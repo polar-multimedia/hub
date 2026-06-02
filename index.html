@@ -950,6 +950,271 @@ select option{background:#0d1b2a;color:#fff;}
 }
 #bottom-sheet.open{display:block;}
 .sheet-handle{width:40px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 20px;}
+
+/* ── AI RECEIPT SCANNER ─────────────────────────────── */
+.scan-zone {
+  border: 2px dashed rgba(237,26,142,0.4);
+  border-radius: 20px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(237,26,142,0.04);
+  margin-bottom: 24px;
+  position: relative;
+}
+.scan-zone.drag-over {
+  border-color: #ed1a8e;
+  background: rgba(237,26,142,0.12);
+  transform: scale(1.01);
+}
+.scan-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.scan-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  display: block;
+}
+.scan-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+.scan-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 16px;
+}
+.scan-btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.scan-btn {
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(237,26,142,0.5);
+  background: transparent;
+  color: #ed1a8e;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+}
+.scan-btn:hover {
+  background: rgba(237,26,142,0.15);
+  border-color: #ed1a8e;
+}
+.scan-preview-wrap {
+  display: none;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  max-height: 220px;
+}
+.scan-preview-wrap img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+.scan-preview-wrap .scan-remove {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.scan-analyze-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(135deg, #ed1a8e, #51c4ca);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(237,26,142,0.3);
+}
+.scan-analyze-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.scan-analyze-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(237,26,142,0.5);
+}
+.scan-result-banner {
+  display: none;
+  background: rgba(81,196,202,0.1);
+  border: 1px solid rgba(81,196,202,0.3);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #51c4ca;
+  font-weight: 500;
+}
+.scan-result-banner.error {
+  background: rgba(237,26,142,0.1);
+  border-color: rgba(237,26,142,0.3);
+  color: #ed1a8e;
+}
+.expense-thumb {
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+.analyzing-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(2,6,23,0.85);
+  backdrop-filter: blur(10px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  display: none;
+}
+.analyzing-orb {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ed1a8e, #51c4ca);
+  animation: pulse-orb 1.5s ease-in-out infinite;
+  margin-bottom: 24px;
+  filter: blur(4px);
+}
+@keyframes pulse-orb {
+  0%,100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+.analyzing-text {
+  font-size: 18px; font-weight: 700; color: white;
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.analyzing-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+/* ── EVENT WIZARD ─────────────────────────────────── */
+.wizard-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(2,6,23,0.92);
+  backdrop-filter: blur(12px);
+  display: none; flex-direction: column;
+  overflow-y: auto;
+}
+.wizard-overlay.open { display: flex; }
+.wizard-wrap {
+  max-width: 520px; width: 100%;
+  margin: auto; padding: 24px 20px 48px;
+}
+.wizard-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px;
+}
+.wizard-title {
+  font-size: 22px; font-weight: 800; color: white;
+}
+.wizard-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); border: none;
+  color: white; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.wizard-steps {
+  display: flex; gap: 6px; margin-bottom: 32px;
+}
+.wizard-step-dot {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: rgba(255,255,255,0.12);
+  transition: background 0.3s;
+}
+.wizard-step-dot.done { background: #51c4ca; }
+.wizard-step-dot.active { background: #ed1a8e; }
+.wizard-step-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  margin-bottom: 20px;
+}
+.wizard-step-label span {
+  background: linear-gradient(135deg,#ed1a8e,#51c4ca);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.wizard-section { margin-bottom: 20px; }
+.wizard-hint {
+  background: rgba(81,196,202,0.08);
+  border: 1px solid rgba(81,196,202,0.2);
+  border-radius: 12px; padding: 12px 16px;
+  font-size: 12px; color: rgba(255,255,255,0.55);
+  margin-bottom: 20px; line-height: 1.6;
+}
+.wizard-hint strong { color: #51c4ca; }
+.wizard-nav {
+  display: flex; gap: 12px; margin-top: 28px;
+}
+.wizard-nav .btn-back {
+  flex: 1; padding: 14px; border-radius: 50px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6);
+  font-family: 'Poppins',sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.wizard-nav .btn-back:hover { background: rgba(255,255,255,0.1); }
+.wizard-nav .btn-next {
+  flex: 2; padding: 14px; border-radius: 50px;
+  background: linear-gradient(135deg,#ed1a8e,#51c4ca);
+  border: none; color: white;
+  font-family: 'Poppins',sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(237,26,142,0.3);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.wizard-nav .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(237,26,142,0.45); }
+.dates-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:400px){ .dates-row { grid-template-columns: 1fr; } }
+.optional-label { font-size: 10px; color: rgba(255,255,255,0.3); margin-left: 6px; font-weight: 400; text-transform: none; letter-spacing: 0; }
+.budget-preview {
+  background: rgba(255,255,255,0.04); border-radius: 14px;
+  padding: 16px; margin-top: 12px;
+}
+.budget-line {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 13px;
+}
+.budget-line:last-child { border-bottom: none; font-weight: 700; font-size: 15px; }
+.budget-line .blabel { color: rgba(255,255,255,0.5); }
+.budget-line .bval {
+  background: linear-gradient(135deg,#ed1a8e,#51c4ca);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  font-weight: 700;
+}
+.event-edit-btn {
+  background: transparent; border: none;
+  color: rgba(255,255,255,0.35); font-size: 16px;
+  cursor: pointer; padding: 4px 8px;
+  transition: color 0.2s;
+}
+.event-edit-btn:hover { color: #51c4ca; }
+
 </style>
 </head>
 <body>
@@ -957,6 +1222,23 @@ select option{background:#0d1b2a;color:#fff;}
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
+
+<div class="analyzing-overlay" id="analyzing-overlay">
+  <div class="analyzing-orb"></div>
+  <div class="analyzing-text">Analizando recibo...</div>
+  <div class="analyzing-sub">Claude está leyendo el comprobante</div>
+</div>
+
+<div class="wizard-overlay" id="event-wizard">
+  <div class="wizard-wrap">
+    <div class="wizard-header">
+      <div class="wizard-title" id="wiz-title">Nuevo Evento</div>
+      <button class="wizard-close" onclick="closeWizard()">&#x2715;</button>
+    </div>
+    <div class="wizard-steps" id="wiz-dots"></div>
+    <div id="wiz-body"></div>
+  </div>
+</div>
 
 <!-- LOGIN -->
 <div id="screen-login">
@@ -1474,6 +1756,20 @@ function renderGasto(user){
   var today=new Date().toISOString().slice(0,10);
   var html='<div class="form-wrap">';
   html+='<div class="form-title">NUEVO GASTO</div>';
+  html+='<div id="scan-zone" class="scan-zone" onclick="void(0)">';
+  html+='<input type="file" id="scan-file-input" accept="image/*">';
+  html+='<span class="scan-icon">📷</span>';
+  html+='<div class="scan-title">Escanear comprobante con IA</div>';
+  html+='<div class="scan-sub">Arrastra la imagen aquí o usa tu cámara</div>';
+  html+='<div class="scan-btn-row">';
+  html+='<button type="button" class="scan-btn" onclick="document.getElementById(\'scan-cam-input\').click();event.stopPropagation()">📱 Tomar foto</button>';
+  html+='<input type="file" id="scan-cam-input" accept="image/*" capture="environment" style="display:none">';
+  html+='<button type="button" class="scan-btn" onclick="document.getElementById(\'scan-file-input\').click();event.stopPropagation()">🖼️ Subir imagen</button>';
+  html+='</div>';
+  html+='</div>';
+  html+='<div class="scan-preview-wrap" id="scan-preview-wrap"><img id="scan-preview-img" src=""><button type="button" class="scan-remove" onclick="removeScanImage()">✕</button></div>';
+  html+='<button type="button" class="scan-analyze-btn" id="scan-analyze-btn" disabled onclick="analyzeReceipt()">✨ ANALIZAR CON IA</button>';
+  html+='<div class="scan-result-banner" id="scan-result-banner"></div>';
   html+='<div class="field"><label>FECHA</label><input type="date" id="g-date" value="'+today+'"></div>';
   html+='<div class="field"><label>EVENTO</label><select id="g-event">';
   events.forEach(function(e){html+='<option value="'+e.id+'">'+esc(e.name)+'</option>';});
@@ -1501,6 +1797,7 @@ function renderGasto(user){
     var ev=allEvents.find(function(ev){return ev.id===e.eventId;})||{name:'—'};
     var expanded=expandedExpense===e.id;
     html+='<div class="expense-row" id="exprow-'+e.id+'" onclick="toggleExpense(\''+e.id+'\')">';
+    if(e.imageData){ html+='<img class="expense-thumb" src="'+e.imageData+'" onclick="event.stopPropagation();showFullImage(\''+e.id+'\')">'; }
     html+='<div class="exp-top"><div><div class="exp-date">'+esc(e.date)+'</div><div class="exp-concept">'+esc(e.concept)+'</div></div>';
     html+='<div class="exp-amount">'+formatMXN(e.amount)+'</div></div>';
     html+='<div class="exp-bottom"><div class="exp-meta">'+esc(ev.name)+' · '+esc(e.rubro)+'</div>'+chipStatus(e.status)+'</div>';
@@ -1521,7 +1818,7 @@ function renderEventos(user){
   var events=getUserEvents(user);
   var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">';
   html+='<div style="font-size:28px;font-weight:700;color:var(--white);">EVENTOS</div>';
-  html+='<span style="font-size:14px;font-weight:700;color:var(--magenta);cursor:pointer;" onclick="openNewEventModal()">+ NUEVO EVENTO</span>';
+  html+='<span style="font-size:14px;font-weight:700;color:var(--magenta);cursor:pointer;" onclick="openNewEventWizard()">+ NUEVO EVENTO</span>';
   html+='</div>';
   events.forEach(function(ev){
     var budget=ev.budget3||ev.budget2||ev.budget1||0;
@@ -1537,7 +1834,7 @@ function renderEventos(user){
     html+='<div class="event-type">'+esc(ev.type)+'</div>';
     html+='<div class="event-divider"></div>';
     html+='<div class="event-row">';
-    html+='<div class="event-field"><div class="event-field-label">FECHA DEL EVENTO</div><div class="event-field-val">'+esc(ev.date)+'</div></div>';
+    html+='<div class="event-field"><div class="event-field-label">FECHA DEL EVENTO</div><div class="event-field-val">'+fmtDateRange(ev)+'</div></div>';
     html+='<div class="event-field"><div class="event-field-label">ASISTENTES</div><div class="event-field-val">'+esc(ev.attendees)+'</div></div>';
     html+='</div>';
     html+='<div class="event-row" style="align-items:flex-end;">';
@@ -1547,6 +1844,7 @@ function renderEventos(user){
     html+='<div class="event-progress-bar"><div class="event-progress-fill" style="width:'+Math.min(100,pct*100).toFixed(1)+'%;background:'+fillColor+';"></div></div>';
     html+='<div style="font-size:12px;color:var(--gray);">'+formatMXN(spent)+' gastados de '+formatMXN(budget)+'</div>';
     html+='<span class="event-detail-link" onclick="openEventPanel(\''+ev.id+'\')">VER DETALLE →</span>';
+    html+='<button class="event-edit-btn" onclick="openEditWizard(\''+ev.id+'\');event.stopPropagation()" title="Editar evento">&#x270F;</button>';
     html+='</div>';
   });
   return html;
@@ -1725,6 +2023,15 @@ function renderConfig(user){
   html+='</div>';
   html+='<button style="background:transparent;border:1px solid var(--teal);color:var(--teal);font-size:13px;font-weight:700;letter-spacing:1px;padding:10px 20px;cursor:pointer;" onclick="saveThresholds()">GUARDAR UMBRALES</button>';
   html+='</div>';
+  // ── INTELIGENCIA ARTIFICIAL ──
+  html+='<div class="config-section">';
+  html+='<div class="config-title">INTELIGENCIA ARTIFICIAL</div>';
+  html+='<div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:16px;">Clave de Anthropic (Claude) para escanear recibos con IA. Se comparte con todos los usuarios.</div>';
+  var cfg = getConfig();
+  html+='<div class="field"><label>ANTHROPIC API KEY</label>';
+  html+='<input type="password" id="ai-api-key" value="'+ esc(cfg.anthropicKey||'') +'" placeholder="sk-ant-..." style="font-family:monospace"></div>';
+  html+='<button type="button" class="btn-save" style="margin-top:12px;" onclick="saveAnthropicKey()">GUARDAR API KEY</button>';
+  html+='</div>';
   // Firebase
   html+='<div class="config-section">';
   html+='<div class="config-title">FIREBASE</div>';
@@ -1774,7 +2081,7 @@ function saveExpense(){
   var invoice=document.getElementById('g-invoice').value.trim();
   if(!concept||!amount||!eventId){showToast('Completa los campos requeridos','yellow');return;}
   var expenses=getExpenses();
-  var newExp={id:uid(),eventId:eventId,date:date,concept:concept,amount:amount,rubro:rubro,paymentMethod:method,status:status,invoice:invoice||'Sin factura',createdBy:user.id};
+  var newExp={id:uid(),eventId:eventId,date:date,concept:concept,amount:amount,rubro:rubro,paymentMethod:method,status:status,invoice:invoice||'Sin factura',createdBy:user.id,imageData:(scanImageData && scanImageData.thumbnail) ? scanImageData.thumbnail : null};
   expenses.push(newExp);
   lsSave('polar_expenses',expenses);
   // Sync to Firestore if connected
@@ -1794,6 +2101,7 @@ function saveExpense(){
   }
   trackEvent('gasto_guardado','gastos',rubro,amount);
   showToast('✓ GASTO GUARDADO');
+  scanImageData = null;
   document.getElementById('g-concept').value='';
   document.getElementById('g-amount').value='';
   document.getElementById('g-invoice').value='';
@@ -2128,6 +2436,478 @@ function initTabEvents(id){
   // login keyboard
   var lp=document.getElementById('login-pass');
   if(lp)lp.onkeydown=function(e){if(e.key==='Enter')doLogin();};
+  if(id==='gasto') setTimeout(initScanZone, 50);
+}
+
+// ============================================================
+// AI RECEIPT SCANNER
+// ============================================================
+var scanImageData = null; // { base64, mediaType, dataUrl }
+
+function compressImage(file, maxPx, quality, callback){
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      var canvas = document.createElement('canvas');
+      var ratio = Math.min(maxPx/img.width, maxPx/img.height, 1);
+      canvas.width  = Math.round(img.width  * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var dataUrl = canvas.toDataURL('image/jpeg', quality);
+      var base64  = dataUrl.split(',')[1];
+      callback({ base64: base64, mediaType: 'image/jpeg', dataUrl: dataUrl });
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleScanFile(file){
+  if(!file || !file.type.startsWith('image/')){ showToast('Selecciona una imagen','yellow'); return; }
+  // Show preview
+  compressImage(file, 1200, 0.85, function(compressed){
+    scanImageData = compressed;
+    var wrap = document.getElementById('scan-preview-wrap');
+    var img  = document.getElementById('scan-preview-img');
+    if(wrap && img){
+      img.src = compressed.dataUrl;
+      wrap.style.display = 'block';
+    }
+    var analyzeBtn = document.getElementById('scan-analyze-btn');
+    if(analyzeBtn) analyzeBtn.disabled = false;
+    // Hide zone
+    var zone = document.getElementById('scan-zone');
+    if(zone) zone.style.display = 'none';
+    hideScanResult();
+  });
+}
+
+function removeScanImage(){
+  scanImageData = null;
+  var wrap = document.getElementById('scan-preview-wrap');
+  var zone = document.getElementById('scan-zone');
+  var btn  = document.getElementById('scan-analyze-btn');
+  if(wrap) wrap.style.display = 'none';
+  if(zone) zone.style.display = 'block';
+  if(btn)  btn.disabled = true;
+  hideScanResult();
+}
+
+function showScanResult(msg, isError){
+  var el = document.getElementById('scan-result-banner');
+  if(!el) return;
+  el.textContent = msg;
+  el.className   = 'scan-result-banner' + (isError ? ' error' : '');
+  el.style.display = 'block';
+}
+function hideScanResult(){
+  var el = document.getElementById('scan-result-banner');
+  if(el) el.style.display = 'none';
+}
+
+async function analyzeReceipt(){
+  if(!scanImageData){ showToast('Primero sube una imagen','yellow'); return; }
+  var cfg    = getConfig();
+  var apiKey = cfg.anthropicKey || '';
+  if(!apiKey.trim()){
+    showScanResult('⚠️ Configura tu Anthropic API Key en CONFIG → Inteligencia Artificial', true);
+    return;
+  }
+  // Show overlay
+  var overlay = document.getElementById('analyzing-overlay');
+  if(overlay) overlay.style.display = 'flex';
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey.trim(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-request-header': 'allow'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5',
+        max_tokens: 512,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: scanImageData.mediaType, data: scanImageData.base64 }
+            },
+            {
+              type: 'text',
+              text: 'Eres asistente de control de gastos para una empresa mexicana de producción de eventos llamada Polar Multimedia.\nAnaliza este comprobante/ticket/factura y extrae la información.\nResponde ÚNICAMENTE con JSON válido, sin explicaciones:\n{\n  "concepto": "descripción breve del gasto (máx 50 chars)",\n  "monto": numero_total_en_pesos_sin_simbolo,\n  "fecha": "YYYY-MM-DD o null",\n  "proveedor": "nombre del negocio",\n  "rubro": "uno de exactamente: Sede / Hospedaje / Catering / Traslado aéreo / Traslado terrestre / Producción · Materiales / Equipo A/V / Promocionales / Personal / Viáticos · Varios / Oficina"\n}'
+            }
+          ]
+        }]
+      })
+    });
+    if(!response.ok){
+      var errText = await response.text();
+      throw new Error('API error ' + response.status + ': ' + errText.substring(0,200));
+    }
+    var data = await response.json();
+    var raw  = data.content[0].text.trim();
+    // Extract JSON even if wrapped in ```
+    var jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('Respuesta no es JSON válido');
+    var result = JSON.parse(jsonMatch[0]);
+    // Auto-fill form
+    if(result.concepto){ var c=document.getElementById('g-concept'); if(c) c.value=result.concepto; }
+    if(result.monto){    var m=document.getElementById('g-amount');  if(m) m.value=result.monto; }
+    if(result.fecha){
+      var d=document.getElementById('g-date');
+      if(d && result.fecha !== 'null' && result.fecha) d.value=result.fecha;
+    }
+    if(result.rubro){
+      var r=document.getElementById('g-rubro');
+      if(r) r.value=result.rubro;
+    }
+    // Store thumbnail (compressed small for storage)
+    compressImage(dataURLtoFile(scanImageData.dataUrl,'receipt.jpg'), 400, 0.65, function(thumb){
+      scanImageData.thumbnail = thumb.dataUrl;
+    });
+    showScanResult('✅ Recibo analizado: ' + (result.proveedor||'') + ' — $' + (result.monto||'') + '. Revisa y confirma los datos.', false);
+    trackEvent('receipt_scanned','ai','claude_vision');
+  } catch(err){
+    console.error('Receipt scan error:', err);
+    showScanResult('❌ ' + err.message, true);
+  } finally {
+    if(overlay) overlay.style.display = 'none';
+  }
+}
+
+function dataURLtoFile(dataUrl, filename){
+  var arr=dataUrl.split(','), mime=arr[0].match(/:(.*?);/)[1];
+  var bstr=atob(arr[1]), n=bstr.length, u8=new Uint8Array(n);
+  while(n--){ u8[n]=bstr.charCodeAt(n); }
+  return new File([u8], filename, {type:mime});
+}
+
+// Drag & drop setup (called after render)
+function initScanZone(){
+  var zone     = document.getElementById('scan-zone');
+  var fileInput= document.getElementById('scan-file-input');
+  var camInput = document.getElementById('scan-cam-input');
+  if(!zone) return;
+  zone.addEventListener('dragover',function(e){ e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave',function(){ zone.classList.remove('drag-over'); });
+  zone.addEventListener('drop',function(e){
+    e.preventDefault(); zone.classList.remove('drag-over');
+    var f=e.dataTransfer.files[0]; if(f) handleScanFile(f);
+  });
+  if(fileInput) fileInput.addEventListener('change',function(e){ handleScanFile(e.target.files[0]); });
+  if(camInput)  camInput.addEventListener('change', function(e){ handleScanFile(e.target.files[0]); });
+}
+
+function showFullImage(expId){
+  var expenses = getExpenses();
+  var exp = expenses.find(function(e){ return e.id === expId; });
+  if(!exp || !exp.imageData) return;
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;cursor:pointer;';
+  overlay.innerHTML = '<img src="'+exp.imageData+'" style="max-width:90%;max-height:90%;border-radius:16px;object-fit:contain;">';
+  overlay.onclick = function(){ document.body.removeChild(overlay); };
+  document.body.appendChild(overlay);
+}
+
+function saveAnthropicKey(){
+  var key = document.getElementById('ai-api-key');
+  if(!key) return;
+  var cfg = getConfig();
+  cfg.anthropicKey = key.value.trim();
+  lsSave('polar_config', cfg);
+  if(fbConnected && fbDb){
+    fbDb.collection('config').doc('main').set(cfg).catch(function(){});
+  }
+  showToast('✅ API Key guardada');
+}
+
+
+// ============================================================
+// EVENT WIZARD
+// ============================================================
+var wizardState = {};
+var wizardStep  = 0;
+var wizardEditId = null;
+
+var WIZ_STEPS = ['Información', 'Fechas', 'Equipo', 'Presupuesto'];
+
+function openNewEventWizard(){
+  wizardEditId = null;
+  wizardStep   = 0;
+  wizardState  = {
+    name:'', client:'', type:'Congreso médico', city:'CDMX',
+    attendees:80, fechaInicio:'', fechaFin:'',
+    status:'Invitación a pitch', assignedTo:[],
+    budget1:0, budget2:0, budget3:0
+  };
+  document.getElementById('wiz-title').textContent = 'Nuevo Evento';
+  document.getElementById('event-wizard').classList.add('open');
+  renderWizardStep();
+}
+
+function openEditWizard(eventId){
+  var events = getEvents();
+  var ev = events.find(function(e){ return e.id===eventId; });
+  if(!ev) return;
+  wizardEditId = eventId;
+  wizardStep   = 0;
+  wizardState  = {
+    name: ev.name||'',
+    client: ev.client||'',
+    type: ev.type||'Congreso médico',
+    city: ev.city||'CDMX',
+    attendees: ev.attendees||0,
+    fechaInicio: ev.fechaInicio||ev.date||'',
+    fechaFin: ev.fechaFin||'',
+    status: ev.status||'Kickoff',
+    assignedTo: ev.assignedTo||[],
+    budget1: ev.budget1||0,
+    budget2: ev.budget2||0,
+    budget3: ev.budget3||0,
+    realSpent: ev.realSpent||0
+  };
+  document.getElementById('wiz-title').textContent = 'Editar Evento';
+  document.getElementById('event-wizard').classList.add('open');
+  renderWizardStep();
+}
+
+function closeWizard(){
+  document.getElementById('event-wizard').classList.remove('open');
+  document.getElementById('event-wizard').scrollTop = 0;
+}
+
+function renderWizardStep(){
+  // dots
+  var dots = '';
+  WIZ_STEPS.forEach(function(s,i){
+    var cls = i < wizardStep ? 'done' : i===wizardStep ? 'active' : '';
+    dots += '<div class="wizard-step-dot '+cls+'"></div>';
+  });
+  document.getElementById('wiz-dots').innerHTML = dots;
+
+  var html = '<div class="wizard-step-label">PASO '+(wizardStep+1)+' DE '+WIZ_STEPS.length+' \u2014 <span>'+WIZ_STEPS[wizardStep]+'</span></div>';
+
+  if(wizardStep===0){
+    html += '<div class="wizard-hint"><strong>¿Qué tipo de evento es?</strong> El tipo determina qué recursos necesitas. Una cumbre nacional requiere vuelos y hospedaje; una cena con charla médica no.</div>';
+    html += '<div class="wizard-section">';
+    html += '<div class="field"><label>Nombre del evento</label><input type="text" id="wiz-name" value="'+esc(wizardState.name)+'" placeholder="Ej: Congreso Ki-CAB GDL 2026"></div>';
+    html += '<div class="field"><label>Cliente</label><input type="text" id="wiz-client" value="'+esc(wizardState.client)+'" placeholder="Ej: Carnot Laboratorios"></div>';
+    html += '<div class="field"><label>Tipo de evento</label><select id="wiz-type"><option>Congreso médico</option><option>Simposio</option><option>Lanzamiento de producto</option><option>Cumbre / Summit</option><option>Cena con charla médica</option><option>Webinar / Virtual</option><option>Congreso educativo</option><option>Mesa redonda</option><option>Campaña digital</option><option>Otro</option></select></div>';
+    html += '<div class="field"><label>Ciudad</label><select id="wiz-city"><option>CDMX</option><option>GDL</option><option>MTY</option><option>Nacional (varias sedes)</option><option>Internacional</option><option>Virtual</option></select></div>';
+    html += '<div class="field"><label>No. de asistentes</label><input type="number" id="wiz-att" value="'+esc(wizardState.attendees)+'" placeholder="80" min="1"></div>';
+    html += '</div>';
+    html += '<div class="wizard-nav"><button class="btn-next" onclick="wizardNext()">SIGUIENTE \u2192</button></div>';
+  }
+
+  else if(wizardStep===1){
+    var isMultiDay = ['Cumbre / Summit','Congreso médico','Simposio','Congreso educativo','Lanzamiento de producto'].indexOf(wizardState.type) >= 0;
+    html += '<div class="wizard-hint">';
+    if(isMultiDay){
+      html += '<strong>'+wizardState.type+'</strong> típicamente dura 2\u20133 días. Define la fecha de inicio y la fecha de finalización para controlar el flujo de pagos correctamente.';
+    } else {
+      html += '<strong>'+wizardState.type+'</strong> es un evento de un día. La fecha de fin es opcional \u2014 úsala si el montaje/desmontaje ocupa días adicionales.';
+    }
+    html += '</div>';
+    html += '<div class="wizard-section">';
+    html += '<div class="dates-row">';
+    html += '<div class="field"><label>Fecha de inicio</label><input type="date" id="wiz-fi" value="'+esc(wizardState.fechaInicio)+'"></div>';
+    html += '<div class="field"><label>Fecha de fin <span class="optional-label">opcional</span></label><input type="date" id="wiz-ff" value="'+esc(wizardState.fechaFin)+'"></div>';
+    html += '</div>';
+    if(isMultiDay){
+      html += '<div class="wizard-hint" style="margin-top:12px">\uD83D\uDCA1 <strong>Recordatorio:</strong> para cumbres y congresos, la fecha de inicio es cuando llegan los primeros invitados (check-in + cena de bienvenida), no el día de las sesiones.</div>';
+    }
+    html += '<div class="field"><label>Estado actual</label><select id="wiz-status"><option>Invitación a pitch</option><option>Kickoff</option><option>Pre-producción</option><option>Producción</option><option>Día del evento</option><option>Post-evento</option><option>Entrega</option><option>Cobro</option><option>Cerrado</option></select></div>';
+    html += '</div>';
+    html += '<div class="wizard-nav"><button class="btn-back" onclick="wizardBack()">\u2190 Atrás</button><button class="btn-next" onclick="wizardNext()">SIGUIENTE \u2192</button></div>';
+  }
+
+  else if(wizardStep===2){
+    var users = getUsers();
+    html += '<div class="wizard-hint">Asigna el equipo que trabajará en este evento. Solo verán este evento en su vista de producción.</div>';
+    html += '<div class="wizard-section">';
+    users.forEach(function(u){
+      if(u.role==='campo') return;
+      var checked = wizardState.assignedTo.indexOf(u.id) >= 0;
+      html += '<label style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,0.04);border-radius:12px;margin-bottom:8px;cursor:pointer;border:1px solid rgba(255,255,255,'+(checked?'0.2':'0.06')+')">';
+      html += '<input type="checkbox" value="'+u.id+'" '+(checked?'checked':'')+' onchange="wizardToggleUser(this)" style="accent-color:#ed1a8e;width:18px;height:18px">';
+      html += '<div><div style="font-size:14px;font-weight:600;color:white">'+esc(u.name)+'</div>';
+      html += '<div style="font-size:11px;color:rgba(255,255,255,0.4)">'+esc(u.email)+'</div></div></label>';
+    });
+    html += '</div>';
+    html += '<div class="wizard-nav"><button class="btn-back" onclick="wizardBack()">\u2190 Atrás</button><button class="btn-next" onclick="wizardNext()">SIGUIENTE \u2192</button></div>';
+  }
+
+  else if(wizardStep===3){
+    var catalog = CATALOG;
+    var city = wizardState.city.split(' ')[0]; // GDL, CDMX, MTY
+    var cat   = catalog.catering[city] || catalog.catering['default'];
+    var av    = catalog.av[city]       || catalog.av['default'];
+    var hosp  = catalog.hospedaje[city]|| catalog.hospedaje['default'];
+    var pax   = parseInt(wizardState.attendees)||80;
+    var type  = wizardState.type;
+
+    // Estimate based on type
+    var estCatering=0, estAV=0, estHosp=0, estVuelos=0, estPersonal=0, estProd=0;
+    var isMultiDay  = ['Cumbre / Summit','Congreso médico','Simposio','Congreso educativo'].indexOf(type)>=0;
+    var isNational  = ['Cumbre / Summit','Congreso médico','Simposio'].indexOf(type)>=0;
+    var isDigital   = ['Webinar / Virtual','Campaña digital'].indexOf(type)>=0;
+
+    if(!isDigital){
+      estCatering = isMultiDay ? pax*cat.fullday*2 : pax*cat.fullday;
+      estAV       = av.paquete;
+      estPersonal = 2 * (catalog.personal[city]||catalog.personal['default']);
+      estProd     = 15000;
+    }
+    if(isNational){
+      estHosp   = Math.round(pax*0.3)*hosp*2; // 30% viajan, 2 noches
+      estVuelos = Math.round(pax*0.3)*catalog.traslado.vuelo;
+    }
+    var total = estCatering+estAV+estHosp+estVuelos+estPersonal+estProd;
+    var suggested = Math.round(total/0.55); // 55% cost ratio target
+
+    html += '<div class="wizard-hint"><strong>Estimado automático</strong> basado en '+pax+' personas en '+city+'. Puedes ajustar los tres presupuestos manualmente.</div>';
+    if(!isDigital && total > 0){
+      html += '<div class="budget-preview">';
+      if(estCatering) html += '<div class="budget-line"><span class="blabel">Catering</span><span class="bval">'+fmt(estCatering)+'</span></div>';
+      if(estAV)       html += '<div class="budget-line"><span class="blabel">Equipo A/V</span><span class="bval">'+fmt(estAV)+'</span></div>';
+      if(estHosp)     html += '<div class="budget-line"><span class="blabel">Hospedaje</span><span class="bval">'+fmt(estHosp)+'</span></div>';
+      if(estVuelos)   html += '<div class="budget-line"><span class="blabel">Vuelos</span><span class="bval">'+fmt(estVuelos)+'</span></div>';
+      if(estPersonal) html += '<div class="budget-line"><span class="blabel">Personal</span><span class="bval">'+fmt(estPersonal)+'</span></div>';
+      if(estProd)     html += '<div class="budget-line"><span class="blabel">Producción</span><span class="bval">'+fmt(estProd)+'</span></div>';
+      html += '<div class="budget-line"><span class="blabel">TOTAL COSTOS EST.</span><span class="bval">'+fmt(total)+'</span></div>';
+      html += '</div>';
+    }
+    html += '<div class="wizard-section" style="margin-top:16px">';
+    html += '<div class="dates-row">';
+    html += '<div class="field"><label>Presup 1 \u2014 Preliminar</label><input type="number" id="wiz-b1" value="'+(wizardState.budget1||suggested||'')+'" placeholder="0"></div>';
+    html += '<div class="field"><label>Presup 2 \u2014 Licitación</label><input type="number" id="wiz-b2" value="'+(wizardState.budget2||'')+'" placeholder="0"></div>';
+    html += '</div>';
+    html += '<div class="field"><label>Presup 3 \u2014 Autorizado <span class="optional-label">opcional al crear</span></label><input type="number" id="wiz-b3" value="'+(wizardState.budget3||'')+'" placeholder="0"></div>';
+    html += '</div>';
+    var saveLabel = wizardEditId ? 'GUARDAR CAMBIOS \u2713' : 'CREAR EVENTO \u2713';
+    html += '<div class="wizard-nav"><button class="btn-back" onclick="wizardBack()">\u2190 Atrás</button><button class="btn-next" onclick="wizardSave()">'+saveLabel+'</button></div>';
+  }
+
+  document.getElementById('wiz-body').innerHTML = html;
+
+  // Restore select values after render
+  if(wizardStep===0){
+    var sel = document.getElementById('wiz-type'); if(sel) sel.value = wizardState.type;
+    var sc  = document.getElementById('wiz-city'); if(sc)  sc.value = wizardState.city;
+  }
+  if(wizardStep===1){
+    var ss = document.getElementById('wiz-status'); if(ss) ss.value = wizardState.status;
+  }
+}
+
+function wizardCollect(){
+  if(wizardStep===0){
+    var n = document.getElementById('wiz-name');
+    if(n && !n.value.trim()){ showToast('Ingresa el nombre del evento','yellow'); return false; }
+    wizardState.name      = document.getElementById('wiz-name').value.trim();
+    wizardState.client    = document.getElementById('wiz-client').value.trim();
+    wizardState.type      = document.getElementById('wiz-type').value;
+    wizardState.city      = document.getElementById('wiz-city').value;
+    wizardState.attendees = parseInt(document.getElementById('wiz-att').value)||0;
+  }
+  if(wizardStep===1){
+    var fi = document.getElementById('wiz-fi');
+    if(fi && !fi.value){ showToast('Ingresa la fecha de inicio','yellow'); return false; }
+    wizardState.fechaInicio = document.getElementById('wiz-fi').value;
+    wizardState.fechaFin    = document.getElementById('wiz-ff').value;
+    wizardState.status      = document.getElementById('wiz-status').value;
+  }
+  if(wizardStep===2){
+    // collected via wizardToggleUser
+  }
+  if(wizardStep===3){
+    wizardState.budget1 = parseFloat(document.getElementById('wiz-b1').value)||0;
+    wizardState.budget2 = parseFloat(document.getElementById('wiz-b2').value)||0;
+    wizardState.budget3 = parseFloat(document.getElementById('wiz-b3').value)||0;
+  }
+  return true;
+}
+
+function wizardNext(){
+  if(!wizardCollect()) return;
+  wizardStep = Math.min(wizardStep+1, WIZ_STEPS.length-1);
+  renderWizardStep();
+  document.getElementById('event-wizard').scrollTop = 0;
+}
+function wizardBack(){
+  wizardStep = Math.max(wizardStep-1, 0);
+  renderWizardStep();
+  document.getElementById('event-wizard').scrollTop = 0;
+}
+function wizardToggleUser(cb){
+  var id = cb.value;
+  var idx = wizardState.assignedTo.indexOf(id);
+  if(cb.checked && idx<0) wizardState.assignedTo.push(id);
+  if(!cb.checked && idx>=0) wizardState.assignedTo.splice(idx,1);
+}
+
+function wizardSave(){
+  if(!wizardCollect()) return;
+  var events = getEvents();
+  if(wizardEditId){
+    // EDIT
+    var idx = events.findIndex(function(e){ return e.id===wizardEditId; });
+    if(idx>=0){
+      Object.assign(events[idx], wizardState);
+      events[idx].date = wizardState.fechaInicio; // keep legacy field
+    }
+  } else {
+    // CREATE
+    var newEv = {
+      id: uid(),
+      name:        wizardState.name,
+      client:      wizardState.client,
+      type:        wizardState.type,
+      city:        wizardState.city,
+      attendees:   wizardState.attendees,
+      fechaInicio: wizardState.fechaInicio,
+      fechaFin:    wizardState.fechaFin,
+      date:        wizardState.fechaInicio,
+      status:      wizardState.status,
+      budget1:     wizardState.budget1,
+      budget2:     wizardState.budget2,
+      budget3:     wizardState.budget3,
+      realSpent:   0,
+      assignedTo:  wizardState.assignedTo,
+      createdAt:   new Date().toISOString().slice(0,10)
+    };
+    events.push(newEv);
+  }
+  lsSave('polar_events', events);
+  if(fbConnected && fbDb){
+    var toSync = wizardEditId ? events.find(function(e){return e.id===wizardEditId;}) : events[events.length-1];
+    if(toSync) fbDb.collection('events').doc(toSync.id).set(toSync).catch(function(){});
+  }
+  closeWizard();
+  showToast(wizardEditId ? '\u2713 Evento actualizado' : '\u2713 Evento creado');
+  trackEvent(wizardEditId?'event_edited':'event_created','eventos',wizardState.type);
+  switchTab('eventos');
+}
+
+function fmt(n){ return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(n); }
+
+function fmtDateRange(ev){
+  var fi = ev.fechaInicio || ev.date || '';
+  var ff = ev.fechaFin    || '';
+  if(!fi) return '\u2014';
+  function fmtD(d){
+    if(!d) return '';
+    var p = d.split('-');
+    var months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return parseInt(p[2])+' '+months[parseInt(p[1])-1]+' '+p[0];
+  }
+  if(ff) return fmtD(fi)+' \u2192 '+fmtD(ff);
+  return fmtD(fi);
 }
 
 // ============================================================
