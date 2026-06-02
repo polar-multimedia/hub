@@ -2026,10 +2026,10 @@ function renderConfig(user){
   // ── INTELIGENCIA ARTIFICIAL ──
   html+='<div class="config-section">';
   html+='<div class="config-title">INTELIGENCIA ARTIFICIAL</div>';
-  html+='<div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:16px;">Clave de Anthropic (Claude) para escanear recibos con IA. Se comparte con todos los usuarios.</div>';
+  html+='<div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:16px;">Clave de OpenAI (GPT-4o) para escanear recibos con IA. Se comparte con todos los usuarios.</div>';
   var cfg = getConfig();
-  html+='<div class="field"><label>ANTHROPIC API KEY</label>';
-  html+='<input type="password" id="ai-api-key" value="'+ esc(cfg.anthropicKey||'') +'" placeholder="sk-ant-..." style="font-family:monospace"></div>';
+  html+='<div class="field"><label>OPENAI API KEY</label>';
+  html+='<input type="password" id="ai-api-key" value="'+ esc(cfg.openaiKey||'') +'" placeholder="sk-..." style="font-family:monospace"></div>';
   html+='<button type="button" class="btn-save" style="margin-top:12px;" onclick="saveAnthropicKey()">GUARDAR API KEY</button>';
   html+='</div>';
   // Firebase
@@ -2510,32 +2510,30 @@ function hideScanResult(){
 async function analyzeReceipt(){
   if(!scanImageData){ showToast('Primero sube una imagen','yellow'); return; }
   var cfg    = getConfig();
-  var apiKey = cfg.anthropicKey || '';
+  var apiKey = cfg.openaiKey || '';
   if(!apiKey.trim()){
-    showScanResult('⚠️ Configura tu Anthropic API Key en CONFIG → Inteligencia Artificial', true);
+    showScanResult('⚠️ Configura tu OpenAI API Key en CONFIG → Inteligencia Artificial', true);
     return;
   }
   // Show overlay
   var overlay = document.getElementById('analyzing-overlay');
   if(overlay) overlay.style.display = 'flex';
   try {
-    var response = await fetch('https://api.anthropic.com/v1/messages', {
+    var response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey.trim(),
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-request-header': 'allow'
+        'Authorization': 'Bearer ' + apiKey.trim()
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
+        model: 'gpt-4o-mini',
         max_tokens: 512,
         messages: [{
           role: 'user',
           content: [
             {
-              type: 'image',
-              source: { type: 'base64', media_type: scanImageData.mediaType, data: scanImageData.base64 }
+              type: 'image_url',
+              image_url: { url: 'data:' + scanImageData.mediaType + ';base64,' + scanImageData.base64 }
             },
             {
               type: 'text',
@@ -2547,10 +2545,10 @@ async function analyzeReceipt(){
     });
     if(!response.ok){
       var errText = await response.text();
-      throw new Error('API error ' + response.status + ': ' + errText.substring(0,200));
+      throw new Error('API error ' + response.status + ': ' + errText.substring(0,300));
     }
     var data = await response.json();
-    var raw  = data.content[0].text.trim();
+    var raw  = data.choices[0].message.content.trim();
     // Extract JSON even if wrapped in ```
     var jsonMatch = raw.match(/\{[\s\S]*\}/);
     if(!jsonMatch) throw new Error('Respuesta no es JSON válido');
@@ -2571,7 +2569,7 @@ async function analyzeReceipt(){
       scanImageData.thumbnail = thumb.dataUrl;
     });
     showScanResult('✅ Recibo analizado: ' + (result.proveedor||'') + ' — $' + (result.monto||'') + '. Revisa y confirma los datos.', false);
-    trackEvent('receipt_scanned','ai','claude_vision');
+    trackEvent('receipt_scanned','ai','gpt4o_vision');
   } catch(err){
     console.error('Receipt scan error:', err);
     showScanResult('❌ ' + err.message, true);
@@ -2618,7 +2616,7 @@ function saveAnthropicKey(){
   var key = document.getElementById('ai-api-key');
   if(!key) return;
   var cfg = getConfig();
-  cfg.anthropicKey = key.value.trim();
+  cfg.openaiKey = key.value.trim();
   lsSave('polar_config', cfg);
   if(fbConnected && fbDb){
     fbDb.collection('config').doc('main').set(cfg).catch(function(){});
