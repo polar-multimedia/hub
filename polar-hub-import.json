@@ -1,0 +1,830 @@
+{
+  "polar_events": [
+    {
+      "id": "e_topgin",
+      "name": "Top Gin — Evento Nacional 2026",
+      "client": "Top Gin",
+      "type": "Cumbre / Summit",
+      "city": "CDMX",
+      "attendees": 150,
+      "date": "2026-05-15",
+      "status": "Producción",
+      "budget1": 700000,
+      "budget2": 780000,
+      "budget3": 780000,
+      "realSpent": 120000,
+      "assignedTo": [
+        "u1"
+      ],
+      "createdAt": "2026-03-01"
+    },
+    {
+      "id": "e_vitald",
+      "name": "Vital D — Gira 4 Sedes 2026",
+      "client": "Asofarma (ADIUM)",
+      "type": "Congreso médico",
+      "city": "GDL / CDMX / MTY",
+      "attendees": 240,
+      "date": "2026-04-15",
+      "status": "Post-evento",
+      "budget1": 1500000,
+      "budget2": 1650000,
+      "budget3": 1606470,
+      "realSpent": 1606470,
+      "assignedTo": [
+        "u1",
+        "u2"
+      ],
+      "createdAt": "2026-02-15"
+    },
+    {
+      "id": "e_experttour",
+      "name": "Expert Tour DEMUS — CDMX",
+      "client": "ADIUM",
+      "type": "Congreso médico",
+      "city": "CDMX",
+      "attendees": 80,
+      "date": "2026-02-26",
+      "status": "Cobro",
+      "budget1": 160000,
+      "budget2": 178145,
+      "budget3": 178145,
+      "realSpent": 178145,
+      "assignedTo": [
+        "u1",
+        "u2"
+      ],
+      "createdAt": "2026-01-20"
+    },
+    {
+      "id": "e_consultivo_vd",
+      "name": "Grupo Consultivo VD",
+      "client": "ADIUM",
+      "type": "Mesa redonda",
+      "city": "CDMX",
+      "attendees": 30,
+      "date": "2026-02-27",
+      "status": "Cobro",
+      "budget1": 230000,
+      "budget2": 259811,
+      "budget3": 259811,
+      "realSpent": 259811,
+      "assignedTo": [
+        "u1"
+      ],
+      "createdAt": "2026-01-25"
+    },
+    {
+      "id": "e_summits_demus",
+      "name": "Summits DEMUS MG 2026 — MTY, GDL, CDMX",
+      "client": "Asofarma (ADIUM)",
+      "type": "Cumbre / Summit",
+      "city": "MTY / GDL / CDMX",
+      "attendees": 300,
+      "date": "2026-07-07",
+      "status": "Pre-producción",
+      "budget1": 3800000,
+      "budget2": 4240513,
+      "budget3": 4240513,
+      "realSpent": 0,
+      "assignedTo": [
+        "u1",
+        "u2"
+      ],
+      "createdAt": "2026-04-15"
+    },
+    {
+      "id": "e_carnot_gastro",
+      "name": "Campaña Digital Ki-CAB H. Pylori",
+      "client": "Carnot Gastro",
+      "type": "Campaña digital",
+      "city": "Nacional",
+      "attendees": 0,
+      "date": "2026-06-30",
+      "status": "Producción",
+      "budget1": 139200,
+      "budget2": 139200,
+      "budget3": 139200,
+      "realSpent": 120000,
+      "assignedTo": [
+        "u1"
+      ],
+      "createdAt": "2026-04-01"
+    },
+    {
+      "id": "e_carnot_sf",
+      "name": "Estrategia C-Tech — Salud Femenina 2026",
+      "client": "Carnot Salud Femenina",
+      "type": "Campaña digital",
+      "city": "Nacional",
+      "attendees": 0,
+      "date": "2026-12-31",
+      "status": "Producción",
+      "budget1": 1200000,
+      "budget2": 1328600,
+      "budget3": 1328600,
+      "realSpent": 527800,
+      "assignedTo": [
+        "u1"
+      ],
+      "createdAt": "2026-01-15"
+    }
+  ],
+  "polar_expenses": [
+    {
+      "id": "r005bfb9245d3",
+      "eventId": "e_experttour",
+      "date": "2026-03-06",
+      "concept": "Estacionamientos Expert Tour",
+      "rubro": "Viáticos · Varios",
+      "amount": 800,
+      "paymentMethod": "BBVA",
+      "status": "Pagado",
+      "invoice": "Pendiente",
+      "createdBy": "u1"
+    },
+    {
+      "id": "rd16efa5a867c",
+      "eventId": "e_experttour",
+      "date": "2026-03-06",
+      "concept": "Reembolso caja chica Expert Tour",
+      "rubro": "Viáticos · Varios",
+      "amount": 19409.95,
+      "paymentMethod": "BBVA",
+      "status": "Pagado",
+      "invoice": "Facturas adjuntas",
+      "createdBy": "u1"
+    },
+    {
+      "id": "rbe13826065a2",
+      "eventId": "e_topgin",
+      "date": "2026-03-06",
+      "concept": "Anticipo sede Top Gin (La Muralla)",
+      "rubro": "Sede",
+      "amount": 120000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado",
+      "invoice": "Pendiente",
+      "createdBy": "u1"
+    },
+    {
+      "id": "r27298eacd6e1",
+      "eventId": "e_vitald",
+      "date": "2026-03-06",
+      "concept": "Anticipo RIU GDL",
+      "rubro": "Sede",
+      "amount": 119500,
+      "paymentMethod": "BBVA",
+      "status": "Pagado",
+      "invoice": "Pendiente",
+      "createdBy": "u2"
+    },
+    {
+      "id": "r80e9719876b5",
+      "eventId": "e_vitald",
+      "date": "2026-03-30",
+      "concept": "Pago préstamo Miriam (desde cuenta evento)",
+      "rubro": "Viáticos · Varios",
+      "amount": 50000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado",
+      "invoice": "Sin factura",
+      "createdBy": "u1"
+    },
+    {
+      "id": "r374e775dac89",
+      "eventId": "e_vitald",
+      "date": "2026-04-06",
+      "concept": "Impuestos",
+      "rubro": "Oficina",
+      "amount": 36818,
+      "paymentMethod": "BBVA",
+      "status": "Pagado",
+      "invoice": "Con líneas de pago",
+      "createdBy": "u1"
+    },
+    {
+      "id": "r6d3ff34e324f",
+      "eventId": "e_vitald",
+      "date": "2026-04-06",
+      "concept": "Anticipo pantalla",
+      "rubro": "Equipo A/V",
+      "amount": 53710.9,
+      "paymentMethod": "BBVA",
+      "status": "Pagado",
+      "invoice": "Anticipo pantalla",
+      "createdBy": "u1"
+    }
+  ],
+  "polar_payments": [
+    {
+      "id": "rb199c5536cf8",
+      "eventId": "e_topgin",
+      "concept": "1° y 2° Pago La Muralla",
+      "dueDate": "2026-03-13",
+      "amount": 120000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "reb1e348f2735",
+      "eventId": "e_topgin",
+      "concept": "2° Pago La Muralla",
+      "dueDate": "2026-04-30",
+      "amount": 60000,
+      "paymentMethod": "BBVA",
+      "status": "Pendiente"
+    },
+    {
+      "id": "ra3c2737b885f",
+      "eventId": "e_topgin",
+      "concept": "Traslados",
+      "dueDate": "2026-04-30",
+      "amount": 128000,
+      "paymentMethod": "BBVA",
+      "status": "Pendiente"
+    },
+    {
+      "id": "rae69961d001b",
+      "eventId": "e_topgin",
+      "concept": "Último pago La Muralla",
+      "dueDate": "2026-05-08",
+      "amount": 219000,
+      "paymentMethod": "BBVA",
+      "status": "Pendiente"
+    },
+    {
+      "id": "r098db5c367b6",
+      "eventId": "e_topgin",
+      "concept": "Traslados terrestres invitados y ponentes",
+      "dueDate": "2026-05-08",
+      "amount": 137000,
+      "paymentMethod": "BBVA",
+      "status": "Pendiente"
+    },
+    {
+      "id": "r4f0f71cfc4ea",
+      "eventId": "e_vitald",
+      "concept": "Anticipo RIU GDL",
+      "dueDate": "2026-03-06",
+      "amount": 119500,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "rf7693bbb19c5",
+      "eventId": "e_vitald",
+      "concept": "Anticipo Hacienda Tlalpan CDMX",
+      "dueDate": "2026-03-06",
+      "amount": 142500,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "ra95cd7598c24",
+      "eventId": "e_vitald",
+      "concept": "Anticipo Hacienda los Morales CDMX",
+      "dueDate": "2026-03-06",
+      "amount": 142500,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r3a966eed36f0",
+      "eventId": "e_vitald",
+      "concept": "Anticipo Barcelo MTY",
+      "dueDate": "2026-03-06",
+      "amount": 115350,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r61338330128e",
+      "eventId": "e_vitald",
+      "concept": "Pantalla 85\" (4 sedes)",
+      "dueDate": "2026-03-13",
+      "amount": 19000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r7f96581b01d8",
+      "eventId": "e_vitald",
+      "concept": "Staff ADIUM (4 sedes)",
+      "dueDate": "2026-03-13",
+      "amount": 104424,
+      "paymentMethod": "AmEx Polar",
+      "status": "Pagado"
+    },
+    {
+      "id": "rc4a9947ef0a5",
+      "eventId": "e_vitald",
+      "concept": "Vuelos staff Polar",
+      "dueDate": "2026-03-13",
+      "amount": 52212,
+      "paymentMethod": "AmEx Polar",
+      "status": "Pagado"
+    },
+    {
+      "id": "r79b524f92626",
+      "eventId": "e_vitald",
+      "concept": "Producción arañas",
+      "dueDate": "2026-03-13",
+      "amount": 19584,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r27ccd3d7af1a",
+      "eventId": "e_vitald",
+      "concept": "Impresión telas",
+      "dueDate": "2026-03-13",
+      "amount": 24000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "ra7a8bfedeb64",
+      "eventId": "e_vitald",
+      "concept": "Anticipo libretas y plumas",
+      "dueDate": "2026-03-13",
+      "amount": 30000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r11eb420488b2",
+      "eventId": "e_vitald",
+      "concept": "Anticipo A/V GDL",
+      "dueDate": "2026-03-27",
+      "amount": 63057,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r178a7a193e90",
+      "eventId": "e_vitald",
+      "concept": "Anticipo A/V CDMX (2 sedes)",
+      "dueDate": "2026-03-27",
+      "amount": 74000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r09c5e405cb36",
+      "eventId": "e_vitald",
+      "concept": "Anticipo A/V MTY",
+      "dueDate": "2026-03-27",
+      "amount": 63058,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "rea3e602edff1",
+      "eventId": "e_vitald",
+      "concept": "Hostess (4 sedes)",
+      "dueDate": "2026-03-27",
+      "amount": 22272,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r1c37228c701e",
+      "eventId": "e_vitald",
+      "concept": "Finiquito RIU GDL",
+      "dueDate": "2026-04-10",
+      "amount": 119500,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "rcd7a7c243c8e",
+      "eventId": "e_vitald",
+      "concept": "Traslados ponentes y staff ADIUM",
+      "dueDate": "2026-04-10",
+      "amount": 15600,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r3c26502b9e04",
+      "eventId": "e_vitald",
+      "concept": "Finiquito Hacienda Tlalpan",
+      "dueDate": "2026-04-10",
+      "amount": 142500,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r336cf611cd16",
+      "eventId": "e_vitald",
+      "concept": "Finiquito Hacienda los Morales",
+      "dueDate": "2026-04-10",
+      "amount": 142500,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "redda57395d22",
+      "eventId": "e_vitald",
+      "concept": "Finiquito Barcelo MTY",
+      "dueDate": "2026-04-10",
+      "amount": 115350,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r3451b4dd335c",
+      "eventId": "e_vitald",
+      "concept": "Finiquito A/V GDL",
+      "dueDate": "2026-04-10",
+      "amount": 63057,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r4d2b7a8fbdbd",
+      "eventId": "e_vitald",
+      "concept": "Finiquito A/V CDMX (2 sedes)",
+      "dueDate": "2026-04-10",
+      "amount": 74000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "ree06a3f147c4",
+      "eventId": "e_vitald",
+      "concept": "Finiquito libretas y plumas",
+      "dueDate": "2026-04-10",
+      "amount": 30000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "rb90a29016218",
+      "eventId": "e_vitald",
+      "concept": "Finiquito A/V MTY",
+      "dueDate": "2026-04-10",
+      "amount": 63058,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r925646d5650c",
+      "eventId": "e_vitald",
+      "concept": "Viáticos Polar (GDL y MTY)",
+      "dueDate": "2026-04-15",
+      "amount": 30000,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "r9a8c10522777",
+      "eventId": "e_vitald",
+      "concept": "Finiquito hostess",
+      "dueDate": "2026-04-30",
+      "amount": 22272,
+      "paymentMethod": "BBVA",
+      "status": "Pagado"
+    },
+    {
+      "id": "rd48835786ca9",
+      "eventId": "e_summits_demus",
+      "concept": "PM Eventos Summits DEMUS MTY/GDL/CDMX",
+      "dueDate": "2026-07-07",
+      "amount": 4240513,
+      "paymentMethod": "BBVA",
+      "status": "Pendiente"
+    }
+  ],
+  "polar_invoices": [
+    {
+      "id": "r2fa4b3c74dc7",
+      "client": "Carnot Gastro",
+      "invoiceNum": "F-218",
+      "oc": "OC-4500081478",
+      "concept": "Desarrollo de juego Ki-CAB (actividades FDV)",
+      "eventId": "e_carnot_gastro",
+      "subtotal": 47000,
+      "iva": 7520,
+      "total": 54520,
+      "dueDate": "2026-04-09",
+      "status": "Vencida",
+      "commission": 0
+    },
+    {
+      "id": "r8d6d4aaac421",
+      "client": "Carnot Gastro",
+      "invoiceNum": "F-219",
+      "oc": "OC-4500081479",
+      "concept": "Desarrollo de juego FIBIOMET (actividades FDV)",
+      "eventId": "e_carnot_gastro",
+      "subtotal": 47000,
+      "iva": 7520,
+      "total": 54520,
+      "dueDate": "2026-04-09",
+      "status": "Vencida",
+      "commission": 0
+    },
+    {
+      "id": "r4269bd5a0639",
+      "client": "Carnot Gastro",
+      "invoiceNum": "F-220",
+      "oc": "OC-4500081478",
+      "concept": "Desarrollo juego Ki-CAB — gerentes y FDV",
+      "eventId": "e_carnot_gastro",
+      "subtotal": 47000,
+      "iva": 7520,
+      "total": 54520,
+      "dueDate": "2026-04-09",
+      "status": "Pagada",
+      "commission": 0
+    },
+    {
+      "id": "rae9e3f6ae32c",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-222",
+      "oc": "OC-4500082138",
+      "concept": "Material audiovisual capacitación FDV SF",
+      "eventId": "e_carnot_sf",
+      "subtotal": 30000,
+      "iva": 4800,
+      "total": 34800,
+      "dueDate": "2026-05-07",
+      "status": "Pagada",
+      "commission": 3000
+    },
+    {
+      "id": "r023f907e363e",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-226",
+      "oc": "OC-4500082316",
+      "concept": "Estrategia de comunicación FDV — Feb 2026",
+      "eventId": "e_carnot_sf",
+      "subtotal": 65000,
+      "iva": 10400,
+      "total": 75400,
+      "dueDate": "2026-05-28",
+      "status": "Pagada",
+      "commission": 6500
+    },
+    {
+      "id": "r05a859e46c0c",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-227",
+      "oc": "OC-4500082320",
+      "concept": "Comunicación interna materiales digitales FDV Feb 2026 (SF3)",
+      "eventId": "e_carnot_sf",
+      "subtotal": 65000,
+      "iva": 10400,
+      "total": 75400,
+      "dueDate": "2026-05-14",
+      "status": "Vencida",
+      "commission": 6500
+    },
+    {
+      "id": "r239532cb93c1",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-228",
+      "oc": "OC-4500082649",
+      "concept": "Estrategia comunicación FDV — Abril 2026",
+      "eventId": "e_carnot_sf",
+      "subtotal": 65000,
+      "iva": 10400,
+      "total": 75400,
+      "dueDate": "2026-05-28",
+      "status": "Pagada",
+      "commission": 6500
+    },
+    {
+      "id": "r62703044c8b6",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-232",
+      "oc": "OC-4500082974",
+      "concept": "Estrategia interna mayo — SF2",
+      "eventId": "e_carnot_sf",
+      "subtotal": 65000,
+      "iva": 10400,
+      "total": 75400,
+      "dueDate": "2026-06-18",
+      "status": "Pendiente",
+      "commission": 6500
+    },
+    {
+      "id": "r5ac5e8b4ff57",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-233",
+      "oc": "OC-4500083000",
+      "concept": "Materiales FDV Urominot — Abril SF3",
+      "eventId": "e_carnot_sf",
+      "subtotal": 65000,
+      "iva": 10400,
+      "total": 75400,
+      "dueDate": "2026-06-25",
+      "status": "Pendiente",
+      "commission": 6500
+    },
+    {
+      "id": "r2d3cb0dd38ff",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-234",
+      "oc": "OC-4500083001",
+      "concept": "Hub estrategia interna FDV — Marzo SF3",
+      "eventId": "e_carnot_sf",
+      "subtotal": 65000,
+      "iva": 10400,
+      "total": 75400,
+      "dueDate": "2026-06-25",
+      "status": "Pendiente",
+      "commission": 6500
+    },
+    {
+      "id": "rc1e3dd7985eb",
+      "client": "Carnot Gastro",
+      "invoiceNum": "F-231",
+      "oc": "OC-4500082872",
+      "concept": "Iguala Abr/May/Jun — Campaña digital Ki-CAB H. Pylori",
+      "eventId": "e_carnot_gastro",
+      "subtotal": 120000,
+      "iva": 19200,
+      "total": 139200,
+      "dueDate": "2026-07-07",
+      "status": "Pendiente",
+      "commission": 0
+    },
+    {
+      "id": "rb45ac811af9f",
+      "client": "Carnot Gastro",
+      "invoiceNum": "F-239",
+      "oc": "OC-450008358",
+      "concept": "Desarrollo dinámica GASTROPARDY — GastroSummit 250 médicos",
+      "eventId": "e_carnot_gastro",
+      "subtotal": 57100,
+      "iva": 9136,
+      "total": 66236,
+      "dueDate": "2026-07-19",
+      "status": "Pendiente",
+      "commission": 0
+    },
+    {
+      "id": "rf1713ec33e4a",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-240",
+      "oc": "OC-4500083691",
+      "concept": "Creación sitio C-Tech + administración campaña — Abril SF2",
+      "eventId": "e_carnot_sf",
+      "subtotal": 50000,
+      "iva": 8000,
+      "total": 58000,
+      "dueDate": "2026-07-22",
+      "status": "Pendiente",
+      "commission": 0
+    },
+    {
+      "id": "rf915fde85d51",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-241",
+      "oc": "OC-4500083694",
+      "concept": "Materiales FDV Urominot mayo + SF1y3",
+      "eventId": "e_carnot_sf",
+      "subtotal": 65000,
+      "iva": 10400,
+      "total": 75400,
+      "dueDate": "2026-07-22",
+      "status": "Pendiente",
+      "commission": 0
+    },
+    {
+      "id": "r7c48611020be",
+      "client": "Carnot Salud Femenina",
+      "invoiceNum": "F-242",
+      "oc": "OC-4500083723",
+      "concept": "Estrategia digital C-Tech — Mayo SF2",
+      "eventId": "e_carnot_sf",
+      "subtotal": 50000,
+      "iva": 8000,
+      "total": 58000,
+      "dueDate": "2026-07-22",
+      "status": "Pendiente",
+      "commission": 0
+    },
+    {
+      "id": "r0fa7de3a02d4",
+      "client": "ADIUM",
+      "invoiceNum": "F-223",
+      "oc": "OC077187",
+      "concept": "PM Eventos — Grupo Consultivo VD (27-28 Feb)",
+      "eventId": "e_consultivo_vd",
+      "subtotal": 223975,
+      "iva": 35836,
+      "total": 259811,
+      "dueDate": "2026-05-21",
+      "status": "Pendiente",
+      "commission": 0
+    },
+    {
+      "id": "rdf31e42c5a83",
+      "client": "ADIUM",
+      "invoiceNum": "F-224",
+      "oc": "SER03635",
+      "concept": "PM Eventos — Expert Tour DEMUS CDMX (26 Feb)",
+      "eventId": "e_experttour",
+      "subtotal": 153574,
+      "iva": 24572,
+      "total": 178146,
+      "dueDate": "2026-05-14",
+      "status": "Pendiente",
+      "commission": 0
+    },
+    {
+      "id": "r0392f819f411",
+      "client": "ADIUM",
+      "invoiceNum": "F-237",
+      "oc": "SER03893",
+      "concept": "PM Eventos — Summits DEMUS MG 2026 (MTY, GDL, CDMX)",
+      "eventId": "e_summits_demus",
+      "subtotal": 3655614,
+      "iva": 584898,
+      "total": 4240513,
+      "dueDate": "2026-07-07",
+      "status": "Pendiente",
+      "commission": 0
+    }
+  ],
+  "polar_config": {
+    "thresholds": {
+      "optimal": 0.5,
+      "max": 0.6
+    },
+    "loans": [
+      {
+        "id": "l1",
+        "creditor": "Miriam Meza",
+        "principal": 619190,
+        "rate": 1.8,
+        "startDate": "2026-02-01",
+        "totalOwed": 663771.68,
+        "paid": 50000
+      },
+      {
+        "id": "l2",
+        "creditor": "Xepelin",
+        "principal": 250000,
+        "rate": 0,
+        "startDate": "2026-03-01",
+        "totalOwed": 250000,
+        "paid": 0
+      },
+      {
+        "id": "l3",
+        "creditor": "Contador",
+        "principal": 200000,
+        "rate": 1.2,
+        "startDate": "2025-11-01",
+        "totalOwed": 228800,
+        "paid": 0
+      },
+      {
+        "id": "l4",
+        "creditor": "H Financieros",
+        "principal": 2000000,
+        "rate": 1.92,
+        "startDate": "2026-03-01",
+        "totalOwed": 2038400,
+        "paid": 0
+      }
+    ],
+    "cards": [
+      {
+        "id": "c1",
+        "name": "AmEx Polar",
+        "cutDay": 11,
+        "cycleStart": 12,
+        "payDay": null,
+        "payMonth": "siguiente",
+        "balance": 0,
+        "limit": 100000
+      },
+      {
+        "id": "c2",
+        "name": "AmEx Roberto",
+        "cutDay": 13,
+        "cycleStart": 14,
+        "payDay": 26,
+        "payMonth": "mismo",
+        "balance": 0,
+        "limit": 80000
+      },
+      {
+        "id": "c3",
+        "name": "Banamex Blanca",
+        "cutDay": 13,
+        "cycleStart": 14,
+        "payDay": 1,
+        "payMonth": "siguiente",
+        "balance": 0,
+        "limit": 60000
+      }
+    ]
+  }
+}
