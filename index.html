@@ -341,24 +341,24 @@ select option{background:#0d1b2a;color:#fff;}
   padding:4px;
 }
 .bnav-item{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:2px;
-  font-size:8px;font-weight:700;
-  letter-spacing:0;text-transform:uppercase;
-  color:rgba(255,255,255,0.3);
+  flex:1;display:flex;flex-direction:row;
+  align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;
+  letter-spacing:0.5px;text-transform:uppercase;
+  color:rgba(255,255,255,0.35);
   cursor:pointer;
   border-radius:14px;
   border:none;
   transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
-  padding:4px 2px;
+  padding:0 4px;
   min-width:0;
 }
 .bnav-item:hover{
-  background:rgba(255,255,255,0.06);
-  color:rgba(255,255,255,0.6);
+  background:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.7);
 }
-.bnav-icon{font-size:17px;line-height:1;display:block;}
-.bnav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;font-size:8px;}
+.bnav-icon{display:none;}
+.bnav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;font-size:11px;font-weight:800;}
 .bnav-item.active{
   background:linear-gradient(135deg,#ed1a8e,#51c4ca);
   color:white;
@@ -2030,7 +2030,7 @@ const ETAPAS = ['Captación','Kickoff','Pre-producción','Producción','Logísti
 const RUBROS = ['Sede','Hospedaje','Catering','Traslado aéreo','Traslado terrestre','Producción · Materiales','Equipo A/V','Promocionales','Personal','Viáticos · Varios','Oficina'];
 const PAYMENT_METHODS = ['AmEx Polar','AmEx Roberto','Banamex Blanca','BBVA','Efectivo'];
 const EXPENSE_STATUSES = ['Pendiente','Pagado','Con línea de pago'];
-const EVENT_TYPES = ['Congreso médico','Cumbre / Summit','Cena con charla médica','Simposio','Taller / Workshop','Webinar','Otro'];
+const EVENT_TYPES = ['Congreso médico','Cumbre / Summit','Gira nacional (múltiples sedes)','Cena con charla médica','Desayuno con charla médica','Comida con charla médica','Simposio','Lanzamiento de producto','Taller / Workshop','Congreso educativo','Mesa redonda','Webinar / Virtual','Campaña digital','Otro'];
 const CITIES = ['GDL','CDMX','MTY','Otro'];
 
 const TABS = [
@@ -2551,9 +2551,21 @@ function renderEventos(user){
     html+='<div class="event-client">'+esc(ev.client)+'</div>';
     html+='<div class="event-type">'+esc(ev.type)+'</div>';
     html+='<div class="event-divider"></div>';
+    // Sedes breakdown for gira nacional
+    if(ev.type==='Gira nacional (múltiples sedes)' && ev.sedes && ev.sedes.length){
+      html+='<div style="margin-bottom:10px;">';
+      ev.sedes.forEach(function(s){
+        html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 10px;background:rgba(81,196,202,0.07);border-radius:8px;margin-bottom:4px;">';
+        html+='<span style="font-size:12px;font-weight:700;color:#51c4ca;">'+esc(s.ciudad)+'</span>';
+        html+='<span style="font-size:11px;color:rgba(255,255,255,0.5);">'+(s.fecha||'—')+(s.fechaFin&&s.fechaFin!==s.fecha?' → '+s.fechaFin:'')+'</span>';
+        html+='<span style="font-size:11px;color:rgba(255,255,255,0.4);">'+(s.asistentes||0)+' pax</span>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
     html+='<div class="event-row">';
     html+='<div class="event-field"><div class="event-field-label">FECHA DEL EVENTO</div><div class="event-field-val">'+fmtDateRange(ev)+'</div></div>';
-    html+='<div class="event-field"><div class="event-field-label">ASISTENTES</div><div class="event-field-val">'+esc(ev.attendees)+'</div></div>';
+    html+='<div class="event-field"><div class="event-field-label">ASISTENTES</div><div class="event-field-val">'+(ev.type==='Gira nacional (múltiples sedes)'&&ev.sedes&&ev.sedes.length?ev.sedes.reduce(function(s,x){return s+(parseInt(x.asistentes)||0);},0)+' ('+ev.sedes.length+' sedes)':esc(ev.attendees))+'</div></div>';
     html+='</div>';
     html+='<div class="event-row" style="align-items:flex-end;">';
     html+='<div class="event-field"><div class="event-field-label">PRESUPUESTO</div><div class="event-budget">'+formatMXN(budget)+'</div></div>';
@@ -3533,6 +3545,7 @@ var wizardStep  = 0;
 var wizardEditId = null;
 
 var WIZ_STEPS = ['Información', 'Fechas', 'Equipo', 'Presupuesto'];
+var WIZ_STEPS_GIRA = ['Información', 'Sedes', 'Equipo', 'Presupuesto'];
 
 function openNewEventWizard(){
   wizardEditId = null;
@@ -3541,7 +3554,8 @@ function openNewEventWizard(){
     name:'', client:'', type:'Congreso médico', city:'CDMX',
     attendees:80, fechaInicio:'', fechaFin:'',
     status:'Invitación a pitch', assignedTo:[],
-    budget1:0, budget2:0, budget3:0
+    budget1:0, budget2:0, budget3:0,
+    sedes:[] // for gira nacional
   };
   document.getElementById('wiz-title').textContent = 'Nuevo Evento';
   document.getElementById('event-wizard').classList.add('open');
@@ -3614,7 +3628,7 @@ function renderWizardStep(){
     html += '<div class="wizard-section">';
     html += '<div class="field"><label>Nombre del evento</label><input type="text" id="wiz-name" value="'+esc(wizardState.name)+'" placeholder="Ej: Congreso Ki-CAB GDL 2026"></div>';
     html += '<div class="field"><label>Cliente</label><input type="text" id="wiz-client" value="'+esc(wizardState.client)+'" placeholder="Ej: Carnot Laboratorios"></div>';
-    html += '<div class="field"><label>Tipo de evento</label><select id="wiz-type"><option>Congreso médico</option><option>Simposio</option><option>Lanzamiento de producto</option><option>Cumbre / Summit</option><option>Cena con charla médica</option><option>Webinar / Virtual</option><option>Congreso educativo</option><option>Mesa redonda</option><option>Campaña digital</option><option>Otro</option></select></div>';
+    html += '<div class="field"><label>Tipo de evento</label><select id="wiz-type"><option>Congreso médico</option><option>Cumbre / Summit</option><option>Gira nacional (múltiples sedes)</option><option>Cena con charla médica</option><option>Desayuno con charla médica</option><option>Comida con charla médica</option><option>Simposio</option><option>Lanzamiento de producto</option><option>Taller / Workshop</option><option>Congreso educativo</option><option>Mesa redonda</option><option>Webinar / Virtual</option><option>Campaña digital</option><option>Otro</option></select></div>';
     html += '<div class="field"><label>Ciudad</label><select id="wiz-city"><option>CDMX</option><option>GDL</option><option>MTY</option><option>Nacional (varias sedes)</option><option>Internacional</option><option>Virtual</option></select></div>';
     html += '<div class="field"><label>No. de asistentes</label><input type="number" id="wiz-att" value="'+esc(wizardState.attendees)+'" placeholder="80" min="1"></div>';
     html += '</div>';
@@ -3622,25 +3636,49 @@ function renderWizardStep(){
   }
 
   else if(wizardStep===1){
-    var isMultiDay = ['Cumbre / Summit','Congreso médico','Simposio','Congreso educativo','Lanzamiento de producto'].indexOf(wizardState.type) >= 0;
-    html += '<div class="wizard-hint">';
-    if(isMultiDay){
-      html += '<strong>'+wizardState.type+'</strong> típicamente dura 2\u20133 días. Define la fecha de inicio y la fecha de finalización para controlar el flujo de pagos correctamente.';
+    var isGiraNac  = wizardState.type==='Gira nacional (múltiples sedes)';
+    var isCharla   = ['Cena con charla médica','Desayuno con charla médica','Comida con charla médica'].indexOf(wizardState.type)>=0;
+    var isMultiDay = ['Cumbre / Summit','Congreso médico','Simposio','Congreso educativo','Lanzamiento de producto','Gira nacional (múltiples sedes)'].indexOf(wizardState.type)>=0;
+
+    if(isGiraNac){
+      html += '<div class="wizard-hint"><strong>Gira Nacional</strong> — agrega una fila por cada ciudad. El total de asistentes y fechas se calculan automáticamente.</div>';
+      html += '<div class="wizard-section">';
+      var sedes = wizardState.sedes||[];
+      if(!sedes.length) sedes=[{id:uid(),ciudad:'CDMX',fecha:'',fechaFin:'',asistentes:60,venue:''}];
+      wizardState.sedes = sedes;
+      sedes.forEach(function(s,i){
+        html += '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;margin-bottom:10px;">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">';
+        html += '<div style="font-size:13px;font-weight:700;color:#51c4ca;">Sede '+(i+1)+'</div>';
+        if(i>0) html += '<button type="button" onclick="removeSede(\''+s.id+'\')" style="background:none;border:none;color:rgba(237,26,142,0.6);cursor:pointer;font-size:12px;">✕ quitar</button>';
+        html += '</div><div class="dates-row">';
+        html += '<div class="field"><label>Ciudad</label><select id="sc-ciudad-'+s.id+'"><option'+(s.ciudad==='CDMX'?' selected':'')+'>CDMX</option><option'+(s.ciudad==='GDL'?' selected':'')+'>GDL</option><option'+(s.ciudad==='MTY'?' selected':'')+'>MTY</option><option'+(s.ciudad==='Puebla'?' selected':'')+'>Puebla</option><option'+(s.ciudad==='Querétaro'?' selected':'')+'>Querétaro</option><option'+(s.ciudad==='Cancún'?' selected':'')+'>Cancún</option><option'+(s.ciudad==='Tijuana'?' selected':'')+'>Tijuana</option><option'+(s.ciudad==='Otra'?' selected':'')+'>Otra</option></select></div>';
+        html += '<div class="field"><label>Asistentes</label><input type="number" id="sc-att-'+s.id+'" value="'+(s.asistentes||60)+'" min="1"></div>';
+        html += '</div><div class="dates-row">';
+        html += '<div class="field"><label>Fecha</label><input type="date" id="sc-fecha-'+s.id+'" value="'+(s.fecha||'')+'"></div>';
+        html += '<div class="field"><label>Fin <span class="optional-label">opc.</span></label><input type="date" id="sc-fin-'+s.id+'" value="'+(s.fechaFin||'')+'"></div>';
+        html += '</div><div class="field"><label>Venue / Hotel</label><input type="text" id="sc-venue-'+s.id+'" value="'+esc(s.venue||'')+'" placeholder="Ej: Fiesta Americana GDL"></div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '<button type="button" onclick="addSede()" style="width:100%;padding:11px;border-radius:50px;background:transparent;border:1.5px dashed rgba(81,196,202,0.4);color:#51c4ca;font-family:Poppins,sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:16px;">+ Agregar ciudad</button>';
+      html += '<div class="field"><label>Estado actual</label><select id="wiz-status"><option>Invitación a pitch</option><option>Kickoff</option><option>Pre-producción</option><option>Producción</option><option>Día del evento</option><option>Post-evento</option><option>Entrega</option><option>Cobro</option><option>Cerrado</option></select></div>';
+      html += '<div class="wizard-nav"><button class="btn-back" onclick="wizardBack()">← Atrás</button><button class="btn-next" onclick="wizardNext()">SIGUIENTE →</button></div>';
     } else {
-      html += '<strong>'+wizardState.type+'</strong> es un evento de un día. La fecha de fin es opcional \u2014 úsala si el montaje/desmontaje ocupa días adicionales.';
+      html += '<div class="wizard-hint">';
+      if(isCharla){ html += '<strong>'+wizardState.type+'</strong> — evento de unas horas. Pon la fecha. La fecha fin es opcional.'; }
+      else if(isMultiDay){ html += '<strong>'+wizardState.type+'</strong> dura 2–3 días. Define inicio y fin para controlar el flujo de pagos.'; }
+      else { html += '<strong>'+wizardState.type+'</strong> es un evento de un día. La fecha de fin es opcional.'; }
+      html += '</div>';
+      html += '<div class="wizard-section"><div class="dates-row">';
+      html += '<div class="field"><label>Fecha de inicio</label><input type="date" id="wiz-fi" value="'+esc(wizardState.fechaInicio)+'"></div>';
+      html += '<div class="field"><label>Fecha de fin <span class="optional-label">opcional</span></label><input type="date" id="wiz-ff" value="'+esc(wizardState.fechaFin)+'"></div>';
+      html += '</div>';
+      if(isMultiDay){ html += '<div class="wizard-hint" style="margin-top:12px">💡 La fecha de inicio es cuando llegan los primeros invitados.</div>'; }
+      html += '<div class="field"><label>Estado actual</label><select id="wiz-status"><option>Invitación a pitch</option><option>Kickoff</option><option>Pre-producción</option><option>Producción</option><option>Día del evento</option><option>Post-evento</option><option>Entrega</option><option>Cobro</option><option>Cerrado</option></select></div>';
+      html += '</div>';
+      html += '<div class="wizard-nav"><button class="btn-back" onclick="wizardBack()">← Atrás</button><button class="btn-next" onclick="wizardNext()">SIGUIENTE →</button></div>';
     }
-    html += '</div>';
-    html += '<div class="wizard-section">';
-    html += '<div class="dates-row">';
-    html += '<div class="field"><label>Fecha de inicio</label><input type="date" id="wiz-fi" value="'+esc(wizardState.fechaInicio)+'"></div>';
-    html += '<div class="field"><label>Fecha de fin <span class="optional-label">opcional</span></label><input type="date" id="wiz-ff" value="'+esc(wizardState.fechaFin)+'"></div>';
-    html += '</div>';
-    if(isMultiDay){
-      html += '<div class="wizard-hint" style="margin-top:12px">\uD83D\uDCA1 <strong>Recordatorio:</strong> para cumbres y congresos, la fecha de inicio es cuando llegan los primeros invitados (check-in + cena de bienvenida), no el día de las sesiones.</div>';
-    }
-    html += '<div class="field"><label>Estado actual</label><select id="wiz-status"><option>Invitación a pitch</option><option>Kickoff</option><option>Pre-producción</option><option>Producción</option><option>Día del evento</option><option>Post-evento</option><option>Entrega</option><option>Cobro</option><option>Cerrado</option></select></div>';
-    html += '</div>';
-    html += '<div class="wizard-nav"><button class="btn-back" onclick="wizardBack()">\u2190 Atrás</button><button class="btn-next" onclick="wizardNext()">SIGUIENTE \u2192</button></div>';
   }
 
   else if(wizardStep===2){
@@ -3843,13 +3881,37 @@ function getWizBriefPrompt(){
     +'{\n'
     +'"nombre": "nombre completo del evento",\n'
     +'"cliente": "nombre del cliente/laboratorio",\n'
-    +'"tipo": "uno de exactamente: Congreso médico / Simposio / Lanzamiento de producto / Cumbre / Summit / Cena con charla médica / Webinar / Virtual / Congreso educativo / Mesa redonda / Campaña digital / Otro",\n'
+    +'"tipo": "uno de exactamente: Congreso médico / Cumbre / Summit / Gira nacional (múltiples sedes) / Cena con charla médica / Desayuno con charla médica / Comida con charla médica / Simposio / Lanzamiento de producto / Taller / Workshop / Congreso educativo / Mesa redonda / Webinar / Virtual / Campaña digital / Otro",\n'
     +'"ciudad": "una de: CDMX / GDL / MTY / Nacional (varias sedes) / Internacional / Virtual",\n'
     +'"asistentes": número_entero_o_null,\n'
     +'"fechaInicio": "YYYY-MM-DD o null",\n'
     +'"fechaFin": "YYYY-MM-DD o null",\n'
     +'"observaciones": "nota breve sobre algo importante del brief, max 60 chars"\n'
     +'}';
+}
+
+// ── Sedes helpers ─────────────────────────────────────────
+function addSede(){
+  if(!wizardState.sedes) wizardState.sedes=[];
+  collectSedeInputs(); // save current values first
+  wizardState.sedes.push({id:uid(),ciudad:'GDL',fecha:'',fechaFin:'',asistentes:60,venue:''});
+  renderWizardStep();
+  document.getElementById('event-wizard').scrollTop = 9999;
+}
+function removeSede(sedeId){
+  collectSedeInputs();
+  wizardState.sedes = wizardState.sedes.filter(function(s){return s.id!==sedeId;});
+  renderWizardStep();
+}
+function collectSedeInputs(){
+  var sedes = wizardState.sedes||[];
+  sedes.forEach(function(s){
+    var c=document.getElementById('sc-ciudad-'+s.id); if(c) s.ciudad=c.value;
+    var a=document.getElementById('sc-att-'+s.id);    if(a) s.asistentes=parseInt(a.value)||0;
+    var f=document.getElementById('sc-fecha-'+s.id);  if(f) s.fecha=f.value;
+    var ff=document.getElementById('sc-fin-'+s.id);   if(ff) s.fechaFin=ff.value;
+    var v=document.getElementById('sc-venue-'+s.id);  if(v) s.venue=v.value.trim();
+  });
 }
 
 function wizardCollect(){
@@ -3863,11 +3925,26 @@ function wizardCollect(){
     wizardState.attendees = parseInt(document.getElementById('wiz-att').value)||0;
   }
   if(wizardStep===1){
-    var fi = document.getElementById('wiz-fi');
-    if(fi && !fi.value){ showToast('Ingresa la fecha de inicio','yellow'); return false; }
-    wizardState.fechaInicio = document.getElementById('wiz-fi').value;
-    wizardState.fechaFin    = document.getElementById('wiz-ff').value;
-    wizardState.status      = document.getElementById('wiz-status').value;
+    if(wizardState.type==='Gira nacional (múltiples sedes)'){
+      // Collect sede inputs
+      collectSedeInputs();
+      if(!wizardState.sedes || !wizardState.sedes.length){
+        showToast('Agrega al menos una sede','yellow'); return false;
+      }
+      // Derive fechaInicio/Fin from sedes
+      var fechas = wizardState.sedes.map(function(s){return s.fecha;}).filter(Boolean).sort();
+      var fechasFin = wizardState.sedes.map(function(s){return s.fechaFin||s.fecha;}).filter(Boolean).sort();
+      wizardState.fechaInicio = fechas[0]||'';
+      wizardState.fechaFin    = fechasFin[fechasFin.length-1]||'';
+      wizardState.attendees   = wizardState.sedes.reduce(function(s,x){return s+(parseInt(x.asistentes)||0);},0);
+      wizardState.city        = wizardState.sedes.map(function(s){return s.ciudad;}).join(' / ');
+    } else {
+      var fi = document.getElementById('wiz-fi');
+      if(fi && !fi.value){ showToast('Ingresa la fecha de inicio','yellow'); return false; }
+      wizardState.fechaInicio = fi ? fi.value : '';
+      wizardState.fechaFin    = (document.getElementById('wiz-ff')||{}).value||'';
+    }
+    wizardState.status = (document.getElementById('wiz-status')||{}).value||wizardState.status;
   }
   if(wizardStep===2){
     // collected via wizardToggleUser
@@ -3927,6 +4004,7 @@ function wizardSave(){
       budget3:     wizardState.budget3,
       realSpent:   0,
       assignedTo:  wizardState.assignedTo,
+      sedes:       (wizardState.type==='Gira nacional (múltiples sedes)') ? (wizardState.sedes||[]) : [],
       createdAt:   new Date().toISOString().slice(0,10)
     };
     newEv.createdByName = (getCurrentUser()||{}).name||'';
