@@ -1462,6 +1462,127 @@ select option{background:#0d1b2a;color:#fff;}
 }
 .quick-q:hover { border-color: #ed1a8e; color: #ed1a8e; background: rgba(237,26,142,0.08); }
 
+
+/* ── GENERIC EDIT MODAL ─────────────────────────── */
+.edit-modal-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(2,6,23,0.95); backdrop-filter: blur(12px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.edit-modal-overlay.open { display: flex; }
+.edit-modal {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 24px; padding: 28px 24px;
+  width: 100%; max-width: 460px;
+  max-height: 88vh; overflow-y: auto;
+}
+.edit-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.edit-modal-title { font-size: 17px; font-weight: 800; color: white; }
+.edit-modal-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); border: none;
+  color: rgba(255,255,255,0.6); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.edit-modal-close:hover { background: rgba(237,26,142,0.2); color: white; }
+.edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:400px){ .edit-row { grid-template-columns: 1fr; } }
+.edit-actions { display: flex; gap: 10px; margin-top: 20px; }
+.edit-btn-save {
+  flex: 2; padding: 13px; border-radius: 50px; border: none;
+  background: linear-gradient(135deg,#ed1a8e,#51c4ca);
+  color: white; font-family: 'Poppins',sans-serif; font-size: 13px;
+  font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.edit-btn-save:hover { transform: translateY(-2px); }
+.edit-btn-delete {
+  flex: 1; padding: 13px; border-radius: 50px;
+  background: rgba(237,26,142,0.1); border: 1px solid rgba(237,26,142,0.3);
+  color: #ed1a8e; font-family: 'Poppins',sans-serif; font-size: 12px;
+  font-weight: 700; cursor: pointer; text-transform: uppercase;
+  transition: all 0.2s;
+}
+.edit-btn-delete:hover { background: rgba(237,26,142,0.2); }
+.edit-btn-cancel {
+  flex: 1; padding: 13px; border-radius: 50px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5); font-family: 'Poppins',sans-serif; font-size: 12px;
+  font-weight: 600; cursor: pointer;
+}
+
+/* inline edit icon */
+.edit-icon-btn {
+  background: none; border: none; color: rgba(255,255,255,0.3);
+  cursor: pointer; font-size: 13px; padding: 2px 6px;
+  transition: color 0.2s;
+}
+.edit-icon-btn:hover { color: #51c4ca; }
+
+/* ── USER AVATARS & HISTORY TOOLTIP ──────────────────── */
+.avatar-row {
+  display: flex; gap: -4px; align-items: center;
+  flex-direction: row;
+}
+.uavatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  font-size: 9px; font-weight: 800; letter-spacing: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1.5px solid rgba(2,6,23,0.8);
+  margin-right: -4px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+  z-index: 1;
+}
+.uavatar:hover { transform: scale(1.2); z-index: 10; }
+.uavatar.role-admin    { background: linear-gradient(135deg,#ed1a8e,#c0106e); color: white; }
+.uavatar.role-produccion { background: linear-gradient(135deg,#51c4ca,#2a8a90); color: white; }
+.uavatar.role-finanzas { background: linear-gradient(135deg,#f9a825,#e65100); color: white; }
+.uavatar.role-campo    { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+.uavatar.role-system   { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); font-size: 8px; }
+
+/* Tooltip */
+.history-tooltip {
+  position: fixed;
+  z-index: 9000;
+  background: rgba(2,6,23,0.97);
+  border: 1px solid rgba(237,26,142,0.3);
+  border-radius: 14px;
+  padding: 12px 14px;
+  min-width: 220px; max-width: 300px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  pointer-events: none;
+  display: none;
+}
+.history-tooltip.visible { display: block; }
+.ht-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  margin-bottom: 8px;
+}
+.ht-entry {
+  display: flex; gap: 8px; align-items: flex-start;
+  padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.ht-entry:last-child { border-bottom: none; }
+.ht-av {
+  width: 20px; height: 20px; border-radius: 50%;
+  font-size: 8px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.ht-info { flex: 1; }
+.ht-action { font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 600; }
+.ht-meta   { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 1px; }
+.ht-who    { color: #51c4ca; }
+
 </style>
 </head>
 <body>
@@ -1485,6 +1606,16 @@ select option{background:#0d1b2a;color:#fff;}
     <div class="wizard-steps" id="wiz-dots"></div>
     <div id="wiz-body"></div>
   </div>
+</div>
+
+<div class="edit-modal-overlay" id="edit-modal-overlay">
+  <div class="edit-modal" id="edit-modal-body"></div>
+</div>
+
+<!-- HISTORY TOOLTIP -->
+<div class="history-tooltip" id="history-tooltip">
+  <div class="ht-title">HISTORIAL</div>
+  <div id="history-tooltip-content"></div>
 </div>
 
 <!-- PAULETTE ORB -->
@@ -1769,10 +1900,10 @@ function seedDemoData(){
 
 function ensureGastosFijos(){
   var cfg = getConfig();
-  if(!cfg.gastosFijos){
-    cfg.gastosFijos = DEMO_CONFIG.gastosFijos;
-    lsSave('polar_config', cfg);
-  }
+  var changed = false;
+  if(!cfg.gastosFijos){ cfg.gastosFijos = DEMO_CONFIG.gastosFijos; changed=true; }
+  if(!cfg.suscripciones){ cfg.suscripciones = DEFAULT_SUBS; changed=true; }
+  if(changed) lsSave('polar_config', cfg);
 }
 
 // ============================================================
@@ -2117,7 +2248,7 @@ function renderGasto(user){
     if(e.imageData){ html+='<img class="expense-thumb" src="'+e.imageData+'" onclick="event.stopPropagation();showFullImage(\''+e.id+'\')">'; }
     html+='<div class="exp-top"><div><div class="exp-date">'+esc(e.date)+'</div><div class="exp-concept">'+esc(e.concept)+'</div></div>';
     html+='<div class="exp-amount">'+formatMXN(e.amount)+'</div></div>';
-    html+='<div class="exp-bottom"><div class="exp-meta">'+esc(ev.name)+' · '+esc(e.rubro)+'</div>'+chipStatus(e.status)+'</div>';
+    html+='<div class="exp-bottom"><div class="exp-meta">'+esc(ev.name)+' · '+esc(e.rubro)+'</div>'+chipStatus(e.status)+buildAvatarRow(e)+'</div>';
     if(expanded){
       html+='<div class="exp-expand" style="display:block;">';
       html+='<div style="font-size:13px;color:var(--gray);margin-bottom:8px;">'+esc(e.paymentMethod)+(e.invoice?' · '+esc(e.invoice):'')+'</div>';
@@ -2162,6 +2293,7 @@ function renderEventos(user){
     html+='<div style="font-size:12px;color:var(--gray);">'+formatMXN(spent)+' gastados de '+formatMXN(budget)+'</div>';
     html+='<span class="event-detail-link" onclick="openEventPanel(\''+ev.id+'\')">VER DETALLE →</span>';
     html+='<button class="event-edit-btn" onclick="openEditWizard(\''+ev.id+'\');event.stopPropagation()" title="Editar evento">&#x270F;</button>';
+    html += '<div style="margin-top:8px;">'+buildAvatarRow(ev)+'</div>';
     html+='</div>';
   });
   return html;
@@ -2207,7 +2339,7 @@ function renderFlujo(user){
     html+='<div class="pay-event">'+esc(ev.name)+'</div><div class="pay-method">'+esc(p.paymentMethod)+'</div>';
     if(p.status==='Pendiente')html+='<button class="btn-mark-paid" onclick="markPaymentPaid(\''+p.id+'\')">MARCAR PAGADO</button>';
     html+='</div>';
-    html+='<div class="pay-right"><div class="pay-amount">'+formatMXN(p.amount)+'</div>'+chipStatus(p.status)+'</div>';
+    html+='<div class="pay-right"><div class="pay-amount">'+formatMXN(p.amount)+'</div>'+chipStatus(p.status)+buildAvatarRow(p)+'</div>';
     html+='</div>';
   });
   return html;
@@ -2280,8 +2412,11 @@ function renderPrestamos(){
     html+='<div style="display:flex;gap:32px;align-items:flex-end;">';
     html+='<div><div class="metric-label">SALDO PENDIENTE</div><div class="loan-balance">'+formatMXN(balance)+'</div></div>';
     if(monthlyInterest>0)html+='<div><div class="metric-label">INTERÉS/MES</div><div class="loan-interest">'+formatMXN(monthlyInterest)+'</div></div>';
-    html+='</div></div>';
+    html+='</div>';
+    html+='<button class="edit-icon-btn" onclick="editLoan(\''+l.id+'\');" title="Editar">✏️ Editar</button>';
+    html+='</div>';
   });
+  html+='<button type="button" onclick="addNewLoan()" style="width:100%;padding:11px;border-radius:50px;background:transparent;border:1.5px dashed rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);font-family:Poppins,sans-serif;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">+ Agregar préstamo</button>';
   html+='<div style="text-align:right;margin-top:16px;"><div style="font-size:13px;font-weight:700;letter-spacing:2px;color:var(--gray);">DEUDA TOTAL</div><div style="font-size:40px;font-weight:700;color:var(--magenta);">'+formatMXN(totalDebt)+'</div></div>';
   return html;
 }
@@ -2299,9 +2434,13 @@ function renderCxC(){
     html+='<div style="font-size:11px;color:var(--gray);margin-top:4px;">Comisión: '+formatMXN(inv.commission)+'</div></div>';
     html+='<div style="text-align:right;"><div class="inv-total">'+formatMXN(inv.total)+'</div>';
     html+=chipStatus(inv.status);
-    html+='<div style="font-size:13px;font-weight:700;color:'+daysColor+';margin-top:6px;">'+Math.abs(days)+(days<0?' DÍAS VENCIDO':' DÍAS')+'</div></div>';
+    html+='<div style="font-size:13px;font-weight:700;color:'+daysColor+';margin-top:6px;">'+Math.abs(days)+(days<0?' DÍAS VENCIDO':' DÍAS')+'</div>';
+    html+='<button class="edit-icon-btn" onclick="editInvoice(\''+inv.id+'\')" title="Editar factura">✏️</button>';
+    html += buildAvatarRow(inv);
+    html+='</div>';
     html+='</div>';
   });
+  html+='<button type="button" onclick="addNewInvoice()" style="width:100%;padding:11px;border-radius:50px;background:transparent;border:1.5px dashed rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);font-family:Poppins,sans-serif;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">+ Nueva factura</button>';
   html+='<div style="text-align:right;margin-top:20px;"><div style="font-size:13px;font-weight:700;letter-spacing:2px;color:var(--gray);">TOTAL PENDIENTE</div><div style="font-size:32px;font-weight:700;color:var(--teal);">'+formatMXN(total)+'</div></div>';
   return html;
 }
@@ -2369,6 +2508,44 @@ function renderConfig(user){
   });
   html += '<button type="button" onclick="openGastoFijoForm(null)" style="width:100%;padding:12px;border-radius:50px;background:transparent;border:1.5px dashed rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);font-family:Poppins,sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;transition:all 0.2s;" onmouseover="this.style.borderColor=\'#ed1a8e\';this.style.color=\'#ed1a8e\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,0.2)\';this.style.color=\'rgba(255,255,255,0.5)\'">+ Agregar gasto fijo</button>';
   html += '</div>';
+  // ── SUSCRIPCIONES ──
+  html += '<div class="config-section">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">';
+  html += '<div class="config-title" style="margin-bottom:0">SUSCRIPCIONES & APPS</div>';
+  html += '<button type="button" onclick="openSuscripcionForm(null)" style="padding:8px 16px;border-radius:50px;border:1px solid rgba(81,196,202,0.4);background:transparent;color:#51c4ca;font-family:Poppins,sans-serif;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px;">+ AGREGAR</button>';
+  html += '</div>';
+  var subs = getSuscripciones();
+  var totalSubsActivo = subs.filter(function(s){return s.activo;}).reduce(function(acc,s){return acc+(s.montomxn||0);},0);
+  var totalSubsTodo = subs.reduce(function(acc,s){return acc+(s.montomxn||0);},0);
+  var subCats = {};
+  subs.forEach(function(s){
+    if(!subCats[s.categoria]) subCats[s.categoria]=[];
+    subCats[s.categoria].push(s);
+  });
+  html += '<div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5)">Activas: <span style="color:#51c4ca;font-weight:700;">'+fmt(totalSubsActivo)+'/mes</span></div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.3)">Incluidas inactivas: <span style="font-weight:600;">'+fmt(totalSubsTodo)+'/mes</span></div>';
+  html += '</div>';
+  Object.keys(subCats).forEach(function(cat){
+    html += '<div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin:14px 0 6px;">'+cat+'</div>';
+    subCats[cat].forEach(function(s){
+      var opacity = s.activo ? '1' : '0.35';
+      html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,'+(s.activo?'0.04':'0.02')+')'
+        +';border:1px solid rgba(255,255,255,'+(s.activo?'0.09':'0.04')+');border-radius:12px;margin-bottom:6px;opacity:'+opacity+';">';
+      html += '<input type="checkbox" '+(s.activo?'checked':'')+' onchange="toggleSuscripcion(\''+s.id+'\');" style="accent-color:#51c4ca;width:16px;height:16px;flex-shrink:0;">';
+      html += '<div style="flex:1;min-width:0;">';
+      html += '<div style="font-size:13px;font-weight:600;color:white;">'+esc(s.nombre)+'</div>';
+      html += '<div style="font-size:11px;color:rgba(255,255,255,0.35);">'+s.paymentMethod+' · día '+s.dia+(s.moneda!=='MXN'?' · '+s.monto+' '+s.moneda:'')+'</div>';
+      html += '</div>';
+      html += '<div style="text-align:right;flex-shrink:0;">';
+      html += '<div style="font-size:13px;font-weight:700;color:'+(s.activo?'#51c4ca':'rgba(255,255,255,0.3)')+';">'+fmt(s.montomxn||0)+'</div>';
+      html += '<button onclick="openSuscripcionForm(\''+s.id+'\');" style="font-size:11px;color:rgba(255,255,255,0.3);background:none;border:none;cursor:pointer;margin-top:2px;">✏️</button>';
+      html += '</div>';
+      html += '</div>';
+    });
+  });
+  html += '</div>';
+
   // ── INTELIGENCIA ARTIFICIAL ──
   html+='<div class="config-section">';
   html+='<div class="config-title">INTELIGENCIA ARTIFICIAL</div>';
@@ -2428,6 +2605,9 @@ function saveExpense(){
   if(!concept||!amount||!eventId){showToast('Completa los campos requeridos','yellow');return;}
   var expenses=getExpenses();
   var newExp={id:uid(),eventId:eventId,date:date,concept:concept,amount:amount,rubro:rubro,paymentMethod:method,status:status,invoice:invoice||'Sin factura',createdBy:user.id,imageData:(scanImageData && scanImageData.thumbnail) ? scanImageData.thumbnail : (scanImageData && scanImageData.isPDF) ? scanImageData.dataUrl : null,docName:(scanImageData && scanImageData.docFile) ? scanImageData.docFile.name : null};
+  newExp = addHistoryEntry(newExp, '\u270f\ufe0f Gasto registrado');
+  newExp.createdAt = new Date().toISOString();
+  newExp.createdByName = (getCurrentUser()||{}).name||'';
   expenses.push(newExp);
   lsSave('polar_expenses',expenses);
   // Sync to Firestore if connected
@@ -3280,6 +3460,7 @@ function wizardSave(){
     if(idx>=0){
       Object.assign(events[idx], wizardState);
       events[idx].date = wizardState.fechaInicio; // keep legacy field
+      events[idx] = addHistoryEntry(events[idx], '\u270f\ufe0f Evento editado');
     }
   } else {
     // CREATE
@@ -3301,6 +3482,8 @@ function wizardSave(){
       assignedTo:  wizardState.assignedTo,
       createdAt:   new Date().toISOString().slice(0,10)
     };
+    newEv.createdByName = (getCurrentUser()||{}).name||'';
+    newEv = addHistoryEntry(newEv, '\u2728 Evento creado');
     events.push(newEv);
   }
   lsSave('polar_events', events);
@@ -3693,14 +3876,54 @@ async function askPaulette(question){
 }
 
 // ── Text to Speech ─────────────────────────────────────────────
-function speakText(text){
+// Current audio instance — to stop previous before playing new
+var pauletteAudio = null;
+
+function stopSpeaking(){
+  if(pauletteAudio){ pauletteAudio.pause(); pauletteAudio.src=''; pauletteAudio=null; }
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+async function speakText(text){
+  if(!text || !text.trim()) return;
+  stopSpeaking();
+  var cfg = getConfig();
+  var apiKey = cfg.openaiKey || '';
+
+  if(apiKey){
+    // OpenAI TTS — nova voice (natural female, Spanish)
+    try {
+      var resp = await fetch('https://api.openai.com/v1/audio/speech', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + apiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'tts-1',
+          input: text.substring(0, 4096),
+          voice: 'nova',
+          response_format: 'mp3',
+          speed: 1.0
+        })
+      });
+      if(!resp.ok) throw new Error('TTS error '+resp.status);
+      var buf = await resp.arrayBuffer();
+      var blob = new Blob([buf], {type:'audio/mpeg'});
+      var url  = URL.createObjectURL(blob);
+      pauletteAudio = new Audio(url);
+      pauletteAudio.onended = function(){ URL.revokeObjectURL(url); pauletteAudio=null; };
+      pauletteAudio.play();
+      return;
+    } catch(e){
+      console.warn('OpenAI TTS falló, usando voz del sistema:', e.message);
+    }
+  }
+
+  // Fallback: Web Speech API
   if(!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
   var utt = new SpeechSynthesisUtterance(text);
-  utt.lang = 'es-MX';
-  utt.rate = 1.05;
-  utt.pitch = 1.0;
-  // Try to find a Spanish voice
+  utt.lang = 'es-MX'; utt.rate = 1.0; utt.pitch = 1.0;
   var voices = window.speechSynthesis.getVoices();
   var esVoice = voices.find(function(v){ return v.lang.startsWith('es'); });
   if(esVoice) utt.voice = esVoice;
@@ -3845,16 +4068,556 @@ function closeBriefing(){
 }
 
 function speakBriefing(){
-  speakText(document.getElementById('briefing-title').textContent + '. ' + pauletteBriefingText);
+  var fullText = document.getElementById('briefing-title').textContent + '. ' + pauletteBriefingText;
+  speakText(fullText);
   closeBriefing();
 }
+
+function closeBriefing(){
+  var overlay = document.getElementById('briefing-overlay');
+  if(overlay) overlay.classList.remove('open');
+  // Don't stop audio — let PAULETTE keep speaking after closing
+}
+
+
+// ============================================================
+// GENERIC EDIT MODAL
+// ============================================================
+function openEditModal(html){
+  document.getElementById('edit-modal-body').innerHTML = html;
+  document.getElementById('edit-modal-overlay').classList.add('open');
+}
+function closeEditModal(){
+  document.getElementById('edit-modal-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape') closeEditModal();
+});
+
+// ── LOAN (Préstamo) EDITOR ────────────────────────────────
+function editLoan(loanId){
+  var cfg  = getConfig();
+  var loan = (cfg.loans||[]).find(function(l){ return l.id===loanId; });
+  if(!loan) return;
+  openEditModal(
+    '<div class="edit-modal-header">'
+    +'<div class="edit-modal-title">Editar Préstamo</div>'
+    +'<button class="edit-modal-close" onclick="closeEditModal()">✕</button>'
+    +'</div>'
+    +'<div class="field"><label>Acreedor</label><input type="text" id="el-creditor" value="'+esc(loan.creditor||'')+'"></div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Capital original</label><input type="number" id="el-principal" value="'+(loan.principal||0)+'"></div>'
+    +'<div class="field"><label>Tasa mensual (%)</label><input type="number" id="el-rate" value="'+(loan.rate||0)+'" step="0.01"></div>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Total a pagar</label><input type="number" id="el-totalOwed" value="'+(loan.totalOwed||0)+'"></div>'
+    +'<div class="field"><label>Ya pagado</label><input type="number" id="el-paid" value="'+(loan.paid||0)+'"></div>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Fecha inicio</label><input type="date" id="el-startDate" value="'+(loan.startDate||'')+'"></div>'
+    +'<div class="field"><label>Interés mensual ($)</label><input type="number" id="el-monthlyInt" value="'+(loan.monthlyInterest||Math.round((loan.principal||0)*(loan.rate||0)/100))+'"></div>'
+    +'</div>'
+    +'<div class="field"><label>Estado</label>'
+    +'<select id="el-status"><option value="activo">Activo</option><option value="pagado">Pagado / Cerrado</option></select>'
+    +'</div>'
+    +'<div class="edit-actions">'
+    +'<button class="edit-btn-save" onclick="saveLoanEdit(\''+loanId+'\')";>GUARDAR</button>'
+    +'<button class="edit-btn-delete" onclick="deleteLoan(\''+loanId+'\')";>ELIMINAR</button>'
+    +'</div>'
+  );
+  setTimeout(function(){
+    var s=document.getElementById('el-status'); if(s) s.value=loan.status||'activo';
+  },50);
+}
+
+function saveLoanEdit(id){
+  var cfg = getConfig();
+  var idx = (cfg.loans||[]).findIndex(function(l){ return l.id===id; });
+  if(idx<0) return;
+  cfg.loans[idx].creditor     = document.getElementById('el-creditor').value.trim();
+  cfg.loans[idx].principal    = parseFloat(document.getElementById('el-principal').value)||0;
+  cfg.loans[idx].rate         = parseFloat(document.getElementById('el-rate').value)||0;
+  cfg.loans[idx].totalOwed    = parseFloat(document.getElementById('el-totalOwed').value)||0;
+  cfg.loans[idx].paid         = parseFloat(document.getElementById('el-paid').value)||0;
+  cfg.loans[idx].startDate    = document.getElementById('el-startDate').value;
+  cfg.loans[idx].monthlyInterest = parseFloat(document.getElementById('el-monthlyInt').value)||0;
+  cfg.loans[idx].status       = document.getElementById('el-status').value;
+  cfg.loans[idx] = addHistoryEntry(cfg.loans[idx], '\u270f\ufe0f Pr\u00e9stamo editado');
+  lsSave('polar_config', cfg);
+  if(fbConnected&&fbDb) fbDb.collection('config').doc('main').set(cfg).catch(function(){});
+  closeEditModal();
+  showToast('✅ Préstamo actualizado');
+  switchTab('finanzas');
+}
+
+function deleteLoan(id){
+  if(!confirm('¿Eliminar este préstamo?')) return;
+  var cfg = getConfig();
+  cfg.loans = (cfg.loans||[]).filter(function(l){ return l.id!==id; });
+  lsSave('polar_config', cfg);
+  if(fbConnected&&fbDb) fbDb.collection('config').doc('main').set(cfg).catch(function(){});
+  closeEditModal();
+  showToast('Préstamo eliminado');
+  switchTab('finanzas');
+}
+
+function addNewLoan(){
+  var newLoan = {id:uid(),creditor:'',principal:0,rate:0,totalOwed:0,paid:0,startDate:'',monthlyInterest:0,status:'activo'};
+  var cfg = getConfig();
+  if(!cfg.loans) cfg.loans=[];
+  cfg.loans.push(newLoan);
+  lsSave('polar_config',cfg);
+  editLoan(newLoan.id);
+}
+
+// ── PAYMENT EDITOR ───────────────────────────────────────
+function editPayment(payId){
+  var payments = getPayments();
+  var p = payments.find(function(x){ return x.id===payId; });
+  if(!p) return;
+  var events = getEvents();
+  var evOpts = events.map(function(e){ return '<option value="'+e.id+'"'+(e.id===p.eventId?' selected':'')+'>'+esc(e.name)+'</option>'; }).join('');
+  evOpts += '<option value="oficina"'+(p.eventId==='oficina'?' selected':'')+'>Oficina / Fijo</option>';
+  openEditModal(
+    '<div class="edit-modal-header">'
+    +'<div class="edit-modal-title">Editar Pago</div>'
+    +'<button class="edit-modal-close" onclick="closeEditModal()">✕</button>'
+    +'</div>'
+    +'<div class="field"><label>Concepto</label><input type="text" id="ep-concept" value="'+esc(p.concept||'')+'"></div>'
+    +'<div class="field"><label>Evento / Proyecto</label><select id="ep-event">'+evOpts+'</select></div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Monto</label><input type="number" id="ep-amount" value="'+(p.amount||0)+'"></div>'
+    +'<div class="field"><label>Fecha de pago</label><input type="date" id="ep-date" value="'+(p.dueDate||'')+'"></div>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Forma de pago</label>'
+    +'<select id="ep-method"><option>BBVA</option><option>AmEx Polar</option><option>AmEx Roberto</option><option>Banamex Blanca</option><option>Efectivo</option></select>'
+    +'</div>'
+    +'<div class="field"><label>Status</label>'
+    +'<select id="ep-status"><option>Pendiente</option><option>Pagado</option><option>Con línea de pago</option><option>Sin factura</option></select>'
+    +'</div>'
+    +'</div>'
+    +'<div class="field"><label>Factura</label><input type="text" id="ep-invoice" value="'+esc(p.invoice||'')+'"></div>'
+    +'<div class="edit-actions">'
+    +'<button class="edit-btn-save" onclick="savePaymentEdit(\''+payId+'\')";>GUARDAR</button>'
+    +'<button class="edit-btn-delete" onclick="deletePayment(\''+payId+'\')";>ELIMINAR</button>'
+    +'<button class="edit-btn-cancel" onclick="closeEditModal()">CANCELAR</button>'
+    +'</div>'
+  );
+  setTimeout(function(){
+    var m=document.getElementById('ep-method'); if(m) m.value=p.paymentMethod||'BBVA';
+    var s=document.getElementById('ep-status'); if(s) s.value=p.status||'Pendiente';
+  },50);
+}
+
+function savePaymentEdit(id){
+  var payments = getPayments();
+  var idx = payments.findIndex(function(x){ return x.id===id; });
+  if(idx<0) return;
+  payments[idx].concept       = document.getElementById('ep-concept').value.trim();
+  payments[idx].eventId       = document.getElementById('ep-event').value;
+  payments[idx].amount        = parseFloat(document.getElementById('ep-amount').value)||0;
+  payments[idx].dueDate       = document.getElementById('ep-date').value;
+  payments[idx].paymentMethod = document.getElementById('ep-method').value;
+  payments[idx].status        = document.getElementById('ep-status').value;
+  payments[idx].invoice       = document.getElementById('ep-invoice').value.trim();
+  payments[idx] = addHistoryEntry(payments[idx], '\u270f\ufe0f Pago editado');
+  lsSave('polar_payments', payments);
+  if(fbConnected&&fbDb) fbDb.collection('payments').doc(id).set(payments[idx]).catch(function(){});
+  closeEditModal();
+  showToast('✅ Pago actualizado');
+  switchTab('flujo');
+}
+
+function deletePayment(id){
+  if(!confirm('¿Eliminar este pago?')) return;
+  var payments = getPayments().filter(function(x){ return x.id!==id; });
+  lsSave('polar_payments', payments);
+  if(fbConnected&&fbDb) fbDb.collection('payments').doc(id).delete().catch(function(){});
+  closeEditModal();
+  showToast('Pago eliminado');
+  switchTab('flujo');
+}
+
+// ── INVOICE (CxC) EDITOR ─────────────────────────────────
+function editInvoice(invId){
+  var invoices = getInvoices();
+  var inv = invoices.find(function(x){ return x.id===invId; });
+  if(!inv) return;
+  openEditModal(
+    '<div class="edit-modal-header">'
+    +'<div class="edit-modal-title">Editar Factura</div>'
+    +'<button class="edit-modal-close" onclick="closeEditModal()">✕</button>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Cliente</label><input type="text" id="ei-client" value="'+esc(inv.client||'')+'"></div>'
+    +'<div class="field"><label>No. Factura</label><input type="text" id="ei-num" value="'+esc(inv.invoiceNum||'')+'"></div>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>OC</label><input type="text" id="ei-oc" value="'+esc(inv.oc||'')+'"></div>'
+    +'<div class="field"><label>Fecha facturación</label><input type="date" id="ei-fdate" value="'+(inv.invoiceDate||'')+'"></div>'
+    +'</div>'
+    +'<div class="field"><label>Concepto</label><input type="text" id="ei-concept" value="'+esc(inv.concept||'')+'"></div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Subtotal</label><input type="number" id="ei-sub" value="'+(inv.subtotal||0)+'" oninput="recalcIVA()"></div>'
+    +'<div class="field"><label>Total (con IVA 16%)</label><input type="number" id="ei-total" value="'+(inv.total||0)+'"></div>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Comisión</label><input type="number" id="ei-comm" value="'+(inv.commission||0)+'"></div>'
+    +'<div class="field"><label>Fecha aprox. pago</label><input type="date" id="ei-duedate" value="'+(inv.dueDate||'')+'"></div>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Status</label>'
+    +'<select id="ei-status"><option>Pendiente</option><option>Pagada</option><option>Vencida</option><option>Parcial</option></select>'
+    +'</div>'
+    +'<div class="field"><label>Fecha pago real</label><input type="date" id="ei-paiddate" value="'+(inv.paidDate||'')+'"></div>'
+    +'</div>'
+    +'<div class="edit-actions">'
+    +'<button class="edit-btn-save" onclick="saveInvoiceEdit(\''+invId+'\')";>GUARDAR</button>'
+    +'<button class="edit-btn-delete" onclick="deleteInvoice(\''+invId+'\')";>ELIMINAR</button>'
+    +'<button class="edit-btn-cancel" onclick="closeEditModal()">CANCELAR</button>'
+    +'</div>'
+  );
+  setTimeout(function(){
+    var s=document.getElementById('ei-status'); if(s) s.value=inv.status||'Pendiente';
+  },50);
+}
+
+function recalcIVA(){
+  var sub = parseFloat(document.getElementById('ei-sub').value)||0;
+  var tot = document.getElementById('ei-total');
+  if(tot) tot.value = Math.round(sub*1.16);
+}
+
+function saveInvoiceEdit(id){
+  var invoices = getInvoices();
+  var idx = invoices.findIndex(function(x){ return x.id===id; });
+  if(idx<0) return;
+  var sub = parseFloat(document.getElementById('ei-sub').value)||0;
+  invoices[idx].client      = document.getElementById('ei-client').value.trim();
+  invoices[idx].invoiceNum  = document.getElementById('ei-num').value.trim();
+  invoices[idx].oc          = document.getElementById('ei-oc').value.trim();
+  invoices[idx].invoiceDate = document.getElementById('ei-fdate').value;
+  invoices[idx].concept     = document.getElementById('ei-concept').value.trim();
+  invoices[idx].subtotal    = sub;
+  invoices[idx].iva         = Math.round(sub*0.16);
+  invoices[idx].total       = parseFloat(document.getElementById('ei-total').value)||Math.round(sub*1.16);
+  invoices[idx].commission  = parseFloat(document.getElementById('ei-comm').value)||0;
+  invoices[idx].dueDate     = document.getElementById('ei-duedate').value;
+  invoices[idx].status      = document.getElementById('ei-status').value;
+  invoices[idx].paidDate    = document.getElementById('ei-paiddate').value;
+  invoices[idx] = addHistoryEntry(invoices[idx], '\u270f\ufe0f Factura actualizada');
+  lsSave('polar_invoices', invoices);
+  if(fbConnected&&fbDb) fbDb.collection('invoices').doc(id).set(invoices[idx]).catch(function(){});
+  closeEditModal();
+  showToast('✅ Factura actualizada');
+  switchTab('finanzas');
+}
+
+function deleteInvoice(id){
+  if(!confirm('¿Eliminar esta factura?')) return;
+  var invoices = getInvoices().filter(function(x){ return x.id!==id; });
+  lsSave('polar_invoices', invoices);
+  if(fbConnected&&fbDb) fbDb.collection('invoices').doc(id).delete().catch(function(){});
+  closeEditModal();
+  showToast('Factura eliminada');
+  switchTab('finanzas');
+}
+
+function addNewInvoice(){
+  var newInv = {id:uid(),client:'',invoiceNum:'',oc:'',concept:'',subtotal:0,iva:0,total:0,dueDate:'',status:'Pendiente',commission:0};
+  var invoices = getInvoices();
+  invoices.push(newInv);
+  lsSave('polar_invoices',invoices);
+  editInvoice(newInv.id);
+}
+
+// ============================================================
+// SUSCRIPCIONES Y APPS
+// ============================================================
+var DEFAULT_SUBS = [
+  {id:'s1',nombre:'Adobe Creative Cloud',categoria:'Diseño',monto:599,moneda:'USD',montomxn:10800,frecuencia:'mensual',dia:5,paymentMethod:'AmEx Polar',url:'adobe.com',activo:true},
+  {id:'s2',nombre:'Notion Team',categoria:'Productividad',monto:16,moneda:'USD',montomxn:290,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'notion.so',activo:true},
+  {id:'s3',nombre:'OpenAI API',categoria:'IA',monto:0,moneda:'USD',montomxn:500,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'openai.com',activo:true},
+  {id:'s4',nombre:'Firebase / Google Cloud',categoria:'IA',monto:0,moneda:'USD',montomxn:0,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'firebase.google.com',activo:true},
+  {id:'s5',nombre:'GitHub',categoria:'Desarrollo',monto:0,moneda:'USD',montomxn:0,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'github.com',activo:true},
+  {id:'s6',nombre:'Google Workspace',categoria:'Productividad',monto:12,moneda:'USD',montomxn:215,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Polar',url:'workspace.google.com',activo:true},
+  {id:'s7',nombre:'Zoom',categoria:'Comunicación',monto:16,moneda:'USD',montomxn:290,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Polar',url:'zoom.us',activo:true},
+  {id:'s8',nombre:'Canva Pro',categoria:'Diseño',monto:13,moneda:'USD',montomxn:235,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Polar',url:'canva.com',activo:false},
+  {id:'s9',nombre:'Meta Ads',categoria:'Publicidad',monto:0,moneda:'MXN',montomxn:0,frecuencia:'variable',dia:1,paymentMethod:'AmEx Polar',url:'facebook.com/business',activo:true},
+  {id:'s10',nombre:'Dropbox / Drive almacenamiento',categoria:'Almacenamiento',monto:10,moneda:'USD',montomxn:180,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'dropbox.com',activo:true}
+];
+
+function getSuscripciones(){
+  var cfg = getConfig();
+  if(!cfg.suscripciones){
+    cfg.suscripciones = DEFAULT_SUBS;
+    lsSave('polar_config',cfg);
+  }
+  return cfg.suscripciones;
+}
+
+function saveSuscripcion(sub){
+  var cfg = getConfig();
+  if(!cfg.suscripciones) cfg.suscripciones = [];
+  var idx = cfg.suscripciones.findIndex(function(s){ return s.id===sub.id; });
+  if(idx>=0){ cfg.suscripciones[idx]=sub; } else { cfg.suscripciones.push(sub); }
+  lsSave('polar_config',cfg);
+  if(fbConnected&&fbDb) fbDb.collection('config').doc('main').set(cfg).catch(function(){});
+}
+
+function deleteSuscripcion(id){
+  if(!confirm('¿Eliminar esta suscripción?')) return;
+  var cfg = getConfig();
+  cfg.suscripciones = (cfg.suscripciones||[]).filter(function(s){ return s.id!==id; });
+  lsSave('polar_config',cfg);
+  if(fbConnected&&fbDb) fbDb.collection('config').doc('main').set(cfg).catch(function(){});
+  switchTab('config');
+  showToast('Suscripción eliminada');
+}
+
+function toggleSuscripcion(id){
+  var cfg = getConfig();
+  var sub = (cfg.suscripciones||[]).find(function(s){ return s.id===id; });
+  if(sub){ sub.activo=!sub.activo; lsSave('polar_config',cfg); }
+  switchTab('config');
+}
+
+function openSuscripcionForm(id){
+  var subs = getSuscripciones();
+  var existing = id ? subs.find(function(s){return s.id===id;}) : null;
+  var def = existing || {id:uid(),nombre:'',categoria:'Productividad',monto:0,moneda:'USD',montomxn:0,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Polar',url:'',activo:true};
+  var cats = ['Diseño','IA','Productividad','Comunicación','Almacenamiento','Publicidad','Desarrollo','Contabilidad','Otro'];
+  openEditModal(
+    '<div class="edit-modal-header">'
+    +'<div class="edit-modal-title">'+(existing?'Editar':'Nueva')+' Suscripción</div>'
+    +'<button class="edit-modal-close" onclick="closeEditModal()">✕</button>'
+    +'</div>'
+    +'<div class="field"><label>Nombre del servicio</label><input type="text" id="ss-nombre" value="'+esc(def.nombre)+'" placeholder="Ej: Adobe Creative Cloud"></div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Categoría</label><select id="ss-cat">'+cats.map(function(c){ return '<option'+(c===def.categoria?' selected':'')+'>'+c+'</option>'; }).join('')+'</select></div>'
+    +'<div class="field"><label>URL / Sitio</label><input type="text" id="ss-url" value="'+esc(def.url)+'" placeholder="adobe.com"></div>'
+    +'</div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Costo (moneda origen)</label><input type="number" id="ss-monto" value="'+def.monto+'" step="0.01"></div>'
+    +'<div class="field"><label>Moneda</label><select id="ss-moneda"><option value="USD"'+(def.moneda==="USD"?' selected':'')+'>USD</option><option value="MXN"'+(def.moneda==="MXN"?' selected':'')+'>MXN</option><option value="EUR"'+(def.moneda==="EUR"?' selected':'')+'>EUR</option></select></div>'
+    +'</div>'
+    +'<div class="field"><label>Equivalente MXN mensual</label><input type="number" id="ss-mxn" value="'+def.montomxn+'" placeholder="Convertido a pesos"></div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Frecuencia</label><select id="ss-freq"><option value="mensual"'+(def.frecuencia==="mensual"?' selected':'')+'>Mensual</option><option value="anual"'+(def.frecuencia==="anual"?' selected':'')+'>Anual</option><option value="variable"'+(def.frecuencia==="variable"?' selected':'')+'>Variable</option></select></div>'
+    +'<div class="field"><label>Día de cobro</label><input type="number" id="ss-dia" value="'+def.dia+'" min="1" max="28"></div>'
+    +'</div>'
+    +'<div class="field"><label>Tarjeta / Forma de pago</label>'
+    +'<select id="ss-pay"><option>AmEx Polar</option><option>AmEx Roberto</option><option>Banamex Blanca</option><option>BBVA</option><option>PayPal</option></select>'
+    +'</div>'
+    +'<div class="edit-actions">'
+    +'<button class="edit-btn-save" onclick="saveSuscripcionForm(\''+def.id+'\')";>GUARDAR</button>'
+    +(existing?'<button class="edit-btn-delete" onclick="deleteSuscripcion(\''+def.id+'\');closeEditModal();">ELIMINAR</button>':'')
+    +'<button class="edit-btn-cancel" onclick="closeEditModal()">CANCELAR</button>'
+    +'</div>'
+  );
+  setTimeout(function(){
+    var p=document.getElementById('ss-pay'); if(p) p.value=def.paymentMethod;
+  },50);
+}
+
+function saveSuscripcionForm(id){
+  var sub = {
+    id: id,
+    nombre: document.getElementById('ss-nombre').value.trim(),
+    categoria: document.getElementById('ss-cat').value,
+    url: document.getElementById('ss-url').value.trim(),
+    monto: parseFloat(document.getElementById('ss-monto').value)||0,
+    moneda: document.getElementById('ss-moneda').value,
+    montomxn: parseFloat(document.getElementById('ss-mxn').value)||0,
+    frecuencia: document.getElementById('ss-freq').value,
+    dia: parseInt(document.getElementById('ss-dia').value)||1,
+    paymentMethod: document.getElementById('ss-pay').value,
+    activo: true
+  };
+  saveSuscripcion(sub);
+  closeEditModal();
+  showToast('✅ Suscripción guardada');
+  switchTab('config');
+}
+
+// ============================================================
+// USER AVATARS + CHANGE HISTORY
+// ============================================================
+
+// Get user info by id
+function getUserById(id){
+  if(!id) return null;
+  var users = getUsers();
+  return users.find(function(u){ return u.id===id; }) || null;
+}
+
+// Get initials from name
+function getInitials(name){
+  if(!name) return '?';
+  var parts = name.trim().split(' ');
+  if(parts.length >= 2) return (parts[0][0]+(parts[1][0]||'')).toUpperCase();
+  return parts[0].slice(0,2).toUpperCase();
+}
+
+// Get role color class
+function getRoleClass(userId){
+  var u = getUserById(userId);
+  if(!u) return 'role-system';
+  return 'role-'+u.role;
+}
+
+// Add a history entry to a record
+function addHistoryEntry(record, action){
+  var user = getCurrentUser();
+  if(!record.history) record.history = [];
+  record.history.push({
+    action: action,
+    userId: user ? user.id : 'system',
+    userName: user ? user.name : 'Sistema',
+    userRole: user ? user.role : 'system',
+    ts: new Date().toISOString()
+  });
+  // Keep last 20 entries
+  if(record.history.length > 20) record.history = record.history.slice(-20);
+  return record;
+}
+
+// Format timestamp for display
+function fmtTs(iso){
+  if(!iso) return '\u2014';
+  var d = new Date(iso);
+  var now = new Date();
+  var diff = now - d;
+  var mins  = Math.floor(diff/60000);
+  var hours = Math.floor(diff/3600000);
+  var days  = Math.floor(diff/86400000);
+  if(mins < 2)   return 'Ahora mismo';
+  if(mins < 60)  return 'Hace '+mins+' min';
+  if(hours < 24) return 'Hace '+hours+' h';
+  if(days < 7)   return 'Hace '+days+' d\u00eda'+(days>1?'s':'');
+  return d.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+// Build avatar HTML for a record
+function buildAvatarRow(record){
+  if(!record) return '';
+  var seen = {};
+  var entries = [];
+
+  // Created by
+  if(record.createdBy){
+    var u = getUserById(record.createdBy);
+    var name = u ? u.name : (record.createdByName||'?');
+    var role = u ? u.role : 'system';
+    if(!seen[record.createdBy]){
+      seen[record.createdBy]=true;
+      entries.push({id:record.createdBy, name:name, role:role});
+    }
+  }
+  // History participants
+  if(record.history){
+    record.history.slice(-5).forEach(function(h){
+      if(!seen[h.userId]){
+        seen[h.userId]=true;
+        entries.push({id:h.userId, name:h.userName, role:h.userRole||'system'});
+      }
+    });
+  }
+
+  if(!entries.length) return '';
+
+  var dataHistory = encodeURIComponent(JSON.stringify({
+    entries: (record.history||[]),
+    createdBy: record.createdBy,
+    createdByName: record.createdByName||(getUserById(record.createdBy)||{}).name,
+    createdAt: record.createdAt||record.date||''
+  }));
+
+  var html = '<div class="avatar-row" '
+    +'onmouseenter="showHistoryTooltip(event,\'' +dataHistory+ '\')" '
+    +'onmouseleave="hideHistoryTooltip()" '
+    +'style="display:inline-flex;cursor:default;">';
+
+  entries.slice(0,3).forEach(function(e){
+    html += '<div class="uavatar role-'+e.role+'" title="'+esc(e.name)+'">'
+      +getInitials(e.name)+'</div>';
+  });
+  if(entries.length > 3){
+    html += '<div class="uavatar role-system">+'+( entries.length-3)+'</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// Show tooltip
+function showHistoryTooltip(event, dataEncoded){
+  var tooltip = document.getElementById('history-tooltip');
+  var content = document.getElementById('history-tooltip-content');
+  if(!tooltip||!content) return;
+  try {
+    var data = JSON.parse(decodeURIComponent(dataEncoded));
+    var html = '';
+
+    // Creation entry
+    if(data.createdBy || data.createdAt){
+      var cName = data.createdByName || (getUserById(data.createdBy)||{}).name || 'Sistema';
+      var cRole = (getUserById(data.createdBy)||{}).role||'system';
+      html += '<div class="ht-entry">'
+        +'<div class="ht-av role-'+cRole+'" style="background:'+(cRole==='admin'?'linear-gradient(135deg,#ed1a8e,#c0106e)':cRole==='produccion'?'linear-gradient(135deg,#51c4ca,#2a8a90)':'rgba(255,255,255,0.1)')+'">'+getInitials(cName)+'</div>'
+        +'<div class="ht-info">'
+        +'<div class="ht-action">\u2728 Creado</div>'
+        +'<div class="ht-meta"><span class="ht-who">'+esc(cName)+'</span> \u00b7 '+fmtTs(data.createdAt)+'</div>'
+        +'</div></div>';
+    }
+
+    // History entries (most recent first)
+    var entries = (data.entries||[]).slice().reverse();
+    entries.slice(0,8).forEach(function(h){
+      var hRole = h.userRole||'system';
+      var bgColor = hRole==='admin'?'linear-gradient(135deg,#ed1a8e,#c0106e)':hRole==='produccion'?'linear-gradient(135deg,#51c4ca,#2a8a90)':'rgba(255,255,255,0.1)';
+      html += '<div class="ht-entry">'
+        +'<div class="ht-av" style="background:'+bgColor+';border-radius:50%;width:20px;height:20px;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;margin-top:1px;">'+getInitials(h.userName||'?')+'</div>'
+        +'<div class="ht-info">'
+        +'<div class="ht-action">'+esc(h.action)+'</div>'
+        +'<div class="ht-meta"><span class="ht-who">'+esc(h.userName||'?')+'</span> \u00b7 '+fmtTs(h.ts)+'</div>'
+        +'</div></div>';
+    });
+
+    if(!html) html = '<div class="ht-meta" style="padding:4px 0">Sin historial registrado</div>';
+    content.innerHTML = html;
+
+    // Position tooltip near cursor
+    tooltip.classList.add('visible');
+    var rect = event.target.getBoundingClientRect();
+    var x = rect.left;
+    var y = rect.top - 10;
+    // Adjust if too close to edge
+    if(x + 300 > window.innerWidth) x = window.innerWidth - 310;
+    if(y - 160 < 0) y = rect.bottom + 10;
+    else y = y - tooltip.offsetHeight - 4;
+    tooltip.style.left = Math.max(8, x) + 'px';
+    tooltip.style.top  = Math.max(8, y) + 'px';
+  } catch(e){ console.warn('tooltip error',e); }
+}
+
+function hideHistoryTooltip(){
+  var t = document.getElementById('history-tooltip');
+  if(t) t.classList.remove('visible');
+}
+
+// ── Patch save functions to record history ────────────────
+
+// Wrap saveExpense to add history
+var _origSaveExpense = null;
+// We'll patch inside initApp after functions are defined
 
 // ============================================================
 // INIT
 // ============================================================
 function initApp(){
-  // PAULETTE: load voices for TTS
-  if('speechSynthesis' in window){ window.speechSynthesis.getVoices(); }
+  // PAULETTE: preload Web Speech voices (fallback only)
+  if('speechSynthesis' in window) window.speechSynthesis.getVoices();
   seedDemoData();
   if(fbConnected && fbAuth){
     // Hide local banner — Firebase is connected
