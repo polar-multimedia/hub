@@ -1226,8 +1226,8 @@ select option{background:#0d1b2a;color:#fff;}
 .paulette-orb {
   position: fixed;
   bottom: 88px; right: 20px;
-  width: 29px; height: 29px;
-  border-radius: 50%;
+  width: 58px; height: 58px;
+  border-radius: 14px;
   background: #0a0a14;
   cursor: pointer;
   z-index: 500;
@@ -1236,12 +1236,11 @@ select option{background:#0d1b2a;color:#fff;}
   transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
   animation: orb-breathe 3s ease-in-out infinite;
 }
-.paulette-orb iframe {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -68%);
-  width: 280%; height: 280%;
-  border: none; pointer-events: none;
+.paulette-orb video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  display: block;
 }
 .paulette-orb:hover { transform: scale(1.1); box-shadow: 0 8px 36px rgba(237,26,142,0.7); }
 .paulette-orb.listening { animation: orb-pulse 0.8s ease-in-out infinite; box-shadow: 0 0 0 0 rgba(237,26,142,0.7); }
@@ -1293,17 +1292,16 @@ select option{background:#0d1b2a;color:#fff;}
   flex-shrink: 0;
 }
 .paulette-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
+  width: 40px; height: 40px; border-radius: 10px;
   background: #0a0a14;
   flex-shrink: 0; overflow: hidden; position: relative;
   box-shadow: 0 0 16px rgba(237,26,142,0.5);
 }
-.paulette-avatar iframe {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -68%);
-  width: 280%; height: 280%;
-  border: none; pointer-events: none;
+.paulette-avatar video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  display: block;
 }
 .paulette-name { font-size: 16px; font-weight: 800; color: white; }
 .paulette-status { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
@@ -1458,7 +1456,7 @@ select option{background:#0d1b2a;color:#fff;}
 
 /* Desktop: move orb above bottom nav */
 @media(min-width:769px){
-  .paulette-orb { bottom: 28px; right: 28px; width: 29px; height: 29px; }
+  .paulette-orb { bottom: 28px; right: 28px; width: 58px; height: 58px; border-radius: 14px; }
   .paulette-orb-label { bottom: 90px; right: 24px; }
 }
 
@@ -1774,7 +1772,7 @@ select option{background:#0d1b2a;color:#fff;}
 
 <!-- PAULETTE ORB -->
 <div class="paulette-orb" id="paulette-orb" onclick="togglePaulette()" title="Hablar con PAULETTE">
-  <iframe src="https://player.vimeo.com/video/1197570845?autoplay=1&loop=1&background=1&muted=1&autopause=0&byline=0&title=0&portrait=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  <video autoplay loop muted playsinline preload="auto"><source src="paulette.mp4" type="video/mp4"></video>
 </div>
 <div class="paulette-orb-label">PAULETTE</div>
 
@@ -1782,7 +1780,7 @@ select option{background:#0d1b2a;color:#fff;}
 <div class="paulette-panel" id="paulette-panel">
   <div class="paulette-header">
     <div class="paulette-avatar">
-      <iframe src="https://player.vimeo.com/video/1197570845?autoplay=1&loop=1&background=1&muted=1&autopause=0&byline=0&title=0&portrait=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      <video autoplay loop muted playsinline preload="auto"><source src="paulette.mp4" type="video/mp4"></video>
     </div>
     <div>
       <div class="paulette-name">PAULETTE</div>
@@ -3473,7 +3471,26 @@ function renderWizardStep(){
   var html = '<div class="wizard-step-label">PASO '+(wizardStep+1)+' DE '+WIZ_STEPS.length+' \u2014 <span>'+WIZ_STEPS[wizardStep]+'</span></div>';
 
   if(wizardStep===0){
-    html += '<div class="wizard-hint"><strong>¿Qué tipo de evento es?</strong> El tipo determina qué recursos necesitas. Una cumbre nacional requiere vuelos y hospedaje; una cena con charla médica no.</div>';
+    // ── AI BRIEF SECTION ─────────────────────────────────
+    html += '<div style="background:linear-gradient(135deg,rgba(237,26,142,0.1),rgba(81,196,202,0.1));border:1px solid rgba(237,26,142,0.25);border-radius:16px;padding:16px;margin-bottom:20px;">';
+    html += '<div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px;">✨ Cargar brief con IA</div>';
+    html += '<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px;line-height:1.6;">Pega el texto del brief, sube el PDF o toma foto — la IA extrae los datos y llena el formulario automáticamente.</div>';
+    html += '<div style="display:flex;gap:8px;margin-bottom:12px;">';
+    html += '<button type="button" id="wiz-tab-txt" onclick="wizAITab(\'text\')" style="flex:1;padding:7px;border-radius:20px;background:rgba(237,26,142,0.2);border:1px solid #ed1a8e;color:#ed1a8e;font-family:Poppins,sans-serif;font-size:11px;font-weight:700;cursor:pointer;">✍️ Pegar texto</button>';
+    html += '<button type="button" id="wiz-tab-fil" onclick="wizAITab(\'file\')" style="flex:1;padding:7px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-family:Poppins,sans-serif;font-size:11px;font-weight:700;cursor:pointer;">📎 Subir PDF / foto</button>';
+    html += '</div>';
+    html += '<div id="wiz-panel-txt">';
+    html += '<textarea id="wiz-brief-text" placeholder="Pega aquí el brief: nombre, cliente, tipo de evento, fechas, ciudad, asistentes..." style="width:100%;height:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:white;font-family:Poppins,sans-serif;font-size:12px;padding:10px;outline:none;resize:vertical;"></textarea>';
+    html += '</div>';
+    html += '<div id="wiz-panel-fil" style="display:none;position:relative;">';
+    html += '<div style="border:1.5px dashed rgba(81,196,202,0.35);border-radius:10px;padding:18px;text-align:center;cursor:pointer;position:relative;">';
+    html += '<input type="file" id="wiz-brief-file" accept="image/*,application/pdf" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" onchange="wizBriefFileSelected(this)">';
+    html += '<div id="wiz-file-lbl" style="font-size:12px;color:rgba(255,255,255,0.35);">📎 Arrastra el PDF del brief o toma foto</div>';
+    html += '</div></div>';
+    html += '<button type="button" onclick="analyzeEventBrief()" style="width:100%;margin-top:10px;padding:11px;border-radius:50px;border:none;background:linear-gradient(135deg,#ed1a8e,#51c4ca);color:white;font-family:Poppins,sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;">✨ ANALIZAR CON IA</button>';
+    html += '<div id="wiz-ai-msg" style="display:none;margin-top:8px;font-size:12px;padding:9px 13px;border-radius:10px;"></div>';
+    html += '</div>';
+    // ── FIELDS ────────────────────────────────────────────
     html += '<div class="wizard-section">';
     html += '<div class="field"><label>Nombre del evento</label><input type="text" id="wiz-name" value="'+esc(wizardState.name)+'" placeholder="Ej: Congreso Ki-CAB GDL 2026"></div>';
     html += '<div class="field"><label>Cliente</label><input type="text" id="wiz-client" value="'+esc(wizardState.client)+'" placeholder="Ej: Carnot Laboratorios"></div>';
@@ -3583,6 +3600,136 @@ function renderWizardStep(){
   if(wizardStep===1){
     var ss = document.getElementById('wiz-status'); if(ss) ss.value = wizardState.status;
   }
+}
+
+// ── AI Brief Analysis ────────────────────────────────────
+var wizBriefMode = 'text';
+var wizBriefImageData = null;
+
+function wizAITab(mode){
+  wizBriefMode = mode;
+  var pt = document.getElementById('wiz-panel-txt');
+  var pf = document.getElementById('wiz-panel-fil');
+  var bt = document.getElementById('wiz-tab-txt');
+  var bf = document.getElementById('wiz-tab-fil');
+  var activeStyle = 'flex:1;padding:7px;border-radius:20px;background:rgba(237,26,142,0.2);border:1px solid #ed1a8e;color:#ed1a8e;font-family:Poppins,sans-serif;font-size:11px;font-weight:700;cursor:pointer;';
+  var inactiveStyle = 'flex:1;padding:7px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-family:Poppins,sans-serif;font-size:11px;font-weight:700;cursor:pointer;';
+  if(mode==='text'){
+    if(pt) pt.style.display='block';
+    if(pf) pf.style.display='none';
+    if(bt) bt.style.cssText=activeStyle;
+    if(bf) bf.style.cssText=inactiveStyle;
+  } else {
+    if(pt) pt.style.display='none';
+    if(pf) pf.style.display='block';
+    if(bt) bt.style.cssText=inactiveStyle;
+    if(bf) bf.style.cssText=activeStyle.replace('#ed1a8e','#51c4ca').replace('rgba(237,26,142,0.2)','rgba(81,196,202,0.15)').replace('#ed1a8e','#51c4ca');
+  }
+}
+
+function wizBriefFileSelected(input){
+  var file = input.files[0];
+  if(!file) return;
+  var lbl = document.getElementById('wiz-file-lbl');
+  if(lbl) lbl.textContent = '📎 '+file.name+' (listo para analizar)';
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var dataUrl = e.target.result;
+    var base64  = dataUrl.split(',')[1];
+    var mediaType = file.type.startsWith('image/') ? file.type : 'image/jpeg';
+    if(file.type === 'application/pdf'){
+      // Render PDF page 1 to canvas then use as image
+      if(typeof pdfjsLib !== 'undefined'){
+        var typedarray = new Uint8Array(atob(base64).split('').map(function(c){return c.charCodeAt(0);}));
+        pdfjsLib.getDocument({data:typedarray}).promise.then(function(pdf){
+          pdf.getPage(1).then(function(page){
+            var vp = page.getViewport({scale:1.5});
+            var canvas = document.createElement('canvas');
+            canvas.width=vp.width; canvas.height=vp.height;
+            page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise.then(function(){
+              wizBriefImageData = {base64:canvas.toDataURL('image/jpeg',0.85).split(',')[1], mediaType:'image/jpeg'};
+              if(lbl) lbl.textContent = '✅ PDF listo (página 1 capturada)';
+            });
+          });
+        });
+      } else {
+        if(lbl) lbl.textContent = '⚠️ PDF.js no disponible — usa imagen';
+      }
+    } else {
+      wizBriefImageData = {base64:base64, mediaType:file.type};
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function analyzeEventBrief(){
+  var cfg = getConfig();
+  if(!cfg.openaiKey){ showToast('Configura tu OpenAI API Key en CONFIG','yellow'); return; }
+  var msg = document.getElementById('wiz-ai-msg');
+  if(msg){ msg.style.display='block'; msg.style.background='rgba(81,196,202,0.1)'; msg.style.border='1px solid rgba(81,196,202,0.2)'; msg.style.color='#51c4ca'; msg.textContent='⏳ Analizando el brief...'; }
+
+  try {
+    var messages;
+    if(wizBriefMode==='file' && wizBriefImageData){
+      messages = [{role:'user', content:[
+        {type:'image_url', image_url:{url:'data:'+wizBriefImageData.mediaType+';base64,'+wizBriefImageData.base64}},
+        {type:'text', text: getWizBriefPrompt()}
+      ]}];
+    } else {
+      var txt = (document.getElementById('wiz-brief-text')||{}).value||'';
+      if(!txt.trim()){ showToast('Pega el texto del brief primero','yellow'); if(msg) msg.style.display='none'; return; }
+      messages = [{role:'user', content: getWizBriefPrompt()+'\n\nBRIEF:\n'+txt}];
+    }
+    var resp = await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+cfg.openaiKey},
+      body: JSON.stringify({model:'gpt-4o-mini', max_tokens:400, messages:[
+        {role:'system', content:'Eres un asistente de producción de eventos para Polar Multimedia, una agencia mexicana especializada en eventos farmacéuticos. Extrae datos de briefs de eventos.'},
+        ...messages
+      ]})
+    });
+    if(!resp.ok) throw new Error('API '+resp.status);
+    var data = await resp.json();
+    var raw  = data.choices[0].message.content;
+    var jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No se pudo extraer JSON');
+    var result = JSON.parse(jsonMatch[0]);
+
+    // Fill wizard fields
+    var filled = [];
+    if(result.nombre){    var el=document.getElementById('wiz-name');   if(el){el.value=result.nombre;   filled.push('nombre');} }
+    if(result.cliente){   var el=document.getElementById('wiz-client'); if(el){el.value=result.cliente;  filled.push('cliente');} }
+    if(result.tipo){      var el=document.getElementById('wiz-type');   if(el){el.value=result.tipo;     filled.push('tipo');} }
+    if(result.ciudad){    var el=document.getElementById('wiz-city');   if(el){el.value=result.ciudad;   filled.push('ciudad');} }
+    if(result.asistentes){var el=document.getElementById('wiz-att');    if(el){el.value=result.asistentes;filled.push('asistentes');} }
+
+    // Store dates for step 1
+    if(result.fechaInicio) wizardState.fechaInicio = result.fechaInicio;
+    if(result.fechaFin)    wizardState.fechaFin    = result.fechaFin;
+    if(result.asistentes)  wizardState.attendees   = parseInt(result.asistentes)||wizardState.attendees;
+
+    if(msg){
+      msg.textContent = '✅ Datos extraídos: '+filled.join(', ')+(result.fechaInicio?' · Fechas detectadas':'')+(result.observaciones?' — '+result.observaciones:'');
+      msg.style.background='rgba(46,125,50,0.1)'; msg.style.borderColor='rgba(46,125,50,0.3)'; msg.style.color='#81c784';
+    }
+    trackEvent('brief_analyzed','ia','wizard_event');
+  } catch(err){
+    if(msg){ msg.textContent='❌ '+err.message; msg.style.background='rgba(237,26,142,0.08)'; msg.style.borderColor='rgba(237,26,142,0.2)'; msg.style.color='#ed1a8e'; }
+  }
+}
+
+function getWizBriefPrompt(){
+  return 'Analiza este brief de evento y extrae la información en JSON. Responde ÚNICAMENTE con JSON válido:\n'
+    +'{\n'
+    +'"nombre": "nombre completo del evento",\n'
+    +'"cliente": "nombre del cliente/laboratorio",\n'
+    +'"tipo": "uno de exactamente: Congreso médico / Simposio / Lanzamiento de producto / Cumbre / Summit / Cena con charla médica / Webinar / Virtual / Congreso educativo / Mesa redonda / Campaña digital / Otro",\n'
+    +'"ciudad": "una de: CDMX / GDL / MTY / Nacional (varias sedes) / Internacional / Virtual",\n'
+    +'"asistentes": número_entero_o_null,\n'
+    +'"fechaInicio": "YYYY-MM-DD o null",\n'
+    +'"fechaFin": "YYYY-MM-DD o null",\n'
+    +'"observaciones": "nota breve sobre algo importante del brief, max 60 chars"\n'
+    +'}';
 }
 
 function wizardCollect(){
