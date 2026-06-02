@@ -1240,7 +1240,7 @@ select option{background:#0d1b2a;color:#fff;}
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%,-50%);
-  width: 180%; height: 180%;
+  width: 300%; height: 300%;
   border: none; pointer-events: none;
 }
 .paulette-orb:hover { transform: scale(1.1); box-shadow: 0 8px 36px rgba(237,26,142,0.7); }
@@ -1302,7 +1302,7 @@ select option{background:#0d1b2a;color:#fff;}
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%,-50%);
-  width: 200%; height: 200%;
+  width: 300%; height: 300%;
   border: none; pointer-events: none;
 }
 .paulette-name { font-size: 16px; font-weight: 800; color: white; }
@@ -2668,30 +2668,57 @@ function renderConfig(user){
   html += '<button type="button" onclick="openSuscripcionForm(null)" style="padding:8px 16px;border-radius:50px;border:1px solid rgba(81,196,202,0.4);background:transparent;color:#51c4ca;font-family:Poppins,sans-serif;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px;">+ AGREGAR</button>';
   html += '</div>';
   var subs = getSuscripciones();
-  var totalSubsActivo = subs.filter(function(s){return s.activo;}).reduce(function(acc,s){return acc+(s.montomxn||0);},0);
-  var totalSubsTodo = subs.reduce(function(acc,s){return acc+(s.montomxn||0);},0);
+  var totalSubsFijo    = subs.filter(function(s){return s.activo&&s.tipo!=='variable'&&s.tipo!=='por_uso';}).reduce(function(a,s){return a+(s.montomxn||0);},0);
+  var totalSubsVar     = subs.filter(function(s){return s.activo&&(s.tipo==='variable'||s.tipo==='por_uso');}).reduce(function(a,s){return a+(s.estimadoMensual||s.montomxn||0);},0);
+  var varPendientes    = subs.filter(function(s){return s.activo&&(s.tipo==='variable'||s.tipo==='por_uso')&&!subLoggedThisMonth(s);}).length;
+
+  html += '<div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5)">Fijos: <span style="color:#51c4ca;font-weight:700;">'+fmt(totalSubsFijo)+'/mes</span></div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5)">Variables est.: <span style="color:#f9a825;font-weight:700;">~'+fmt(totalSubsVar)+'/mes</span></div>';
+  html += '</div>';
+  if(varPendientes>0){
+    html += '<div style="background:rgba(237,26,142,0.08);border:1px solid rgba(237,26,142,0.25);border-radius:12px;padding:12px 16px;margin-bottom:14px;font-size:12px;color:rgba(255,255,255,0.7);">'
+      +'⚠️ <strong style="color:#ed1a8e">'+varPendientes+' servicio'+(varPendientes>1?'s':'')+' por uso</strong> sin registrar este mes. Revisa los cargos en tu tarjeta y regístralos.'
+      +'</div>';
+  }
+
   var subCats = {};
   subs.forEach(function(s){
     if(!subCats[s.categoria]) subCats[s.categoria]=[];
     subCats[s.categoria].push(s);
   });
-  html += '<div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">';
-  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5)">Activas: <span style="color:#51c4ca;font-weight:700;">'+fmt(totalSubsActivo)+'/mes</span></div>';
-  html += '<div style="font-size:12px;color:rgba(255,255,255,0.3)">Incluidas inactivas: <span style="font-weight:600;">'+fmt(totalSubsTodo)+'/mes</span></div>';
-  html += '</div>';
+
+  // Type badge helper
+  function tipoBadge(tipo){
+    if(tipo==='variable') return '<span style="font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(249,168,37,0.15);color:#f9a825;border:1px solid rgba(249,168,37,0.3);font-weight:700;margin-left:5px;">VARIABLE</span>';
+    if(tipo==='por_uso')  return '<span style="font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(237,26,142,0.12);color:#ed1a8e;border:1px solid rgba(237,26,142,0.25);font-weight:700;margin-left:5px;">POR USO</span>';
+    return '';
+  }
+
   Object.keys(subCats).forEach(function(cat){
     html += '<div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin:14px 0 6px;">'+cat+'</div>';
     subCats[cat].forEach(function(s){
-      var opacity = s.activo ? '1' : '0.35';
-      html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,'+(s.activo?'0.04':'0.02')+')'
-        +';border:1px solid rgba(255,255,255,'+(s.activo?'0.09':'0.04')+');border-radius:12px;margin-bottom:6px;opacity:'+opacity+';">';
-      html += '<input type="checkbox" '+(s.activo?'checked':'')+' onchange="toggleSuscripcion(\''+s.id+'\');" style="accent-color:#51c4ca;width:16px;height:16px;flex-shrink:0;">';
+      var isVar    = s.tipo==='variable'||s.tipo==='por_uso';
+      var logged   = isVar ? subLoggedThisMonth(s) : true;
+      var alertBorder = (isVar&&s.activo&&!logged) ? 'rgba(237,26,142,0.35)' : (s.activo?'rgba(255,255,255,0.09)':'rgba(255,255,255,0.04)');
+      html += '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:rgba(255,255,255,'+(s.activo?'0.04':'0.02')+')'
+        +';border:1px solid '+alertBorder+';border-radius:12px;margin-bottom:6px;opacity:'+(s.activo?'1':'0.35')+';">';
+      html += '<input type="checkbox" '+(s.activo?'checked':'')+' onchange="toggleSuscripcion(\''+s.id+'\');" style="accent-color:#51c4ca;width:16px;height:16px;flex-shrink:0;margin-top:2px;">';
       html += '<div style="flex:1;min-width:0;">';
-      html += '<div style="font-size:13px;font-weight:600;color:white;">'+esc(s.nombre)+'</div>';
-      html += '<div style="font-size:11px;color:rgba(255,255,255,0.35);">'+s.paymentMethod+' · día '+s.dia+(s.moneda!=='MXN'?' · '+s.monto+' '+s.moneda:'')+'</div>';
+      html += '<div style="font-size:13px;font-weight:600;color:white;">'+esc(s.nombre)+tipoBadge(s.tipo)+'</div>';
+      html += '<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;">'+esc(s.paymentMethod)+' · día '+s.dia+(s.moneda!=='MXN'?' · '+s.monto+' '+s.moneda:'')+'</div>';
+      if(s.notas){ html += '<div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;line-height:1.5;">'+esc(s.notas)+'</div>'; }
+      if(isVar&&s.activo){
+        if(logged){
+          html += '<div style="font-size:10px;color:#51c4ca;margin-top:4px;">✅ Registrado este mes</div>';
+        } else {
+          html += '<button onclick="registrarCostoVariable(\''+s.id+'\')" style="margin-top:6px;font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(237,26,142,0.15);border:1px solid rgba(237,26,142,0.35);color:#ed1a8e;cursor:pointer;font-family:Poppins,sans-serif;font-weight:700;">+ Registrar costo del mes</button>';
+        }
+      }
       html += '</div>';
       html += '<div style="text-align:right;flex-shrink:0;">';
-      html += '<div style="font-size:13px;font-weight:700;color:'+(s.activo?'#51c4ca':'rgba(255,255,255,0.3)')+';">'+fmt(s.montomxn||0)+'</div>';
+      var displayAmt = isVar ? (s.estimadoMensual||s.montomxn||0) : (s.montomxn||0);
+      html += '<div style="font-size:13px;font-weight:700;color:'+(s.activo?(isVar?'#f9a825':'#51c4ca'):'rgba(255,255,255,0.3)')+';">'+(isVar?'~':'')+fmt(displayAmt)+'</div>';
       html += '<button onclick="openSuscripcionForm(\''+s.id+'\');" style="font-size:11px;color:rgba(255,255,255,0.3);background:none;border:none;cursor:pointer;margin-top:2px;">✏️</button>';
       html += '</div>';
       html += '</div>';
@@ -4511,16 +4538,19 @@ function addNewInvoice(){
 // SUSCRIPCIONES Y APPS
 // ============================================================
 var DEFAULT_SUBS = [
-  {id:'s1',nombre:'Adobe Creative Cloud',categoria:'Diseño',monto:599,moneda:'USD',montomxn:10800,frecuencia:'mensual',dia:5,paymentMethod:'AmEx Polar',url:'adobe.com',activo:true},
-  {id:'s2',nombre:'Notion Team',categoria:'Productividad',monto:16,moneda:'USD',montomxn:290,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'notion.so',activo:true},
-  {id:'s3',nombre:'OpenAI API',categoria:'IA',monto:0,moneda:'USD',montomxn:500,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'openai.com',activo:true},
-  {id:'s4',nombre:'Firebase / Google Cloud',categoria:'IA',monto:0,moneda:'USD',montomxn:0,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'firebase.google.com',activo:true},
-  {id:'s5',nombre:'GitHub',categoria:'Desarrollo',monto:0,moneda:'USD',montomxn:0,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'github.com',activo:true},
-  {id:'s6',nombre:'Google Workspace',categoria:'Productividad',monto:12,moneda:'USD',montomxn:215,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Polar',url:'workspace.google.com',activo:true},
-  {id:'s7',nombre:'Zoom',categoria:'Comunicación',monto:16,moneda:'USD',montomxn:290,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Polar',url:'zoom.us',activo:true},
-  {id:'s8',nombre:'Canva Pro',categoria:'Diseño',monto:13,moneda:'USD',montomxn:235,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Polar',url:'canva.com',activo:false},
-  {id:'s9',nombre:'Meta Ads',categoria:'Publicidad',monto:0,moneda:'MXN',montomxn:0,frecuencia:'variable',dia:1,paymentMethod:'AmEx Polar',url:'facebook.com/business',activo:true},
-  {id:'s10',nombre:'Dropbox / Drive almacenamiento',categoria:'Almacenamiento',monto:10,moneda:'USD',montomxn:180,frecuencia:'mensual',dia:1,paymentMethod:'AmEx Roberto',url:'dropbox.com',activo:true}
+  // tipo: 'fijo' = mismo monto cada mes | 'variable' = depende del uso | 'por_uso' = solo cuando se usa
+  {id:'s1', nombre:'Adobe Creative Cloud',  categoria:'Diseño',        tipo:'fijo',     monto:599,  moneda:'USD', montomxn:10800, frecuencia:'mensual', dia:5,  paymentMethod:'AmEx Polar',    url:'adobe.com',               activo:true,  notas:'Plan All Apps'},
+  {id:'s2', nombre:'Notion Team',           categoria:'Productividad', tipo:'fijo',     monto:16,   moneda:'USD', montomxn:290,   frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Roberto',  url:'notion.so',               activo:true,  notas:''},
+  {id:'s3', nombre:'OpenAI API — PAULETTE', categoria:'IA',            tipo:'variable', monto:0,    moneda:'USD', montomxn:500,   frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Roberto',  url:'platform.openai.com',     activo:true,  notas:'GPT-4o-mini texto + TTS nova. Varía por uso mensual. Registrar cargo real al cierre de ciclo.', estimadoMensual:500},
+  {id:'s4', nombre:'OpenAI API — Escaneo',  categoria:'IA',            tipo:'variable', monto:0,    moneda:'USD', montomxn:200,   frecuencia:'por_uso', dia:1,  paymentMethod:'AmEx Roberto',  url:'platform.openai.com',     activo:true,  notas:'GPT-4o-mini vision para recibos. ~$0.003/imagen. Registrar cuando llegue la factura.', estimadoMensual:200},
+  {id:'s5', nombre:'Firebase / Firestore',  categoria:'IA',            tipo:'variable', monto:0,    moneda:'USD', montomxn:0,     frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Roberto',  url:'firebase.google.com',     activo:true,  notas:'Plan Spark gratuito — escala automáticamente. Revisar si supera free tier.', estimadoMensual:0},
+  {id:'s6', nombre:'Vimeo (PAULETTE video)',categoria:'Comunicación',  tipo:'fijo',     monto:20,   moneda:'USD', montomxn:360,   frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Roberto',  url:'vimeo.com',               activo:true,  notas:'Hosting del loop de PAULETTE'},
+  {id:'s7', nombre:'GitHub',                categoria:'Desarrollo',    tipo:'fijo',     monto:0,    moneda:'USD', montomxn:0,     frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Roberto',  url:'github.com',              activo:true,  notas:'Plan gratuito (repos públicos)'},
+  {id:'s8', nombre:'Google Workspace',      categoria:'Productividad', tipo:'fijo',     monto:12,   moneda:'USD', montomxn:215,   frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Polar',    url:'workspace.google.com',    activo:true,  notas:''},
+  {id:'s9', nombre:'Zoom',                  categoria:'Comunicación',  tipo:'fijo',     monto:16,   moneda:'USD', montomxn:290,   frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Polar',    url:'zoom.us',                 activo:true,  notas:''},
+  {id:'s10',nombre:'Meta Ads',              categoria:'Publicidad',    tipo:'variable', monto:0,    moneda:'MXN', montomxn:0,     frecuencia:'por_uso', dia:1,  paymentMethod:'AmEx Polar',    url:'facebook.com/business',   activo:true,  notas:'Registrar gasto por campaña al lanzar o al cierre de mes.', estimadoMensual:3000},
+  {id:'s11',nombre:'Canva Pro',             categoria:'Diseño',        tipo:'fijo',     monto:13,   moneda:'USD', montomxn:235,   frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Polar',    url:'canva.com',               activo:false, notas:''},
+  {id:'s12',nombre:'Dropbox / almacenamiento',categoria:'Almacenamiento',tipo:'fijo',  monto:10,   moneda:'USD', montomxn:180,   frecuencia:'mensual', dia:1,  paymentMethod:'AmEx Roberto',  url:'dropbox.com',             activo:true,  notas:''}
 ];
 
 function getSuscripciones(){
@@ -4539,6 +4569,98 @@ function saveSuscripcion(sub){
   if(idx>=0){ cfg.suscripciones[idx]=sub; } else { cfg.suscripciones.push(sub); }
   lsSave('polar_config',cfg);
   if(fbConnected&&fbDb) fbDb.collection('config').doc('main').set(cfg).catch(function(){});
+}
+
+// ── Variable cost: register actual monthly charge ─────────
+function registrarCostoVariable(subId){
+  var subs = getSuscripciones();
+  var sub  = subs.find(function(s){return s.id===subId;});
+  if(!sub) return;
+  var now  = new Date();
+  var mesStr = now.toLocaleString('es-MX',{month:'long',year:'numeric'});
+  openEditModal(
+    '<div class="edit-modal-header">'
+    +'<div class="edit-modal-title">Registrar costo real</div>'
+    +'<button class="edit-modal-close" onclick="closeEditModal()">✕</button>'
+    +'</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px;">'+esc(sub.nombre)+' · '+mesStr+'</div>'
+    +(sub.notas?'<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;line-height:1.6;">'+esc(sub.notas)+'</div>':'')
+    +'<div class="field"><label>Monto real cobrado (MXN)</label>'
+    +'<input type="number" id="cv-monto" value="'+(sub.estimadoMensual||sub.montomxn||0)+'" placeholder="0" step="1"></div>'
+    +'<div class="edit-row">'
+    +'<div class="field"><label>Fecha del cargo</label><input type="date" id="cv-fecha" value="'+now.toISOString().slice(0,10)+'"></div>'
+    +'<div class="field"><label>Forma de pago</label>'
+    +'<select id="cv-pay"><option>AmEx Polar</option><option>AmEx Roberto</option><option>Banamex Blanca</option><option>BBVA</option></select>'
+    +'</div></div>'
+    +'<div class="field"><label>Factura / Referencia</label><input type="text" id="cv-factura" placeholder="Ej: INV-2026-06-..."></div>'
+    +'<div style="font-size:11px;color:rgba(81,196,202,0.7);margin:12px 0;padding:10px 14px;background:rgba(81,196,202,0.07);border-radius:10px;">✅ Esto crea automáticamente un gasto en el sistema y actualiza el costo real de esta suscripción.</div>'
+    +'<div class="edit-actions">'
+    +'<button class="edit-btn-save" onclick="guardarCostoVariable(\''+subId+'\')">REGISTRAR GASTO</button>'
+    +'<button class="edit-btn-cancel" onclick="closeEditModal()">CANCELAR</button>'
+    +'</div>'
+  );
+  setTimeout(function(){
+    var s=document.getElementById('cv-pay'); if(s) s.value=sub.paymentMethod||'AmEx Roberto';
+  },50);
+}
+
+function guardarCostoVariable(subId){
+  var subs   = getSuscripciones();
+  var sub    = subs.find(function(s){return s.id===subId;});
+  if(!sub) return;
+  var monto  = parseFloat(document.getElementById('cv-monto').value)||0;
+  var fecha  = document.getElementById('cv-fecha').value;
+  var pay    = document.getElementById('cv-pay').value;
+  var factura= document.getElementById('cv-factura').value.trim();
+  var user   = getCurrentUser();
+  var now    = new Date();
+  var mesKey = now.getFullYear()+'-'+(now.getMonth()+1);
+
+  // Create a GASTO entry
+  var expenses = getExpenses();
+  var newExp = {
+    id: uid(),
+    eventId: 'oficina',
+    date: fecha,
+    concept: sub.nombre + ' — ' + now.toLocaleString('es-MX',{month:'long',year:'numeric'}),
+    rubro: 'Oficina',
+    amount: monto,
+    paymentMethod: pay,
+    status: 'Pagado',
+    invoice: factura||'Sin factura',
+    createdBy: user?user.id:'system',
+    createdByName: user?user.name:'Sistema',
+    createdAt: new Date().toISOString(),
+    attachments: []
+  };
+  newExp = addHistoryEntry(newExp, '✅ Costo variable registrado');
+  expenses.push(newExp);
+  lsSave('polar_expenses', expenses);
+
+  // Update subscription's real cost for this month
+  var cfg = getConfig();
+  var sIdx = (cfg.suscripciones||[]).findIndex(function(s){return s.id===subId;});
+  if(sIdx>=0){
+    if(!cfg.suscripciones[sIdx].historialCostos) cfg.suscripciones[sIdx].historialCostos=[];
+    cfg.suscripciones[sIdx].historialCostos.push({mes:mesKey, monto:monto, fecha:fecha, pay:pay});
+    cfg.suscripciones[sIdx].montomxn = monto; // update reference
+    lsSave('polar_config',cfg);
+  }
+  if(fbConnected&&fbDb){
+    fbDb.collection('expenses').doc(newExp.id).set(newExp).catch(function(){});
+    fbDb.collection('config').doc('main').set(cfg).catch(function(){});
+  }
+  closeEditModal();
+  showToast('✅ Gasto registrado: $'+monto.toLocaleString('es-MX'));
+  switchTab('config');
+}
+
+// Check if variable sub has been logged this month
+function subLoggedThisMonth(sub){
+  if(!sub.historialCostos||!sub.historialCostos.length) return false;
+  var now = new Date();
+  var mesKey = now.getFullYear()+'-'+(now.getMonth()+1);
+  return sub.historialCostos.some(function(h){return h.mes===mesKey;});
 }
 
 function deleteSuscripcion(id){
