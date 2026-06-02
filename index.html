@@ -1771,10 +1771,10 @@ select option{background:#0d1b2a;color:#fff;}
 </div>
 
 <!-- PAULETTE ORB -->
-<div class="paulette-orb" id="paulette-orb" onclick="togglePaulette()" title="Hablar con PAULETTE">
+<div class="paulette-orb" id="paulette-orb" onclick="togglePaulette()" title="Hablar con PAULETTE" style="display:none;">
   <video autoplay loop muted playsinline preload="auto"><source src="paulette.mp4" type="video/mp4"></video>
 </div>
-<div class="paulette-orb-label">PAULETTE</div>
+<div class="paulette-orb-label" id="paulette-orb-label" style="display:none;">PAULETTE</div>
 
 <!-- PAULETTE PANEL -->
 <div class="paulette-panel" id="paulette-panel">
@@ -2175,9 +2175,17 @@ function doLogin(){
   }
 }
 function doGoogleLogin(){
+  // Google Sign-In requires HTTPS — no funciona en file://
+  if(location.protocol === 'file:'){
+    var errEl = document.getElementById('login-error');
+    if(errEl){
+      errEl.style.display='block';
+      errEl.textContent='Google Sign-In requiere HTTPS. Abre la app desde: polar-multimedia.github.io/hub — o usa correo y contraseña aquí.';
+    }
+    return;
+  }
   if(!fbConnected || !fbAuth){
-    showToast('Conectando Firebase... intenta en unos segundos o usa correo.','yellow');
-    console.warn('fbConnected:', fbConnected, 'fbAuth:', fbAuth);
+    showToast('Firebase no disponible. Usa correo y contraseña.','yellow');
     return;
   }
   var provider = new firebase.auth.GoogleAuthProvider();
@@ -2193,7 +2201,10 @@ function doGoogleLogin(){
       } else if(err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user'){
         // usuario cerró el popup — ignorar
       } else if(err.code === 'auth/unauthorized-domain'){
-        showToast('Dominio no autorizado. Agrégalo en Firebase Auth → Dominios autorizados.','yellow');
+        showToast('Agrega "polar-multimedia.github.io" en Firebase Auth → Dominios autorizados.','yellow');
+      } else if(err.code === 'auth/operation-not-supported-in-this-environment'){
+        var errEl = document.getElementById('login-error');
+        if(errEl){ errEl.style.display='block'; errEl.textContent='Abre la app desde polar-multimedia.github.io/hub para usar Google Sign-In.'; }
       } else {
         showToast('Error Google: '+err.message,'yellow');
       }
@@ -2201,10 +2212,12 @@ function doGoogleLogin(){
 }
 function doLogout(){
   localStorage.removeItem('polar_current_user');
-  if(fbConnected && fbAuth){
-    fbAuth.signOut().catch(function(){});
-  }
+  if(fbConnected && fbAuth) fbAuth.signOut().catch(function(){});
   document.getElementById('app').style.display='none';
+  // Hide PAULETTE on logout
+  var orb=document.getElementById('paulette-orb'); if(orb) orb.style.display='none';
+  var lbl=document.getElementById('paulette-orb-label'); if(lbl) lbl.style.display='none';
+  var panel=document.getElementById('paulette-panel'); if(panel) panel.classList.remove('open');
   document.getElementById('screen-login').style.display='flex';
   document.getElementById('login-email').value='';
   document.getElementById('login-pass').value='';
@@ -2216,11 +2229,13 @@ function doLogout(){
 function showApp(){
   document.getElementById('screen-login').style.display='none';
   document.getElementById('app').style.display='block';
+  // Show PAULETTE only when logged in
+  var orb=document.getElementById('paulette-orb'); if(orb) orb.style.display='flex';
+  var lbl=document.getElementById('paulette-orb-label'); if(lbl) lbl.style.display='block';
   var user=getCurrentUser();
   buildNav(user);
   updateTopbar(user);
   switchTab('inicio');
-  // Show PAULETTE morning briefing (once per day)
   setTimeout(showBriefing, 1500);
 }
 function buildNav(user){
@@ -5396,10 +5411,21 @@ function attachBadge(recordType, recordId, attachments){
 // INIT
 // ============================================================
 function initApp(){
-  // PAULETTE: preload Web Speech voices (fallback only)
   if('speechSynthesis' in window) window.speechSynthesis.getVoices();
   seedDemoData();
-  initFilesDB(); // Initialize IndexedDB for file storage
+  initFilesDB();
+  // Hide Google button when running on file:// (requires HTTPS)
+  if(location.protocol === 'file:'){
+    var gBtn = document.querySelector('.login-btn');
+    if(gBtn && gBtn.textContent.trim().includes('GOOGLE')){
+      gBtn.style.display = 'none';
+      // Show a note instead
+      var note = document.createElement('div');
+      note.style.cssText = 'font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:20px;line-height:1.6;';
+      note.innerHTML = 'Google Sign-In disponible en<br><a href="https://polar-multimedia.github.io/hub/" style="color:#51c4ca;">polar-multimedia.github.io/hub</a>';
+      gBtn.parentNode.insertBefore(note, gBtn.nextSibling);
+    }
+  }
   if(fbConnected && fbAuth){
     // Hide local banner — Firebase is connected
     document.getElementById('banner-local').style.display='none';
