@@ -326,35 +326,45 @@ select option{background:#0d1b2a;color:#fff;}
 #bottom-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;
-  height:68px;
-  background:rgba(2,6,23,0.85);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border-top:1px solid rgba(255,255,255,0.08);
+  height:76px;
+  background:rgba(2,6,23,0.92);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-top:1px solid rgba(255,255,255,0.06);
   z-index:150;
+  padding:8px 10px 10px;
 }
-.bnav-inner{display:flex;height:100%;}
+.bnav-inner{
+  display:flex;height:100%;gap:4px;
+  background:rgba(255,255,255,0.04);
+  border-radius:18px;
+  padding:4px;
+}
 .bnav-item{
   flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:2px;
-  font-size:8.5px;font-weight:700;
+  font-size:8px;font-weight:700;
   letter-spacing:0;text-transform:uppercase;
-  color:rgba(255,255,255,0.35);
+  color:rgba(255,255,255,0.3);
   cursor:pointer;
-  border-top:2px solid transparent;
-  transition:all 0.2s ease;
-  padding:0 2px;
+  border-radius:14px;
+  border:none;
+  transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  padding:4px 2px;
   min-width:0;
 }
-.bnav-icon{font-size:16px;line-height:1;display:block;}
-.bnav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;}
+.bnav-item:hover{
+  background:rgba(255,255,255,0.06);
+  color:rgba(255,255,255,0.6);
+}
+.bnav-icon{font-size:17px;line-height:1;display:block;}
+.bnav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;font-size:8px;}
 .bnav-item.active{
-  color:transparent;
   background:linear-gradient(135deg,#ed1a8e,#51c4ca);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  border-top:2px solid #ed1a8e;
+  color:white;
+  -webkit-text-fill-color:white;
+  box-shadow:0 2px 12px rgba(237,26,142,0.4);
+  border-top:none;
 }
 
 /* ROLE CHIPS */
@@ -1725,6 +1735,80 @@ select option{background:#0d1b2a;color:#fff;}
   border-radius: 12px; object-fit: contain;
 }
 
+
+/* ── PILL BUTTON SYSTEM ──────────────────────────────── */
+button, .btn-primary, .btn-save, .btn-outline, .btn-next, .btn-back,
+.login-btn, .scan-analyze-btn, .scan-btn, .edit-btn-save,
+.edit-btn-delete, .edit-btn-cancel, .briefing-btn-speak, .briefing-btn-skip,
+.wizard-nav .btn-next, .wizard-nav .btn-back {
+  border-radius: 50px !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Glass card upgrade */
+.metric-card, .event-card, .payment-item, .loan-card,
+.invoice-row, .alert-item, .config-section,
+.paulette-panel, .edit-modal, .wizard-wrap > * {
+  border-radius: 20px !important;
+}
+
+/* Input fields — pill/rounded */
+input[type=text], input[type=email], input[type=password],
+input[type=number], input[type=date], select, textarea {
+  border-radius: 12px !important;
+  background: rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus,
+input[type=number]:focus, input[type=date]:focus, select:focus, textarea:focus {
+  border-color: rgba(81,196,202,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(81,196,202,0.1) !important;
+  outline: none !important;
+}
+
+/* Pill chips and status badges */
+.src-chip, .attach-chip, .quick-q, .card-attach-badge,
+.feat-tag, .status-chip {
+  border-radius: 50px !important;
+}
+
+/* Paulette orb shadow enhancement */
+.paulette-orb {
+  box-shadow: 0 4px 20px rgba(237,26,142,0.5),
+              0 0 0 2px rgba(237,26,142,0.15),
+              inset 0 1px 0 rgba(255,255,255,0.1) !important;
+}
+
+/* Card neumorphic depth */
+.paulette-panel {
+  border-radius: 24px 24px 0 0 !important;
+}
+
+/* Edit modal rounder */
+#edit-modal-overlay .edit-modal {
+  border-radius: 28px !important;
+}
+
+/* Wizard overlay */
+.wizard-wrap {
+  border-radius: 24px !important;
+  overflow: hidden;
+}
+
+/* Glass card inner highlight */
+.metric-card, .event-card {
+  background: rgba(255,255,255,0.055) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08),
+              0 4px 24px rgba(0,0,0,0.2) !important;
+}
+
+/* Scan zone rounder */
+.scan-zone { border-radius: 20px !important; }
+.scan-preview-wrap { border-radius: 18px !important; }
+
+/* Toast pill */
+.history-tooltip { border-radius: 18px !important; }
 </style>
 </head>
 <body>
