@@ -326,7 +326,7 @@ select option{background:#0d1b2a;color:#fff;}
 #bottom-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;
-  height:64px;
+  height:68px;
   background:rgba(2,6,23,0.85);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
@@ -336,14 +336,18 @@ select option{background:#0d1b2a;color:#fff;}
 .bnav-inner{display:flex;height:100%;}
 .bnav-item{
   flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  font-size:10px;font-weight:600;
-  letter-spacing:1px;text-transform:uppercase;
+  align-items:center;justify-content:center;gap:2px;
+  font-size:8.5px;font-weight:700;
+  letter-spacing:0;text-transform:uppercase;
   color:rgba(255,255,255,0.35);
   cursor:pointer;
   border-top:2px solid transparent;
   transition:all 0.2s ease;
+  padding:0 2px;
+  min-width:0;
 }
+.bnav-icon{font-size:16px;line-height:1;display:block;}
+.bnav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;}
 .bnav-item.active{
   color:transparent;
   background:linear-gradient(135deg,#ed1a8e,#51c4ca);
@@ -1946,12 +1950,12 @@ const EVENT_TYPES = ['Congreso médico','Cumbre / Summit','Cena con charla médi
 const CITIES = ['GDL','CDMX','MTY','Otro'];
 
 const TABS = [
-  {id:'inicio',  label:'INICIO',   roles:['admin','produccion','finanzas','campo']},
-  {id:'gasto',   label:'GASTO',    roles:['admin','produccion','campo']},
-  {id:'eventos', label:'EVENTOS',  roles:['admin','produccion']},
-  {id:'flujo',   label:'FLUJO',    roles:['admin','finanzas']},
-  {id:'finanzas',label:'FINANZAS', roles:['admin','finanzas']},
-  {id:'config',  label:'CONFIG',   roles:['admin']}
+  {id:'inicio',  label:'INICIO',   icon:'🏠', roles:['admin','produccion','finanzas','campo']},
+  {id:'gasto',   label:'GASTO',    icon:'✏️', roles:['admin','produccion','campo']},
+  {id:'eventos', label:'EVENTOS',  icon:'📋', roles:['admin','produccion']},
+  {id:'flujo',   label:'FLUJO',    icon:'💳', roles:['admin','finanzas']},
+  {id:'finanzas',label:'FINANZAS', icon:'💰', roles:['admin','finanzas']},
+  {id:'config',  label:'CONFIG',   icon:'⚙️', roles:['admin']}
 ];
 
 // ============================================================
@@ -2190,16 +2194,30 @@ function doGoogleLogin(){
   }
   var provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ hd: 'polarmultimedia.com' });
-  fbAuth.signInWithPopup(provider)
+
+  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // Use LOCAL persistence to avoid sessionStorage issues on iOS Safari
+  fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(function(){
+      if(isMobile){
+        // Redirect flow for mobile — result handled in initApp
+        return fbAuth.signInWithRedirect(provider);
+      } else {
+        // Popup flow for desktop
+        return fbAuth.signInWithPopup(provider);
+      }
+    })
     .then(function(result){
-      trackEvent('login','auth','google');
+      if(result) trackEvent('login','auth','google_popup');
     })
     .catch(function(err){
       console.error('Google login error:', err.code, err.message);
       if(err.code === 'auth/popup-blocked'){
-        showToast('Popup bloqueado — permite popups en tu navegador.','yellow');
+        // If popup was blocked, fallback to redirect
+        fbAuth.signInWithRedirect(provider);
       } else if(err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user'){
-        // usuario cerró el popup — ignorar
+        // usuario cerró — ignorar
       } else if(err.code === 'auth/unauthorized-domain'){
         showToast('Agrega "polar-multimedia.github.io" en Firebase Auth → Dominios autorizados.','yellow');
       } else if(err.code === 'auth/operation-not-supported-in-this-environment'){
@@ -2249,7 +2267,10 @@ function buildNav(user){
   }).join('');
   // bottom nav
   document.getElementById('bnav').innerHTML=visibleTabs.map(function(t){
-    return '<div class="bnav-item'+(currentTab===t.id?' active':'')+'" onclick="switchTab(\''+t.id+'\')" data-tab="'+t.id+'">'+t.label+'</div>';
+    return '<div class="bnav-item'+(currentTab===t.id?' active':'')+'" onclick="switchTab(\''+t.id+'\')" data-tab="'+t.id+'">'
+      +'<span class="bnav-icon">'+(t.icon||'')+'</span>'
+      +'<span class="bnav-label">'+t.label+'</span>'
+      +'</div>';
   }).join('');
 }
 function updateTopbar(user){
@@ -5427,8 +5448,18 @@ function initApp(){
     }
   }
   if(fbConnected && fbAuth){
-    // Hide local banner — Firebase is connected
     document.getElementById('banner-local').style.display='none';
+    // Handle Google redirect result (mobile flow — iOS Safari)
+    fbAuth.getRedirectResult().then(function(result){
+      if(result && result.user){
+        trackEvent('login','auth','google_redirect');
+        // onAuthStateChanged below will handle the rest
+      }
+    }).catch(function(err){
+      if(err.code && err.code !== 'auth/no-current-user'){
+        console.warn('getRedirectResult error:', err.code, err.message);
+      }
+    });
     // Listen for Firebase auth state
     fbAuth.onAuthStateChanged(function(fbUser){
       if(fbUser){
