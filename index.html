@@ -2502,28 +2502,7 @@ function renderInicio(user){
     html+='<div style="margin-top:24px;">';
     html+='<div style="font-size:16px;font-weight:800;color:rgba(255,255,255,0.7);margin-bottom:4px;">¡Bienvenido al Hub Polar!</div>';
     html+='<div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;">Empieza registrando tu primer evento o gasto.</div>';
-    html+='<div class="quickstart-grid">';
-    html+='<div class="qs-card" onclick="switchTab('eventos');setTimeout(openNewEventWizard,200)">';
-    html+='<span class="qs-card-icon">🎪</span>';
-    html+='<div class="qs-card-title">Nuevo Evento</div>';
-    html+='<div class="qs-card-sub">Crea el primer evento o pitch</div>';
-    html+='</div>';
-    html+='<div class="qs-card" onclick="switchTab('gasto')">';
-    html+='<span class="qs-card-icon">✏️</span>';
-    html+='<div class="qs-card-title">Registrar Gasto</div>';
-    html+='<div class="qs-card-sub">Captura un gasto o comprobante</div>';
-    html+='</div>';
-    html+='<div class="qs-card" onclick="switchTab('flujo');setTimeout(function(){var fab=document.querySelector('.flujo-fab');if(fab)fab.click();},200)">';
-    html+='<span class="qs-card-icon">📅</span>';
-    html+='<div class="qs-card-title">Programar Pago</div>';
-    html+='<div class="qs-card-sub">Agenda un pago a proveedor</div>';
-    html+='</div>';
-    html+='<div class="qs-card" onclick="switchTab('finanzas')">';
-    html+='<span class="qs-card-icon">🧾</span>';
-    html+='<div class="qs-card-title">Nueva Factura</div>';
-    html+='<div class="qs-card-sub">Registra lo que te deben</div>';
-    html+='</div>';
-    html+='</div>';
+    html+=buildQuickstartGrid();
     html+='<div style="margin-top:16px;padding:14px 16px;background:rgba(81,196,202,0.07);border:1px solid rgba(81,196,202,0.2);border-radius:14px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;">';
     html+='💡 <strong style="color:#51c4ca;">Tip:</strong> Ve a <strong>CONFIG → Gastos Fijos</strong> para configurar la nómina y apps recurrentes, luego usa <strong>"Generar pagos del mes"</strong>.';
     html+='</div>';
@@ -5757,6 +5736,25 @@ function attachBadge(recordType, recordId, attachments){
   return '<span class="card-attach-badge" onclick="openFileGallery(\''+recordType+'\',\''+recordId+'\',\'\');event.stopPropagation()">&#x1F4CE; '+count+'</span>';
 }
 
+
+function buildQuickstartGrid(){
+  var cards = [
+    {icon:"🎪", title:"Nuevo Evento",      sub:"Crea el primer evento o pitch",  fn:"switchTab('eventos');setTimeout(openNewEventWizard,200)"},
+    {icon:"✏️",  title:"Registrar Gasto",   sub:"Captura un gasto o comprobante", fn:"switchTab('gasto')"},
+    {icon:"📅", title:"Programar Pago",    sub:"Agenda un pago a proveedor",     fn:"switchTab('flujo')"},
+    {icon:"🧾", title:"Nueva Factura",     sub:"Registra lo que te deben",       fn:"switchTab('finanzas')"}
+  ];
+  var h = '<div class="quickstart-grid">';
+  cards.forEach(function(card){
+    h += '<div class="qs-card" onclick="'+card.fn.replace(/"/g,"&quot;")+'">';
+    h += '<span class="qs-card-icon">'+card.icon+'</span>';
+    h += '<div class="qs-card-title">'+card.title+'</div>';
+    h += '<div class="qs-card-sub">'+card.sub+'</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
 
 // ============================================================
 // INIT
