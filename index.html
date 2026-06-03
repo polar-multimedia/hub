@@ -2111,11 +2111,11 @@ const TABS = [
 // ============================================================
 // DEMO DATA
 // ============================================================
-const USERS_VERSION = 4; // bumped to force re-seed after login fix
+const USERS_VERSION = 5; // Blanca y Verónica → admin
 const DEMO_USERS = [
   {id:'u1',name:'Roberto Carpinteyro',email:'carpinteyro@polarmultimedia.com',password:'Polar2026',role:'admin'},
-  {id:'u2',name:'Verónica Silva',email:'veronica@polarmultimedia.com',password:'Polar2026',role:'produccion',assignedEvents:['e1','e2','e3']},
-  {id:'u3',name:'Blanca Puebla',email:'blanca.puebla@polarmultimedia.com',password:'Polar2026',role:'finanzas',assignedEvents:[]},
+  {id:'u2',name:'Verónica Silva',email:'veronica@polarmultimedia.com',password:'Polar2026',role:'admin',assignedEvents:[]},
+  {id:'u3',name:'Blanca Puebla',email:'blanca.puebla@polarmultimedia.com',password:'Polar2026',role:'admin',assignedEvents:[]},
   {id:'u4',name:'Staff Campo',email:'campo@polarmultimedia.com',password:'Polar2026',role:'campo',assignedEvents:['e1']}
 ];
 const DEMO_EVENTS = [
@@ -6009,8 +6009,8 @@ function initApp(){
             profile = doc.data();
           } else {
             // New user — create profile with default role
-            var adminEmails = ['carpinteyro@polarmultimedia.com'];
-            var finanzasEmails = ['blanca.puebla@polarmultimedia.com'];
+            var adminEmails = ['carpinteyro@polarmultimedia.com','veronica@polarmultimedia.com','blanca.puebla@polarmultimedia.com'];
+            var finanzasEmails = []; // all polarmultimedia.com → admin now
             var role = adminEmails.indexOf(fbUser.email) >= 0 ? 'admin'
                      : finanzasEmails.indexOf(fbUser.email) >= 0 ? 'finanzas'
                      : 'produccion';

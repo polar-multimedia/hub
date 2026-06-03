@@ -1973,10 +1973,11 @@ input[type=number]:focus, input[type=date]:focus, select:focus, textarea:focus {
     <div class="login-glass">
       <div class="login-hub">HUB INTERNO</div>
 
-      <!-- Google Sign-In -->
-      <button type="button" onclick="doGoogleLogin()" class="login-btn" style="margin-bottom:24px;">
-        ENTRAR CON GOOGLE
-      </button>
+      <div id="login-google-wrap">
+        <button type="button" id="login-google-btn" class="login-btn" style="margin-bottom:24px;" onclick="doGoogleLogin()">
+          ENTRAR CON GOOGLE
+        </button>
+      </div>
 
       <div class="login-divider">
         <div class="login-divider-line"></div>
@@ -1985,13 +1986,13 @@ input[type=number]:focus, input[type=date]:focus, select:focus, textarea:focus {
       </div>
 
       <div class="login-field">
-        <input type="text" id="login-email" placeholder="correo@polar.mx" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false">
+        <input type="text" id="login-email" placeholder="correo@polar.mx" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
       </div>
       <div class="login-field">
-        <input type="password" id="login-pass" placeholder="contraseña" autocomplete="current-password">
+        <input type="password" id="login-pass" placeholder="contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
-      <button type="button" class="login-btn" onclick="doLogin()">ENTRAR</button>
-      <div class="login-error" id="login-error">Credenciales incorrectas</div>
+      <button type="button" id="login-submit-btn" class="login-btn" onclick="doLogin()">ENTRAR</button>
+      <div class="login-error" id="login-error" style="display:none;margin-top:12px;font-size:13px;color:#ed1a8e;text-align:center;"></div>
     </div>
   </div>
 </div>
@@ -2091,7 +2092,7 @@ const CATALOG = {
 };
 
 const ETAPAS = ['Captación','Kickoff','Pre-producción','Producción','Logística','On-site','Post-evento','Cierre','Cerrado'];
-const RUBROS = ['Sede','Hospedaje','Catering','Traslado aéreo','Traslado terrestre','Producción · Materiales','Equipo A/V','Promocionales','Personal','Viáticos · Varios','Oficina'];
+const RUBROS = ['Sede','Hospedaje','Catering','Traslado aéreo','Traslado terrestre','Producción · Materiales','Equipo A/V','Promocionales','Personal','Viáticos · Varios','Oficina','Proyecto'];
 const PAYMENT_METHODS = ['AmEx Polar','AmEx Roberto','Banamex Blanca','BBVA','Efectivo'];
 const EXPENSE_STATUSES = ['Pendiente','Pagado','Con línea de pago'];
 const EVENT_TYPES = ['Congreso médico','Cumbre / Summit','Gira nacional (múltiples sedes)','Cena con charla médica','Desayuno con charla médica','Comida con charla médica','Simposio','Lanzamiento de producto','Taller / Workshop','Congreso educativo','Mesa redonda','Webinar / Virtual','Campaña digital','Otro'];
@@ -2101,6 +2102,7 @@ const TABS = [
   {id:'inicio',  label:'INICIO',   icon:'🏠', roles:['admin','produccion','finanzas','campo']},
   {id:'gasto',   label:'GASTO',    icon:'✏️', roles:['admin','produccion','campo']},
   {id:'eventos', label:'EVENTOS',  icon:'📋', roles:['admin','produccion']},
+  {id:'proyectos', label:'PROYECTOS', icon:'📂', roles:['admin','produccion','finanzas']},
   {id:'flujo',   label:'FLUJO',    icon:'💳', roles:['admin','finanzas']},
   {id:'finanzas',label:'FINANZAS', icon:'💰', roles:['admin','finanzas']},
   {id:'config',  label:'CONFIG',   icon:'⚙️', roles:['admin']}
@@ -2109,11 +2111,11 @@ const TABS = [
 // ============================================================
 // DEMO DATA
 // ============================================================
-const USERS_VERSION = 3;
+const USERS_VERSION = 5; // Blanca y Verónica → admin
 const DEMO_USERS = [
   {id:'u1',name:'Roberto Carpinteyro',email:'carpinteyro@polarmultimedia.com',password:'Polar2026',role:'admin'},
-  {id:'u2',name:'Verónica Silva',email:'veronica@polarmultimedia.com',password:'Polar2026',role:'produccion',assignedEvents:['e1','e2','e3']},
-  {id:'u3',name:'Blanca Puebla',email:'blanca.puebla@polarmultimedia.com',password:'Polar2026',role:'finanzas',assignedEvents:[]},
+  {id:'u2',name:'Verónica Silva',email:'veronica@polarmultimedia.com',password:'Polar2026',role:'admin',assignedEvents:[]},
+  {id:'u3',name:'Blanca Puebla',email:'blanca.puebla@polarmultimedia.com',password:'Polar2026',role:'admin',assignedEvents:[]},
   {id:'u4',name:'Staff Campo',email:'campo@polarmultimedia.com',password:'Polar2026',role:'campo',assignedEvents:['e1']}
 ];
 const DEMO_EVENTS = [
@@ -2175,6 +2177,11 @@ function getEvents(){return ls('polar_events')||[];}
 function getExpenses(){return ls('polar_expenses')||[];}
 function getPayments(){return ls('polar_payments')||[];}
 function getInvoices(){return ls('polar_invoices')||[];}
+function getProjects(){ return ls('polar_projects')||[]; }
+function saveProjects(arr){
+  lsSave('polar_projects',arr);
+  if(fbConnected&&fbDb) arr.forEach(function(p){ fbDb.collection('projects').doc(p.id).set(p).catch(function(){}); });
+}
 function getConfig(){return ls('polar_config')||DEMO_CONFIG;}
 function getCurrentUser(){return ls('polar_current_user');}
 
@@ -2191,6 +2198,7 @@ function seedDemoData(){
   if(!ls('polar_payments')){lsSave('polar_payments',DEMO_PAYMENTS);}
   if(!ls('polar_invoices')){lsSave('polar_invoices',DEMO_INVOICES);}
   if(!ls('polar_config')){lsSave('polar_config',DEMO_CONFIG);}
+  if(!ls('polar_projects')){lsSave('polar_projects',[]);}
   ensureGastosFijos();
 }
 
@@ -2287,38 +2295,30 @@ function doLogin(){
   var email = document.getElementById('login-email').value.trim().toLowerCase();
   var pass  = document.getElementById('login-pass').value.trim();
   var errEl = document.getElementById('login-error');
+  if(errEl) errEl.style.display='none';
 
-  if(fbConnected && fbAuth){
-    // Firebase email/password login
-    errEl.style.display='none';
-    fbAuth.signInWithEmailAndPassword(email, pass)
-      .then(function(){ /* onAuthStateChanged handles the rest */ })
-      .catch(function(err){
-        // Firebase login failed — fallback to localStorage users
-        var users = getUsers();
-        var user = users.find(function(u){ return u.email.toLowerCase()===email && u.password===pass; });
-        if(user){
-          lsSave('polar_current_user',{id:user.id,name:user.name,role:user.role,email:user.email,assignedEvents:user.assignedEvents||[]});
-          trackEvent('login','auth',user.role+'_local');
-          showApp();
-        } else {
-          errEl.style.display='block';
-          errEl.textContent='Correo o contraseña incorrectos.';
-        }
-      });
-  } else {
-    // Pure localStorage login
-    var users = getUsers();
-    var user = users.find(function(u){ return u.email.toLowerCase()===email && u.password===pass; });
-    if(!user){
-      errEl.style.display='block';
-      errEl.textContent='Correo o contraseña incorrectos. Verifica mayúsculas.';
-      console.log('Login attempt:', email, '| Users:', users.map(function(u){return u.email;}));
-      return;
-    }
+  // ALWAYS check localStorage first — fast and reliable
+  var users = getUsers();
+  var user  = users.find(function(u){ return u.email.toLowerCase()===email && u.password===pass; });
+
+  if(user){
+    // ✅ Local auth — log in immediately
     lsSave('polar_current_user',{id:user.id,name:user.name,role:user.role,email:user.email,assignedEvents:user.assignedEvents||[]});
     trackEvent('login','auth',user.role);
     showApp();
+    // Also sign into Firebase in background (for Firestore sync) — non-blocking
+    if(fbConnected && fbAuth){
+      fbAuth.signInWithEmailAndPassword(email, pass).catch(function(){
+        // If Firebase auth fails, no problem — localStorage session is active
+      });
+    }
+  } else {
+    // ❌ Not found in localStorage
+    if(errEl){
+      errEl.style.display='block';
+      errEl.textContent='Correo o contraseña incorrectos. Verifica mayúsculas.';
+    }
+    console.log('Login fail — email:', email, '| Users en sistema:', users.map(function(u){return u.email;}));
   }
 }
 function doGoogleLogin(){
@@ -2428,7 +2428,7 @@ function switchTab(id){
   document.querySelectorAll('[data-tab]').forEach(function(el){
     el.classList.toggle('active',el.dataset.tab===id);
   });
-  var titles={inicio:'INICIO',gasto:'NUEVO GASTO',eventos:'EVENTOS',flujo:'FLUJO DE PAGOS',finanzas:'FINANZAS',config:'CONFIGURACIÓN'};
+  var titles={inicio:'INICIO',gasto:'NUEVO GASTO',eventos:'EVENTOS',proyectos:'PROYECTOS',flujo:'FLUJO DE PAGOS',finanzas:'FINANZAS',config:'CONFIGURACIÓN'};
   document.getElementById('tb-title').textContent=titles[id]||id.toUpperCase();
   // render
   var content=document.getElementById('content');
@@ -2454,6 +2454,7 @@ function renderTab(id,user){
   if(id==='inicio')return renderInicio(user);
   if(id==='gasto')return renderGasto(user);
   if(id==='eventos')return renderEventos(user);
+  if(id==='proyectos')return renderProyectos(user);
   if(id==='flujo')return renderFlujo(user);
   if(id==='finanzas')return renderFinanzas(user);
   if(id==='config')return renderConfig(user);
@@ -2469,6 +2470,8 @@ function renderInicio(user){
   var invoices=getInvoices();
   // metrics
   var activeEvents=events.filter(function(e){return e.status!=='Cerrado';}).length;
+  var activeProjects=getProjects().filter(function(p){return p.status==='Activo';}).length;
+  var monthlyFee=getProjects().filter(function(p){return p.status==='Activo'&&p.cobro==='Mensual (iguala)';}).reduce(function(s,p){return s+p.fee;},0);
   var prodCount=events.filter(function(e){return e.status==='Producción';}).length;
   var totalReceivable=invoices.reduce(function(s,i){return s+(i.status==='Pendiente'?i.total:0);},0);
   var today=new Date(); today.setHours(0,0,0,0);
@@ -2485,6 +2488,9 @@ function renderInicio(user){
   html+='<div class="metric-card"><div class="metric-label">POR COBRAR</div><div class="metric-value magenta">'+formatMXN(totalReceivable).replace('$','').replace(' MXN','')+'</div><div class="metric-sub">'+invoices.filter(function(i){return i.status==='Pendiente';}).length+' facturas</div></div>';
   html+='<div class="metric-card"><div class="metric-label">PAGOS ESTA SEMANA</div><div class="metric-value yellow">'+formatMXN(weekPayAmt).replace('$','').replace(' MXN','')+'</div><div class="metric-sub">'+weekPayments.length+' vencimientos</div></div>';
   html+='<div class="metric-card"><div class="metric-label">GASTOS HOY</div><div class="metric-value white">'+formatMXN(todayAmt).replace('$','').replace(' MXN','')+'</div><div class="metric-sub">'+todayExpenses.length+' movimientos</div></div>';
+  if(activeProjects>0){
+    html+='<div class="metric-card"><div class="metric-label">PROYECTOS ACTIVOS</div><div class="metric-value teal">'+activeProjects+'</div><div class="metric-sub">'+formatMXN(monthlyFee)+'/mes en igualas</div></div>';
+  }
   html+='</div>';
   // alerts
   html+='<div class="section-title" style="margin-top:8px;">ALERTAS</div>';
@@ -2509,28 +2515,7 @@ function renderInicio(user){
     html+='<div style="margin-top:24px;">';
     html+='<div style="font-size:16px;font-weight:800;color:rgba(255,255,255,0.7);margin-bottom:4px;">¡Bienvenido al Hub Polar!</div>';
     html+='<div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;">Empieza registrando tu primer evento o gasto.</div>';
-    html+='<div class="quickstart-grid">';
-    html+='<div class="qs-card" onclick="switchTab('eventos');setTimeout(openNewEventWizard,200)">';
-    html+='<span class="qs-card-icon">🎪</span>';
-    html+='<div class="qs-card-title">Nuevo Evento</div>';
-    html+='<div class="qs-card-sub">Crea el primer evento o pitch</div>';
-    html+='</div>';
-    html+='<div class="qs-card" onclick="switchTab('gasto')">';
-    html+='<span class="qs-card-icon">✏️</span>';
-    html+='<div class="qs-card-title">Registrar Gasto</div>';
-    html+='<div class="qs-card-sub">Captura un gasto o comprobante</div>';
-    html+='</div>';
-    html+='<div class="qs-card" onclick="switchTab('flujo');setTimeout(function(){var fab=document.querySelector('.flujo-fab');if(fab)fab.click();},200)">';
-    html+='<span class="qs-card-icon">📅</span>';
-    html+='<div class="qs-card-title">Programar Pago</div>';
-    html+='<div class="qs-card-sub">Agenda un pago a proveedor</div>';
-    html+='</div>';
-    html+='<div class="qs-card" onclick="switchTab('finanzas')">';
-    html+='<span class="qs-card-icon">🧾</span>';
-    html+='<div class="qs-card-title">Nueva Factura</div>';
-    html+='<div class="qs-card-sub">Registra lo que te deben</div>';
-    html+='</div>';
-    html+='</div>';
+    html+=buildQuickstartGrid();
     html+='<div style="margin-top:16px;padding:14px 16px;background:rgba(81,196,202,0.07);border:1px solid rgba(81,196,202,0.2);border-radius:14px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;">';
     html+='💡 <strong style="color:#51c4ca;">Tip:</strong> Ve a <strong>CONFIG → Gastos Fijos</strong> para configurar la nómina y apps recurrentes, luego usa <strong>"Generar pagos del mes"</strong>.';
     html+='</div>';
@@ -2583,8 +2568,14 @@ function renderGasto(user){
   html+='<button type="button" class="scan-analyze-btn" id="scan-analyze-btn" disabled onclick="analyzeReceipt()">✨ ANALIZAR CON IA</button>';
   html+='<div class="scan-result-banner" id="scan-result-banner"></div>';
   html+='<div class="field"><label>FECHA</label><input type="date" id="g-date" value="'+today+'"></div>';
-  html+='<div class="field"><label>EVENTO</label><select id="g-event">';
+  html+='<div class="field"><label>EVENTO / PROYECTO</label><select id="g-event">';
   events.forEach(function(e){html+='<option value="'+e.id+'">'+esc(e.name)+'</option>';});
+  var projs=getProjects().filter(function(p){return p.status==='Activo';});
+  if(projs.length){
+    html+='<optgroup label="── PROYECTOS ──">';
+    projs.forEach(function(p){html+='<option value="proj_'+p.id+'">'+esc(p.nombre)+'</option>';});
+    html+='</optgroup>';
+  }
   html+='</select></div>';
   html+='<div class="field"><label>CONCEPTO</label><input type="text" id="g-concept" placeholder="descripción del gasto"></div>';
   html+='<div class="field field-amount"><label>MONTO</label><div class="field-amount-wrap"><span class="field-amount-prefix">$</span><input type="number" id="g-amount" placeholder="0" min="0" step="0.01"></div></div>';
@@ -2624,6 +2615,204 @@ function renderGasto(user){
   });
   html+='</div>';
   return html;
+}
+
+// ---- PROYECTOS ----
+function renderProyectos(user){
+  var projects = getProjects();
+  var userProjects = user.role==='admin' ? projects : projects.filter(function(p){
+    return p.assignedTo && p.assignedTo.indexOf(user.id)>=0;
+  });
+
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">';
+  html += '<div style="font-size:28px;font-weight:800;color:var(--white);">PROYECTOS</div>';
+  html += '<span style="font-size:14px;font-weight:700;color:var(--magenta);cursor:pointer;" onclick="openNewProjectForm()">+ NUEVO</span>';
+  html += '</div>';
+
+  if(userProjects.length===0){
+    html += '<div class="empty-state">';
+    html += '<span class="empty-icon">📂</span>';
+    html += '<div class="empty-title">Sin proyectos todavía</div>';
+    html += '<div class="empty-sub">Registra igualas, campañas digitales, consultoría y cualquier proyecto que no sea un evento de producción.</div>';
+    html += '<button class="empty-btn" onclick="openNewProjectForm()">+ CREAR PRIMER PROYECTO</button>';
+    html += '</div>';
+    return html;
+  }
+
+  var active   = userProjects.filter(function(p){ return p.status==='Activo'; });
+  var paused   = userProjects.filter(function(p){ return p.status==='En pausa'; });
+  var done     = userProjects.filter(function(p){ return p.status==='Completado'||p.status==='Cancelado'; });
+
+  function renderProjectCard(p){
+    var isIguala = p.cobro==='Mensual (iguala)';
+    var displayFee = isIguala ? formatMXN(p.fee)+'/mes' : formatMXN(p.fee||0);
+    var card = '<div class="event-card">';
+    card += '<div class="event-card-header">'+chipProyecto(p.status)+'<span style="font-size:11px;color:var(--gray);">'+esc(p.tipo)+'</span></div>';
+    card += '<div class="event-name">'+esc(p.nombre)+'</div>';
+    card += '<div class="event-client">'+esc(p.cliente)+'</div>';
+    card += '<div class="event-divider"></div>';
+    card += '<div class="event-row">';
+    card += '<div class="event-field"><div class="event-field-label">FEE</div><div style="font-size:20px;font-weight:700;color:var(--teal);">'+displayFee+'</div></div>';
+    card += '<div class="event-field"><div class="event-field-label">PERIODO</div><div class="event-field-val">';
+    card += (p.fechaInicio||'—')+(p.fechaFin?' → '+p.fechaFin:'');
+    card += '</div></div>';
+    card += '</div>';
+    if(p.descripcion){
+      card += '<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.5;">'+esc(p.descripcion.substring(0,120))+'</div>';
+    }
+    card += '<div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">';
+    card += buildAvatarRow(p);
+    card += '<span style="font-size:12px;color:var(--gray);cursor:pointer;" onclick="editProject(\''+p.id+'\')">✏️ Editar</span>';
+    card += '</div>';
+    card += '</div>';
+    return card;
+  }
+
+  if(active.length){ html += '<div class="section-title" style="margin-bottom:12px;">ACTIVOS</div>'; active.forEach(function(p){ html+=renderProjectCard(p); }); }
+  if(paused.length){ html += '<div class="section-title" style="margin-top:20px;margin-bottom:12px;">EN PAUSA</div>'; paused.forEach(function(p){ html+=renderProjectCard(p); }); }
+  if(done.length){   html += '<div class="section-title" style="margin-top:20px;margin-bottom:12px;">CERRADOS</div>'; done.forEach(function(p){ html+=renderProjectCard(p); }); }
+
+  return html;
+}
+
+function chipProyecto(status){
+  var map={
+    'Activo':'background:rgba(46,125,50,0.2);border-color:rgba(46,125,50,0.5);color:#81c784;',
+    'En pausa':'background:rgba(249,168,37,0.15);border-color:rgba(249,168,37,0.4);color:#f9a825;',
+    'Completado':'background:rgba(81,196,202,0.1);border-color:rgba(81,196,202,0.3);color:#51c4ca;',
+    'Cancelado':'background:rgba(237,26,142,0.1);border-color:rgba(237,26,142,0.3);color:#ed1a8e;'
+  };
+  var s = map[status]||map['Activo'];
+  return '<span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid;letter-spacing:0.5px;'+s+'">'+esc(status)+'</span>';
+}
+
+var editingProjectId = null;
+
+function openNewProjectForm(){
+  editingProjectId = null;
+  renderProjectModal({});
+}
+
+function editProject(id){
+  var projects = getProjects();
+  var p = projects.find(function(x){ return x.id===id; });
+  if(!p) return;
+  editingProjectId = id;
+  renderProjectModal(p);
+}
+
+function renderProjectModal(p){
+  var users = getUsers();
+  var TIPOS = ['Iguala mensual','Campaña digital','Producción de contenido','Desarrollo web / app','Consultoría','Estrategia de marca','Hub de contenido','Otro'];
+  var COBROS = ['Mensual (iguala)','Por proyecto (fijo)','Por entregable','Por hora'];
+  var STATUSES = ['Activo','En pausa','Completado','Cancelado'];
+
+  var html = '<div class="edit-modal-header">';
+  html += '<div class="edit-modal-title">'+(editingProjectId?'Editar Proyecto':'Nuevo Proyecto')+'</div>';
+  html += '<button class="edit-modal-close" onclick="closeEditModal()">✕</button>';
+  html += '</div>';
+
+  html += '<div class="field"><label>Nombre del proyecto</label><input type="text" id="proj-nombre" value="'+esc(p.nombre||'')+'" placeholder="Ej: Iguala Carnot SF 2026"></div>';
+  html += '<div class="field"><label>Cliente</label><input type="text" id="proj-cliente" value="'+esc(p.cliente||'')+'" placeholder="Ej: Carnot Laboratorios"></div>';
+
+  html += '<div class="edit-row">';
+  html += '<div class="field"><label>Tipo</label><select id="proj-tipo">'+TIPOS.map(function(t){ return '<option'+(t===(p.tipo||'Iguala mensual')?' selected':'')+'>'+t+'</option>'; }).join('')+'</select></div>';
+  html += '<div class="field"><label>Tipo de cobro</label><select id="proj-cobro">'+COBROS.map(function(t){ return '<option'+(t===(p.cobro||'Mensual (iguala)')?' selected':'')+'>'+t+'</option>'; }).join('')+'</select></div>';
+  html += '</div>';
+
+  html += '<div class="edit-row">';
+  html += '<div class="field"><label>Fee / Monto (MXN sin IVA)</label><input type="number" id="proj-fee" value="'+(p.fee||'')+'" placeholder="0"></div>';
+  html += '<div class="field"><label>Status</label><select id="proj-status">'+STATUSES.map(function(t){ return '<option'+(t===(p.status||'Activo')?' selected':'')+'>'+t+'</option>'; }).join('')+'</select></div>';
+  html += '</div>';
+
+  html += '<div class="edit-row">';
+  html += '<div class="field"><label>Fecha inicio</label><input type="date" id="proj-fi" value="'+(p.fechaInicio||'')+'"></div>';
+  html += '<div class="field"><label>Fecha fin <span class="optional-label">opcional</span></label><input type="date" id="proj-ff" value="'+(p.fechaFin||'')+'"></div>';
+  html += '</div>';
+
+  html += '<div class="field"><label>Descripción / Alcance</label><textarea id="proj-desc" rows="3" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:white;font-family:Poppins,sans-serif;font-size:13px;padding:10px;outline:none;resize:vertical;">'+esc(p.descripcion||'')+'</textarea></div>';
+
+  html += '<div class="field"><label>Equipo asignado</label>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">';
+  users.forEach(function(u){
+    if(u.role==='campo') return;
+    var checked = p.assignedTo && p.assignedTo.indexOf(u.id)>=0;
+    html += '<label style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.04);border-radius:50px;border:1px solid rgba(255,255,255,'+(checked?'0.2':'0.07')+');cursor:pointer;">';
+    html += '<input type="checkbox" value="'+u.id+'" '+(checked?'checked':'')+' style="accent-color:#51c4ca;">';
+    html += '<span style="font-size:12px;color:white;">'+esc(u.name.split(' ')[0])+'</span>';
+    html += '</label>';
+  });
+  html += '</div></div>';
+
+  html += '<div class="edit-actions">';
+  html += '<button class="edit-btn-save" onclick="saveProject()">'+(editingProjectId?'GUARDAR CAMBIOS':'CREAR PROYECTO')+'</button>';
+  if(editingProjectId) html += '<button class="edit-btn-delete" onclick="deleteProject(\''+editingProjectId+'\')">ELIMINAR</button>';
+  html += '<button class="edit-btn-cancel" onclick="closeEditModal()">CANCELAR</button>';
+  html += '</div>';
+
+  openEditModal(html);
+}
+
+function saveProject(){
+  var assignedTo = [];
+  document.querySelectorAll('#edit-modal-body input[type=checkbox]').forEach(function(cb){
+    if(cb.checked) assignedTo.push(cb.value);
+  });
+  var projects = getProjects();
+  var user = getCurrentUser();
+
+  if(editingProjectId){
+    var idx = projects.findIndex(function(p){ return p.id===editingProjectId; });
+    if(idx>=0){
+      projects[idx].nombre      = document.getElementById('proj-nombre').value.trim();
+      projects[idx].cliente     = document.getElementById('proj-cliente').value.trim();
+      projects[idx].tipo        = document.getElementById('proj-tipo').value;
+      projects[idx].cobro       = document.getElementById('proj-cobro').value;
+      projects[idx].fee         = parseFloat(document.getElementById('proj-fee').value)||0;
+      projects[idx].status      = document.getElementById('proj-status').value;
+      projects[idx].fechaInicio = document.getElementById('proj-fi').value;
+      projects[idx].fechaFin    = document.getElementById('proj-ff').value;
+      projects[idx].descripcion = document.getElementById('proj-desc').value.trim();
+      projects[idx].assignedTo  = assignedTo;
+      projects[idx] = addHistoryEntry(projects[idx], '✏️ Proyecto editado');
+    }
+  } else {
+    var nombre = document.getElementById('proj-nombre').value.trim();
+    if(!nombre){ showToast('Ingresa el nombre del proyecto','yellow'); return; }
+    var newProj = {
+      id: uid(),
+      nombre:      nombre,
+      cliente:     document.getElementById('proj-cliente').value.trim(),
+      tipo:        document.getElementById('proj-tipo').value,
+      cobro:       document.getElementById('proj-cobro').value,
+      fee:         parseFloat(document.getElementById('proj-fee').value)||0,
+      status:      document.getElementById('proj-status').value,
+      fechaInicio: document.getElementById('proj-fi').value,
+      fechaFin:    document.getElementById('proj-ff').value,
+      descripcion: document.getElementById('proj-desc').value.trim(),
+      assignedTo:  assignedTo,
+      createdBy:   user?user.id:'system',
+      createdByName: user?user.name:'',
+      createdAt:   new Date().toISOString().slice(0,10),
+      attachments: []
+    };
+    newProj = addHistoryEntry(newProj, '✨ Proyecto creado');
+    projects.push(newProj);
+  }
+  saveProjects(projects);
+  closeEditModal();
+  showToast('✅ Proyecto guardado');
+  switchTab('proyectos');
+}
+
+function deleteProject(id){
+  if(!confirm('¿Eliminar este proyecto?')) return;
+  var projects = getProjects().filter(function(p){ return p.id!==id; });
+  saveProjects(projects);
+  if(fbConnected&&fbDb) fbDb.collection('projects').doc(id).delete().catch(function(){});
+  closeEditModal();
+  showToast('Proyecto eliminado');
+  switchTab('proyectos');
 }
 
 // ---- EVENTOS ----
@@ -3137,6 +3326,7 @@ function resetAllData(){
   lsSave('polar_expenses',[]);
   lsSave('polar_payments',[]);
   lsSave('polar_invoices',[]);
+  lsSave('polar_projects',[]);
   if(fbConnected&&fbDb){
     // Also clear Firestore collections
     ['events','expenses','payments','invoices'].forEach(function(col){
@@ -5765,6 +5955,25 @@ function attachBadge(recordType, recordId, attachments){
 }
 
 
+function buildQuickstartGrid(){
+  var cards = [
+    {icon:"🎪", title:"Nuevo Evento",      sub:"Crea el primer evento o pitch",  fn:"switchTab('eventos');setTimeout(openNewEventWizard,200)"},
+    {icon:"✏️",  title:"Registrar Gasto",   sub:"Captura un gasto o comprobante", fn:"switchTab('gasto')"},
+    {icon:"📅", title:"Programar Pago",    sub:"Agenda un pago a proveedor",     fn:"switchTab('flujo')"},
+    {icon:"🧾", title:"Nueva Factura",     sub:"Registra lo que te deben",       fn:"switchTab('finanzas')"}
+  ];
+  var h = '<div class="quickstart-grid">';
+  cards.forEach(function(card){
+    h += '<div class="qs-card" onclick="'+card.fn.replace(/"/g,"&quot;")+'">';
+    h += '<span class="qs-card-icon">'+card.icon+'</span>';
+    h += '<div class="qs-card-title">'+card.title+'</div>';
+    h += '<div class="qs-card-sub">'+card.sub+'</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
 // ============================================================
 // INIT
 // ============================================================
@@ -5772,17 +5981,10 @@ function initApp(){
   if('speechSynthesis' in window) window.speechSynthesis.getVoices();
   seedDemoData();
   initFilesDB();
-  // Hide Google button when running on file:// (requires HTTPS)
+  // On file:// just hide the Google button cleanly — no DOM manipulation
   if(location.protocol === 'file:'){
-    var gBtn = document.querySelector('.login-btn');
-    if(gBtn && gBtn.textContent.trim().includes('GOOGLE')){
-      gBtn.style.display = 'none';
-      // Show a note instead
-      var note = document.createElement('div');
-      note.style.cssText = 'font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:20px;line-height:1.6;';
-      note.innerHTML = 'Google Sign-In disponible en<br><a href="https://polar-multimedia.github.io/hub/" style="color:#51c4ca;">polar-multimedia.github.io/hub</a>';
-      gBtn.parentNode.insertBefore(note, gBtn.nextSibling);
-    }
+    var gWrap = document.getElementById('login-google-wrap');
+    if(gWrap) gWrap.style.display='none';
   }
   if(fbConnected && fbAuth){
     document.getElementById('banner-local').style.display='none';
@@ -5807,8 +6009,8 @@ function initApp(){
             profile = doc.data();
           } else {
             // New user — create profile with default role
-            var adminEmails = ['carpinteyro@polarmultimedia.com'];
-            var finanzasEmails = ['blanca.puebla@polarmultimedia.com'];
+            var adminEmails = ['carpinteyro@polarmultimedia.com','veronica@polarmultimedia.com','blanca.puebla@polarmultimedia.com'];
+            var finanzasEmails = []; // all polarmultimedia.com → admin now
             var role = adminEmails.indexOf(fbUser.email) >= 0 ? 'admin'
                      : finanzasEmails.indexOf(fbUser.email) >= 0 ? 'finanzas'
                      : 'produccion';
@@ -5837,16 +6039,22 @@ function initApp(){
 }
 
 function showLoginScreen(){
-  document.getElementById('screen-login').style.display='flex';
-  document.getElementById('app').style.display='none';
-  var lp = document.getElementById('login-pass');
-  if(lp){
-    lp.onkeydown = function(e){ if(e.key==='Enter') doLogin(); };
-  }
-  var le = document.getElementById('login-email');
-  if(le){
-    le.onkeydown = function(e){ if(e.key==='Enter') document.getElementById('login-pass').focus(); };
-  }
+  var sl = document.getElementById('screen-login');
+  var ap = document.getElementById('app');
+  if(sl) sl.style.display='flex';
+  if(ap) ap.style.display='none';
+  // Hide PAULETTE when not logged in
+  var orb=document.getElementById('paulette-orb'); if(orb) orb.style.display='none';
+  var lbl=document.getElementById('paulette-orb-label'); if(lbl) lbl.style.display='none';
+  var panel=document.getElementById('paulette-panel'); if(panel) panel.classList.remove('open');
+  // Clear any error from previous attempt
+  var errEl = document.getElementById('login-error');
+  if(errEl){ errEl.style.display='none'; errEl.textContent=''; }
+  // Focus email field
+  setTimeout(function(){
+    var em = document.getElementById('login-email');
+    if(em) em.focus();
+  }, 100);
 }
 
 document.addEventListener('DOMContentLoaded',initApp);
