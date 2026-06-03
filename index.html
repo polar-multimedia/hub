@@ -2053,27 +2053,22 @@ const DEMO_USERS = [
   {id:'u4',name:'Staff Campo',email:'campo@polarmultimedia.com',password:'Polar2026',role:'campo',assignedEvents:['e1']}
 ];
 const DEMO_EVENTS = [
+];
+// demo events cleared
+const _OLD_DEMO_EVENTS = [
   {id:'e1',name:'Congreso Ki-CAB GDL 2026',client:'Carnot Laboratorios',type:'Congreso médico',city:'GDL',attendees:120,date:'2026-08-15',status:'Producción',budget1:420000,budget2:480000,budget3:475000,realSpent:181000,assignedTo:['u1','u2'],createdAt:'2026-05-10'},
   {id:'e2',name:'Summit Salud Femenina CDMX',client:'Carnot Salud Femenina',type:'Cumbre / Summit',city:'CDMX',attendees:80,date:'2026-09-22',status:'Kickoff',budget1:780000,budget2:850000,budget3:0,realSpent:42000,assignedTo:['u1','u3'],createdAt:'2026-05-20'},
   {id:'e3',name:'Cena Médica Bacmune MTY',client:'Carnot Gastro',type:'Cena con charla médica',city:'MTY',attendees:55,date:'2026-07-10',status:'Pre-producción',budget1:95000,budget2:112000,budget3:108000,realSpent:24000,assignedTo:['u1'],createdAt:'2026-06-01'}
 ];
 const DEMO_EXPENSES = [
-  {id:'x1',eventId:'e1',date:'2026-06-01',concept:'Anticipo RIU Guadalajara',rubro:'Sede',amount:119500,paymentMethod:'BBVA',status:'Pagado',invoice:'F-0042',createdBy:'u2'},
-  {id:'x2',eventId:'e1',date:'2026-06-03',concept:'Vuelos ponentes GDL ida',rubro:'Traslado aéreo',amount:34400,paymentMethod:'AmEx Roberto',status:'Pagado',invoice:'Sin factura',createdBy:'u1'},
-  {id:'x3',eventId:'e1',date:'2026-06-05',concept:'Anticipo A/V Plenaria',rubro:'Equipo A/V',amount:42750,paymentMethod:'BBVA',status:'Pendiente',invoice:'Pendiente',createdBy:'u2'},
-  {id:'x4',eventId:'e2',date:'2026-05-28',concept:'Kick off interno equipo',rubro:'Viáticos · Varios',amount:3200,paymentMethod:'Efectivo',status:'Pagado',invoice:'Sin factura',createdBy:'u3'},
-  {id:'x5',eventId:'e3',date:'2026-06-01',concept:'Anticipo venue MTY',rubro:'Sede',amount:24000,paymentMethod:'AmEx Polar',status:'Con línea de pago',invoice:'Pendiente',createdBy:'u1'}
 ];
+// demo expenses cleared
 const DEMO_PAYMENTS = [
-  {id:'p1',eventId:'e1',concept:'Finiquito RIU Guadalajara',dueDate:'2026-08-11',amount:119500,paymentMethod:'BBVA',status:'Pendiente'},
-  {id:'p2',eventId:'e1',concept:'Paquete A/V completo',dueDate:'2026-06-15',amount:85000,paymentMethod:'BBVA',status:'Pendiente'},
-  {id:'p3',eventId:'e1',concept:'Libretas personalizadas 120 pzas',dueDate:'2026-07-20',amount:10800,paymentMethod:'AmEx Polar',status:'Pendiente'},
-  {id:'p4',eventId:'e2',concept:'Anticipo Hacienda Tlalpan',dueDate:'2026-07-01',amount:142500,paymentMethod:'BBVA',status:'Pendiente'}
 ];
+// demo payments cleared
 const DEMO_INVOICES = [
-  {id:'i1',client:'Carnot Laboratorios',invoiceNum:'F-239',oc:'OC-4500082872',concept:'Congreso Ki-CAB GDL — gestión integral',eventId:'e1',subtotal:475000,iva:76000,total:551000,dueDate:'2026-10-15',status:'Pendiente',commission:47500},
-  {id:'i2',client:'Carnot Gastro',invoiceNum:'F-231',oc:'OC-4500082316',concept:'Cena Médica Bacmune MTY',eventId:'e3',subtotal:108000,iva:17280,total:125280,dueDate:'2026-09-10',status:'Pendiente',commission:10800}
 ];
+// demo invoices cleared
 const DEMO_CONFIG = {
   thresholds:{optimal:0.50,max:0.60},
   loans:[
@@ -2877,11 +2872,15 @@ function renderConfig(user){
   html+='<button class="btn-save" style="margin-top:8px;" onclick="saveFirebaseConfig()">GUARDAR CONFIGURACIÓN</button>';
   html+='<div class="firebase-status" style="color:'+(fbConnected?'#3DD6CC':'#E8DC2A')+'">● '+(fbConnected?'FIREBASE CONECTADO — PolarAdminHub':'MODO LOCAL')+'</div>';
   html+='</div>';
-  // Export
+  // Export + Reset
   html+='<div class="config-section">';
-  html+='<div class="config-title">EXPORTAR</div>';
-  html+='<button class="btn-outline" onclick="exportData()">DESCARGAR DATOS JSON</button>';
-  html+='</div>';
+  html+='<div class="config-title">DATOS</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:10px;">';
+  html+='<button class="btn-outline" onclick="exportData()">📥 DESCARGAR RESPALDO (JSON)</button>';
+  html+='<button type="button" onclick="document.getElementById(\'import-file\').click()" style="width:100%;padding:13px;border-radius:50px;background:transparent;border:1.5px solid rgba(81,196,202,0.4);color:#51c4ca;font-family:Poppins,sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;">📤 IMPORTAR DATOS (JSON)</button>';
+  html+='<input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImportFile(this)">';
+  html+='<button type="button" onclick="resetAllData()" style="width:100%;padding:13px;border-radius:50px;background:rgba(237,26,142,0.06);border:1.5px solid rgba(237,26,142,0.3);color:#ed1a8e;font-family:Poppins,sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;">🗑️ BORRAR TODO Y EMPEZAR DE CERO</button>';
+  html+='</div></div>';
   return html;
 }
 
@@ -2997,6 +2996,52 @@ function exportData(){
   var a=document.createElement('a');
   a.href=url;a.download='polar-hub-data-'+new Date().toISOString().slice(0,10)+'.json';
   a.click();URL.revokeObjectURL(url);
+  showToast('✅ Respaldo descargado');
+}
+
+function resetAllData(){
+  if(!confirm('⚠️ ¿Borrar TODOS los eventos, gastos, pagos y facturas?\n\nEsta acción no se puede deshacer. Los usuarios y la configuración se conservan.')) return;
+  localStorage.removeItem('polar_events');
+  localStorage.removeItem('polar_expenses');
+  localStorage.removeItem('polar_payments');
+  localStorage.removeItem('polar_invoices');
+  // Force re-seed with empty arrays
+  lsSave('polar_events',[]);
+  lsSave('polar_expenses',[]);
+  lsSave('polar_payments',[]);
+  lsSave('polar_invoices',[]);
+  if(fbConnected&&fbDb){
+    // Also clear Firestore collections
+    ['events','expenses','payments','invoices'].forEach(function(col){
+      fbDb.collection(col).get().then(function(snap){
+        snap.forEach(function(doc){ doc.ref.delete(); });
+      }).catch(function(){});
+    });
+  }
+  showToast('✅ Datos borrados — empezando desde cero');
+  setTimeout(function(){ switchTab('inicio'); }, 800);
+}
+
+function handleImportFile(input){
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      var data = JSON.parse(e.target.result);
+      if(data.events)   lsSave('polar_events',   data.events);
+      if(data.expenses) lsSave('polar_expenses',  data.expenses);
+      if(data.payments) lsSave('polar_payments',  data.payments);
+      if(data.invoices) lsSave('polar_invoices',  data.invoices);
+      if(data.config)   lsSave('polar_config',    data.config);
+      showToast('✅ Datos importados correctamente');
+      setTimeout(function(){ switchTab('inicio'); }, 600);
+    } catch(err) {
+      showToast('❌ Error al importar: '+err.message,'yellow');
+    }
+  };
+  reader.readAsText(file);
+  input.value='';
 }
 function openAddUserForm(){
   var f=document.getElementById('add-user-form');
