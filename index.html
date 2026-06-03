@@ -1973,10 +1973,11 @@ input[type=number]:focus, input[type=date]:focus, select:focus, textarea:focus {
     <div class="login-glass">
       <div class="login-hub">HUB INTERNO</div>
 
-      <!-- Google Sign-In -->
-      <button type="button" onclick="doGoogleLogin()" class="login-btn" style="margin-bottom:24px;">
-        ENTRAR CON GOOGLE
-      </button>
+      <div id="login-google-wrap">
+        <button type="button" id="login-google-btn" class="login-btn" style="margin-bottom:24px;" onclick="doGoogleLogin()">
+          ENTRAR CON GOOGLE
+        </button>
+      </div>
 
       <div class="login-divider">
         <div class="login-divider-line"></div>
@@ -1985,13 +1986,13 @@ input[type=number]:focus, input[type=date]:focus, select:focus, textarea:focus {
       </div>
 
       <div class="login-field">
-        <input type="text" id="login-email" placeholder="correo@polar.mx" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false">
+        <input type="text" id="login-email" placeholder="correo@polar.mx" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
       </div>
       <div class="login-field">
-        <input type="password" id="login-pass" placeholder="contraseña" autocomplete="current-password">
+        <input type="password" id="login-pass" placeholder="contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
-      <button type="button" class="login-btn" onclick="doLogin()">ENTRAR</button>
-      <div class="login-error" id="login-error">Credenciales incorrectas</div>
+      <button type="button" id="login-submit-btn" class="login-btn" onclick="doLogin()">ENTRAR</button>
+      <div class="login-error" id="login-error" style="display:none;margin-top:12px;font-size:13px;color:#ed1a8e;text-align:center;"></div>
     </div>
   </div>
 </div>
@@ -2109,7 +2110,7 @@ const TABS = [
 // ============================================================
 // DEMO DATA
 // ============================================================
-const USERS_VERSION = 3;
+const USERS_VERSION = 4; // bumped to force re-seed after login fix
 const DEMO_USERS = [
   {id:'u1',name:'Roberto Carpinteyro',email:'carpinteyro@polarmultimedia.com',password:'Polar2026',role:'admin'},
   {id:'u2',name:'Verónica Silva',email:'veronica@polarmultimedia.com',password:'Polar2026',role:'produccion',assignedEvents:['e1','e2','e3']},
@@ -2287,38 +2288,30 @@ function doLogin(){
   var email = document.getElementById('login-email').value.trim().toLowerCase();
   var pass  = document.getElementById('login-pass').value.trim();
   var errEl = document.getElementById('login-error');
+  if(errEl) errEl.style.display='none';
 
-  if(fbConnected && fbAuth){
-    // Firebase email/password login
-    errEl.style.display='none';
-    fbAuth.signInWithEmailAndPassword(email, pass)
-      .then(function(){ /* onAuthStateChanged handles the rest */ })
-      .catch(function(err){
-        // Firebase login failed — fallback to localStorage users
-        var users = getUsers();
-        var user = users.find(function(u){ return u.email.toLowerCase()===email && u.password===pass; });
-        if(user){
-          lsSave('polar_current_user',{id:user.id,name:user.name,role:user.role,email:user.email,assignedEvents:user.assignedEvents||[]});
-          trackEvent('login','auth',user.role+'_local');
-          showApp();
-        } else {
-          errEl.style.display='block';
-          errEl.textContent='Correo o contraseña incorrectos.';
-        }
-      });
-  } else {
-    // Pure localStorage login
-    var users = getUsers();
-    var user = users.find(function(u){ return u.email.toLowerCase()===email && u.password===pass; });
-    if(!user){
-      errEl.style.display='block';
-      errEl.textContent='Correo o contraseña incorrectos. Verifica mayúsculas.';
-      console.log('Login attempt:', email, '| Users:', users.map(function(u){return u.email;}));
-      return;
-    }
+  // ALWAYS check localStorage first — fast and reliable
+  var users = getUsers();
+  var user  = users.find(function(u){ return u.email.toLowerCase()===email && u.password===pass; });
+
+  if(user){
+    // ✅ Local auth — log in immediately
     lsSave('polar_current_user',{id:user.id,name:user.name,role:user.role,email:user.email,assignedEvents:user.assignedEvents||[]});
     trackEvent('login','auth',user.role);
     showApp();
+    // Also sign into Firebase in background (for Firestore sync) — non-blocking
+    if(fbConnected && fbAuth){
+      fbAuth.signInWithEmailAndPassword(email, pass).catch(function(){
+        // If Firebase auth fails, no problem — localStorage session is active
+      });
+    }
+  } else {
+    // ❌ Not found in localStorage
+    if(errEl){
+      errEl.style.display='block';
+      errEl.textContent='Correo o contraseña incorrectos. Verifica mayúsculas.';
+    }
+    console.log('Login fail — email:', email, '| Users en sistema:', users.map(function(u){return u.email;}));
   }
 }
 function doGoogleLogin(){
@@ -5772,17 +5765,10 @@ function initApp(){
   if('speechSynthesis' in window) window.speechSynthesis.getVoices();
   seedDemoData();
   initFilesDB();
-  // Hide Google button when running on file:// (requires HTTPS)
+  // On file:// just hide the Google button cleanly — no DOM manipulation
   if(location.protocol === 'file:'){
-    var gBtn = document.querySelector('.login-btn');
-    if(gBtn && gBtn.textContent.trim().includes('GOOGLE')){
-      gBtn.style.display = 'none';
-      // Show a note instead
-      var note = document.createElement('div');
-      note.style.cssText = 'font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:20px;line-height:1.6;';
-      note.innerHTML = 'Google Sign-In disponible en<br><a href="https://polar-multimedia.github.io/hub/" style="color:#51c4ca;">polar-multimedia.github.io/hub</a>';
-      gBtn.parentNode.insertBefore(note, gBtn.nextSibling);
-    }
+    var gWrap = document.getElementById('login-google-wrap');
+    if(gWrap) gWrap.style.display='none';
   }
   if(fbConnected && fbAuth){
     document.getElementById('banner-local').style.display='none';
@@ -5837,16 +5823,22 @@ function initApp(){
 }
 
 function showLoginScreen(){
-  document.getElementById('screen-login').style.display='flex';
-  document.getElementById('app').style.display='none';
-  var lp = document.getElementById('login-pass');
-  if(lp){
-    lp.onkeydown = function(e){ if(e.key==='Enter') doLogin(); };
-  }
-  var le = document.getElementById('login-email');
-  if(le){
-    le.onkeydown = function(e){ if(e.key==='Enter') document.getElementById('login-pass').focus(); };
-  }
+  var sl = document.getElementById('screen-login');
+  var ap = document.getElementById('app');
+  if(sl) sl.style.display='flex';
+  if(ap) ap.style.display='none';
+  // Hide PAULETTE when not logged in
+  var orb=document.getElementById('paulette-orb'); if(orb) orb.style.display='none';
+  var lbl=document.getElementById('paulette-orb-label'); if(lbl) lbl.style.display='none';
+  var panel=document.getElementById('paulette-panel'); if(panel) panel.classList.remove('open');
+  // Clear any error from previous attempt
+  var errEl = document.getElementById('login-error');
+  if(errEl){ errEl.style.display='none'; errEl.textContent=''; }
+  // Focus email field
+  setTimeout(function(){
+    var em = document.getElementById('login-email');
+    if(em) em.focus();
+  }, 100);
 }
 
 document.addEventListener('DOMContentLoaded',initApp);
