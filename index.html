@@ -1139,11 +1139,13 @@ select option{background:#0d1b2a;color:#fff;}
   backdrop-filter: blur(12px);
   display: none; flex-direction: column;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .wizard-overlay.open { display: flex; }
 .wizard-wrap {
   max-width: 520px; width: 100%;
-  margin: auto; padding: 24px 20px 48px;
+  margin: auto; padding: 24px 20px 80px;
+  flex-shrink: 0;
 }
 .wizard-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -1153,10 +1155,11 @@ select option{background:#0d1b2a;color:#fff;}
   font-size: 22px; font-weight: 800; color: white;
 }
 .wizard-close {
-  width: 36px; height: 36px; border-radius: 50%;
+  width: 44px; height: 44px; border-radius: 50%;
   background: rgba(255,255,255,0.08); border: none;
   color: white; font-size: 18px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px;
 }
 .wizard-steps {
   display: flex; gap: 6px; margin-bottom: 32px;
@@ -1793,7 +1796,7 @@ input[type=number]:focus, input[type=date]:focus, select:focus, textarea:focus {
 /* Wizard overlay */
 .wizard-wrap {
   border-radius: 24px !important;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Glass card inner highlight */
@@ -2149,21 +2152,33 @@ const DEMO_CONFIG = {
     {id:'c3',name:'Banamex Blanca',cutDay:13,cycleStart:14,payDay:1,payMonth:'siguiente'}
   ],
   gastosFijos: [
-    {id:'gf1', nombre:'Nómina interna Q1 (Vero, Genesis, Maribel)', monto:28335, frecuencia:'quincenal', quincena:1, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf2', nombre:'Nómina interna Q2 (Vero, Genesis, Maribel)', monto:28335, frecuencia:'quincenal', quincena:2, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf3', nombre:'Nómina externa Q1', monto:8623, frecuencia:'quincenal', quincena:1, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf4', nombre:'Nómina externa Q2', monto:16123, frecuencia:'quincenal', quincena:2, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf5', nombre:'Honorarios Roberto Carpinteyro', monto:150000, frecuencia:'mensual', dia:1, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf6', nombre:'IMSS e INFONAVIT', monto:8256, frecuencia:'mensual', dia:17, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf7', nombre:'Impuesto sobre nóminas (ISN)', monto:885, frecuencia:'mensual', dia:17, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf8', nombre:'Honorarios Contador', monto:7424, frecuencia:'mensual', dia:6, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf9', nombre:'Apps y suscripciones (Adobe, Notion, etc.)', monto:25455, frecuencia:'mensual', dia:5, rubro:'Oficina', paymentMethod:'AmEx Polar', activo:true},
-    {id:'gf10', nombre:'Transporte / Uber oficina', monto:1500, frecuencia:'mensual', dia:1, rubro:'Oficina', paymentMethod:'Efectivo', activo:true},
-    {id:'gf11', nombre:'Banca internet BBVA', monto:358, frecuencia:'mensual', dia:1, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf12', nombre:'OpenAI API', monto:500, frecuencia:'mensual', dia:1, rubro:'Oficina', paymentMethod:'AmEx Roberto', activo:true},
-    {id:'gf13', nombre:'Firebase / Google Cloud', monto:300, frecuencia:'mensual', dia:1, rubro:'Oficina', paymentMethod:'AmEx Roberto', activo:true},
-    {id:'gf14', nombre:'Interés H Financieros', monto:38400, frecuencia:'mensual', dia:1, rubro:'Oficina', paymentMethod:'BBVA', activo:true},
-    {id:'gf15', nombre:'Interés Miriam Meza (1.8%)', monto:11145, frecuencia:'mensual', dia:1, rubro:'Oficina', paymentMethod:'BBVA', activo:true}
+    // ── NÓMINA INDIVIDUAL ─────────────────────────────────────────────
+    // Quincena 1 (día 1)
+    {id:'gf_vero_q1',   nombre:'Nómina Q1 — Verónica Silva (BBVA)',      monto:4661,  frecuencia:'quincenal', quincena:1, dia:1,  rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Depósito BBVA',        activo:true, persona:'Verónica Silva'},
+    {id:'gf_vero_q1e',  nombre:'Nómina Q1 — Verónica Silva (externo)',    monto:7339,  frecuencia:'quincenal', quincena:1, dia:1,  rubro:'Oficina', paymentMethod:'Transferencia', tipoCargo:'Transferencia manual',  activo:true, persona:'Verónica Silva'},
+    {id:'gf_gen_q1',    nombre:'Nómina Q1 — Genesis Mendoza (BBVA)',      monto:4660,  frecuencia:'quincenal', quincena:1, dia:1,  rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Depósito BBVA',        activo:true, persona:'Genesis Mendoza'},
+    {id:'gf_gen_q1e',   nombre:'Nómina Q1 — Genesis Mendoza (externo)',   monto:4090,  frecuencia:'quincenal', quincena:1, dia:1,  rubro:'Oficina', paymentMethod:'Transferencia', tipoCargo:'Transferencia manual',  activo:true, persona:'Genesis Mendoza'},
+    {id:'gf_mar_q1',    nombre:'Nómina Q1 — Maribel Ortiz (BBVA)',        monto:4792,  frecuencia:'quincenal', quincena:1, dia:1,  rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Depósito BBVA',        activo:true, persona:'Maribel Ortiz'},
+    // Quincena 2 (día 15)
+    {id:'gf_vero_q2',   nombre:'Nómina Q2 — Verónica Silva (BBVA)',      monto:4661,  frecuencia:'quincenal', quincena:2, dia:15, rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Depósito BBVA',        activo:true, persona:'Verónica Silva'},
+    {id:'gf_vero_q2e',  nombre:'Nómina Q2 — Verónica Silva (externo)',    monto:7339,  frecuencia:'quincenal', quincena:2, dia:15, rubro:'Oficina', paymentMethod:'Transferencia', tipoCargo:'Transferencia manual',  activo:true, persona:'Verónica Silva'},
+    {id:'gf_gen_q2',    nombre:'Nómina Q2 — Genesis Mendoza (BBVA)',      monto:4660,  frecuencia:'quincenal', quincena:2, dia:15, rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Depósito BBVA',        activo:true, persona:'Genesis Mendoza'},
+    {id:'gf_gen_q2e',   nombre:'Nómina Q2 — Genesis Mendoza (externo)',   monto:4090,  frecuencia:'quincenal', quincena:2, dia:15, rubro:'Oficina', paymentMethod:'Transferencia', tipoCargo:'Transferencia manual',  activo:true, persona:'Genesis Mendoza'},
+    {id:'gf_mar_q2',    nombre:'Nómina Q2 — Maribel Ortiz (BBVA)',        monto:4792,  frecuencia:'quincenal', quincena:2, dia:15, rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Depósito BBVA',        activo:true, persona:'Maribel Ortiz'},
+    {id:'gf_noms',      nombre:'Nómina externa — Costo agencia',          monto:1828,  frecuencia:'quincenal', quincena:1, dia:1,  rubro:'Oficina', paymentMethod:'Transferencia', tipoCargo:'Transferencia manual',  activo:true},
+    {id:'gf_noms2',     nombre:'Nómina externa — Costo agencia Q2',       monto:1828,  frecuencia:'quincenal', quincena:2, dia:15, rubro:'Oficina', paymentMethod:'Transferencia', tipoCargo:'Transferencia manual',  activo:true},
+    // ── GASTOS FIJOS MENSUALES ────────────────────────────────────────
+    {id:'gf5',  nombre:'Honorarios Roberto Carpinteyro', monto:150000, frecuencia:'mensual', dia:1,  rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Transferencia manual',  activo:true},
+    {id:'gf6',  nombre:'IMSS e INFONAVIT',               monto:8256,   frecuencia:'mensual', dia:17, rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Domiciliación IMSS',    activo:true},
+    {id:'gf7',  nombre:'Impuesto sobre nóminas (ISN)',   monto:885,    frecuencia:'mensual', dia:17, rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Línea de pago SAT',     activo:true},
+    {id:'gf8',  nombre:'Honorarios Contador',            monto:7424,   frecuencia:'mensual', dia:6,  rubro:'Oficina', paymentMethod:'Transferencia', tipoCargo:'Transferencia manual',  activo:true},
+    {id:'gf9',  nombre:'Apps y suscripciones',           monto:25455,  frecuencia:'mensual', dia:5,  rubro:'Oficina', paymentMethod:'AmEx Polar',    tipoCargo:'Cargo automático AmEx Polar', activo:true},
+    {id:'gf10', nombre:'Transporte / Uber oficina',      monto:1500,   frecuencia:'mensual', dia:1,  rubro:'Oficina', paymentMethod:'Efectivo',      tipoCargo:'Efectivo / App',        activo:true},
+    {id:'gf11', nombre:'Banca internet BBVA',            monto:358,    frecuencia:'mensual', dia:1,  rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Cargo automático BBVA', activo:true},
+    {id:'gf12', nombre:'OpenAI API',                     monto:500,    frecuencia:'mensual', dia:1,  rubro:'Oficina', paymentMethod:'AmEx Roberto',  tipoCargo:'Cargo automático AmEx Roberto', activo:true},
+    {id:'gf13', nombre:'Firebase / Google Cloud',        monto:300,    frecuencia:'mensual', dia:1,  rubro:'Oficina', paymentMethod:'AmEx Roberto',  tipoCargo:'Cargo automático AmEx Roberto', activo:true},
+    {id:'gf14', nombre:'Interés H Financieros (mensual)',monto:38400,  frecuencia:'mensual', dia:1,  rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Transferencia manual',  activo:true},
+    {id:'gf15', nombre:'Interés Miriam Meza (1.8%)',     monto:11145,  frecuencia:'mensual', dia:1,  rubro:'Oficina', paymentMethod:'BBVA',          tipoCargo:'Transferencia manual',  activo:true}
   ]
 };
 
@@ -2205,7 +2220,8 @@ function seedDemoData(){
 function ensureGastosFijos(){
   var cfg = getConfig();
   var changed = false;
-  if(!cfg.gastosFijos){ cfg.gastosFijos = DEMO_CONFIG.gastosFijos; changed=true; }
+  // Force update gastosFijos if version mismatch (new individual payroll entries)
+  if(!cfg.gastosFijosV || cfg.gastosFijosV < 2){ cfg.gastosFijos = DEMO_CONFIG.gastosFijos; cfg.gastosFijosV=2; changed=true; }
   if(!cfg.suscripciones){ cfg.suscripciones = DEFAULT_SUBS; changed=true; }
   if(changed) lsSave('polar_config', cfg);
 }
@@ -2502,12 +2518,59 @@ function renderInicio(user){
       alerts.push({days:d,text:'PAGO EN '+d+' DÍAS — '+formatMXN(p.amount),sub:p.concept+' · '+ev.name});
     }
   });
+  // OC alerts — invoices with OC Solicitada for 5+ days
+  getInvoices().filter(function(i){return i.ocStatus==='OC Solicitada';}).forEach(function(inv){
+    var daysSince=inv.invoiceDate?Math.floor((new Date()-new Date(inv.invoiceDate))/86400000):0;
+    if(daysSince>=5){
+      alerts.push({
+        days:-daysSince,
+        text:'OC PENDIENTE '+daysSince+' DÍAS — '+esc(inv.client),
+        sub:inv.invoiceNum+' · '+esc(inv.concept)+' · '+formatMXN(inv.total)
+      });
+    }
+  });
   if(alerts.length===0){
     html+='<div style="text-align:center;padding:32px 0;font-size:28px;font-weight:700;color:var(--teal);">SIN ALERTAS</div>';
   } else {
     alerts.sort(function(a,b){return a.days-b.days;});
     alerts.forEach(function(a){
       html+='<div class="alert-row"><div class="alert-big">'+esc(a.text)+'</div><div class="alert-sub">'+esc(a.sub)+'</div></div>';
+    });
+  }
+  // POR FACTURAR section
+  var needsInvoice=[];
+  getEvents().filter(function(e){return ['Post-evento','Entrega','Cobro'].indexOf(e.status)>=0;}).forEach(function(ev){
+    var hasInvoice=getInvoices().some(function(i){return i.eventId===ev.id;});
+    if(!hasInvoice){
+      needsInvoice.push({tipo:'evento',id:ev.id,nombre:ev.name,cliente:ev.client,
+        monto:ev.budget3||ev.budget2||0,fechaEvento:ev.fechaFin||ev.fechaInicio||ev.date});
+    }
+  });
+  var thisMonth=new Date().toISOString().slice(0,7);
+  getProjects().filter(function(p){return p.status==='Activo'&&p.cobro==='Mensual (iguala)';}).forEach(function(proj){
+    var hasInvoiceThisMonth=getInvoices().some(function(i){
+      return i.eventId===('proj_'+proj.id)&&i.invoiceDate&&i.invoiceDate.startsWith(thisMonth);
+    });
+    if(!hasInvoiceThisMonth){
+      needsInvoice.push({tipo:'proyecto_iguala',id:proj.id,nombre:proj.nombre,cliente:proj.cliente,
+        monto:proj.fee,fechaEvento:null,esIguala:true});
+    }
+  });
+  if(needsInvoice.length){
+    html+='<div class="section-title" style="margin-top:24px;color:#ed1a8e;">POR FACTURAR</div>';
+    needsInvoice.forEach(function(item){
+      html+='<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(237,26,142,0.06);border:1px solid rgba(237,26,142,0.2);border-radius:14px;margin-bottom:8px;">';
+      html+='<div style="flex:1;">';
+      html+='<div style="font-size:14px;font-weight:700;color:white;">'+esc(item.nombre)+'</div>';
+      html+='<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">'+esc(item.cliente||'')+(item.esIguala?' · Iguala '+new Date().toLocaleString('es-MX',{month:'long',year:'numeric'}):'')+'</div>';
+      html+='</div>';
+      html+='<div style="text-align:right;">';
+      html+='<div style="font-size:16px;font-weight:700;color:#51c4ca;">'+formatMXN(item.monto)+'</div>';
+      html+='<button data-qci-tipo="'+esc(item.tipo)+'" data-qci-id="'+esc(item.id)+'" data-qci-nombre="'+esc(item.nombre)+'" data-qci-cliente="'+esc(item.cliente||'')+'" data-qci-monto="'+item.monto+'" '+
+        'onclick="var b=this;quickCreateInvoice(b.dataset.qciTipo,b.dataset.qciId,b.dataset.qciNombre,b.dataset.qciCliente,parseFloat(b.dataset.qciMonto))" '+
+        'style="margin-top:4px;font-size:11px;padding:4px 12px;border-radius:20px;background:linear-gradient(135deg,#ed1a8e,#51c4ca);border:none;color:white;cursor:pointer;font-family:Poppins,sans-serif;font-weight:700;">CREAR FACTURA</button>';
+      html+='</div>';
+      html+='</div>';
     });
   }
   // Quick-start when empty
@@ -2568,8 +2631,13 @@ function renderGasto(user){
   html+='<button type="button" class="scan-analyze-btn" id="scan-analyze-btn" disabled onclick="analyzeReceipt()">✨ ANALIZAR CON IA</button>';
   html+='<div class="scan-result-banner" id="scan-result-banner"></div>';
   html+='<div class="field"><label>FECHA</label><input type="date" id="g-date" value="'+today+'"></div>';
-  html+='<div class="field"><label>EVENTO / PROYECTO</label><select id="g-event">';
-  events.forEach(function(e){html+='<option value="'+e.id+'">'+esc(e.name)+'</option>';});
+  html+='<div class="field"><label>EVENTO / PROYECTO <span class="optional-label">opcional</span></label><select id="g-event">';
+  html+='<option value="oficina">— Oficina / General —</option>';
+  if(events.length){
+    html+='<optgroup label="── EVENTOS ──">';
+    events.forEach(function(e){html+='<option value="'+e.id+'">'+esc(e.name)+'</option>';});
+    html+='</optgroup>';
+  }
   var projs=getProjects().filter(function(p){return p.status==='Activo';});
   if(projs.length){
     html+='<optgroup label="── PROYECTOS ──">';
@@ -2603,7 +2671,8 @@ function renderGasto(user){
     if(e.imageData){ html+='<img class="expense-thumb" src="'+e.imageData+'" onclick="event.stopPropagation();showFullImage(\''+e.id+'\')">'; }
     html+='<div class="exp-top"><div><div class="exp-date">'+esc(e.date)+'</div><div class="exp-concept">'+esc(e.concept)+'</div></div>';
     html+='<div class="exp-amount">'+formatMXN(e.amount)+'</div></div>';
-    html+='<div class="exp-bottom"><div class="exp-meta">'+esc(ev.name)+' · '+esc(e.rubro)+'</div>'+chipStatus(e.status)+attachBadge('expense',e.id,e.attachments)+buildAvatarRow(e)+'</div>';
+    var hasFact = e.invoice && e.invoice!=='Sin factura' && e.invoice!=='Pendiente' && e.invoice!=='';
+    html+='<div class="exp-bottom"><div class="exp-meta">'+esc(ev.name)+' · '+esc(e.rubro)+'</div>'+chipStatus(e.status)+'<span style="font-size:10px;padding:2px 8px;border-radius:20px;'+(hasFact?'background:rgba(81,196,202,0.12);color:#51c4ca;':'background:rgba(249,168,37,0.12);color:#f9a825;')+'">'+(hasFact?'✅ '+esc(e.invoice):'⚠️ Sin comprobante')+'</span>'+attachBadge('expense',e.id,e.attachments)+buildAvatarRow(e)+'</div>';
     html+='<div style="margin-top:6px;"><button onclick="openFileGallery(\'expense\',\''+e.id+'\',\''+esc(e.concept)+'\');event.stopPropagation()" style="background:none;border:1px dashed rgba(81,196,202,0.2);color:rgba(81,196,202,0.5);font-size:10px;cursor:pointer;font-family:Poppins,sans-serif;padding:3px 10px;border-radius:20px;transition:all 0.2s;">&#x1F4CE; Archivos</button></div>';
     if(expanded){
       html+='<div class="exp-expand" style="display:block;">';
@@ -2626,7 +2695,10 @@ function renderProyectos(user){
 
   var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">';
   html += '<div style="font-size:28px;font-weight:800;color:var(--white);">PROYECTOS</div>';
+  html += '<div style="display:flex;gap:8px;align-items:center;">';
+  html += '<button style="font-size:12px;font-weight:700;color:#51c4ca;cursor:pointer;background:none;border:1px solid rgba(81,196,202,0.3);border-radius:50px;padding:6px 14px;" onclick="programarCobrosProyectos()">📅 Programar cobros del mes</button>';
   html += '<span style="font-size:14px;font-weight:700;color:var(--magenta);cursor:pointer;" onclick="openNewProjectForm()">+ NUEVO</span>';
+  html += '</div>';
   html += '</div>';
 
   if(userProjects.length===0){
@@ -2657,6 +2729,16 @@ function renderProyectos(user){
     card += (p.fechaInicio||'—')+(p.fechaFin?' → '+p.fechaFin:'');
     card += '</div></div>';
     card += '</div>';
+    if(p.lineas && p.lineas.length > 1){
+      card += '<div style="margin-top:8px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;">';
+      p.lineas.forEach(function(l){
+        card += '<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">';
+        card += '<span style="font-size:11px;color:rgba(255,255,255,0.5);">'+esc(l.concepto||'—')+'</span>';
+        card += '<span style="font-size:11px;font-weight:700;color:#51c4ca;">'+formatMXN(l.monto)+'</span>';
+        card += '</div>';
+      });
+      card += '</div>';
+    }
     if(p.descripcion){
       card += '<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.5;">'+esc(p.descripcion.substring(0,120))+'</div>';
     }
@@ -2673,6 +2755,62 @@ function renderProyectos(user){
   if(done.length){   html += '<div class="section-title" style="margin-top:20px;margin-bottom:12px;">CERRADOS</div>'; done.forEach(function(p){ html+=renderProjectCard(p); }); }
 
   return html;
+}
+
+function programarCobrosProyectos(){
+  var projects = getProjects().filter(function(p){ return p.status==='Activo'; });
+  var payments = getPayments();
+  var now = new Date();
+  var added = 0;
+
+  projects.forEach(function(proj){
+    var lineas = proj.lineas && proj.lineas.length ? proj.lineas : [{id:'single_'+proj.id, concepto:proj.nombre, monto:proj.fee||0, cobro:proj.cobro||'Mensual', dia:7}];
+
+    lineas.forEach(function(l){
+      if(l.cobro!=='Mensual' && l.cobro!=='Bimestral' && l.cobro!=='Trimestral') return;
+      if(!l.monto) return;
+
+      // Check if already scheduled this month
+      var alreadyScheduled = payments.some(function(p){
+        return p.proyectoId===proj.id && p.lineaId===l.id && (p.dueDate||'').startsWith(now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'));
+      });
+      if(alreadyScheduled) return;
+
+      // Schedule billing date
+      var payDay = l.dia||7;
+      var payDate = new Date(now.getFullYear(), now.getMonth(), payDay);
+      if(payDate < now) payDate = new Date(now.getFullYear(), now.getMonth()+1, payDay);
+      var payDateStr = payDate.toISOString().slice(0,10);
+
+      // Payment expected 60 days after invoice
+      var expectedPay = new Date(payDate);
+      expectedPay.setDate(expectedPay.getDate()+60);
+
+      // Add to FLUJO as expected INCOME (tipo='cobro')
+      payments.push({
+        id: uid(),
+        eventId: 'proj_'+proj.id,
+        proyectoId: proj.id,
+        lineaId: l.id,
+        concept: (l.concepto||proj.nombre)+' — '+payDate.toLocaleString('es-MX',{month:'long',year:'numeric'}),
+        dueDate: payDateStr,
+        amount: l.monto,
+        ivaAmount: Math.round(l.monto*0.16),
+        total: Math.round(l.monto*1.16),
+        paymentMethod: 'Transferencia',
+        status: 'Pendiente',
+        tipo: 'cobro',
+        expectedPayDate: expectedPay.toISOString().slice(0,10),
+        proyectoNombre: proj.nombre,
+        cliente: proj.cliente
+      });
+      added++;
+    });
+  });
+
+  lsSave('polar_payments', payments);
+  showToast('✅ '+added+' cobros programados para el mes en FLUJO');
+  switchTab('flujo');
 }
 
 function chipProyecto(status){
@@ -2721,8 +2859,33 @@ function renderProjectModal(p){
   html += '</div>';
 
   html += '<div class="edit-row">';
-  html += '<div class="field"><label>Fee / Monto (MXN sin IVA)</label><input type="number" id="proj-fee" value="'+(p.fee||'')+'" placeholder="0"></div>';
+  html += '<div class="field"><label>Fee total calculado (MXN sin IVA)</label><input type="number" id="proj-fee" value="'+(p.fee||'')+'" placeholder="0 (se calcula de líneas)" style="background:rgba(81,196,202,0.05);border-color:rgba(81,196,202,0.2);" readonly></div>';
   html += '<div class="field"><label>Status</label><select id="proj-status">'+STATUSES.map(function(t){ return '<option'+(t===(p.status||'Activo')?' selected':'')+'>'+t+'</option>'; }).join('')+'</select></div>';
+  html += '</div>';
+
+  // LÍNEAS DE COBRO
+  var lineas = p.lineas && p.lineas.length ? p.lineas : [{id:uid(), concepto:'', monto:p.fee||0, cobro:p.cobro||'Mensual', dia:7}];
+  window._projLineas = lineas.map(function(l){ return l.id; });
+  html += '<div style="margin-top:16px;">';
+  html += '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-bottom:10px;">LÍNEAS DE COBRO</div>';
+  html += '<div id="proj-lineas-list">';
+  lineas.forEach(function(l, i){
+    html += '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:12px;margin-bottom:8px;" id="prl-'+l.id+'">';
+    html += '<div style="display:flex;gap:8px;margin-bottom:8px;">';
+    html += '<input type="text" id="prl-concepto-'+l.id+'" value="'+esc(l.concepto||'')+'" placeholder="Concepto (ej: Estrategia SF)" style="flex:2;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:13px;padding:8px 10px;outline:none;">';
+    html += '<input type="number" id="prl-monto-'+l.id+'" value="'+(l.monto||'')+'" placeholder="$" oninput="recalcProjFee()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:13px;padding:8px 10px;outline:none;">';
+    html += '</div>';
+    html += '<div style="display:flex;gap:8px;align-items:center;">';
+    html += '<select id="prl-cobro-'+l.id+'" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:12px;padding:7px 8px;outline:none;">';
+    ['Mensual','Por entregable','Al inicio','A la entrega','Bimestral','Trimestral'].forEach(function(op){ html += '<option'+(op===l.cobro?' selected':'')+'>'+op+'</option>'; });
+    html += '</select>';
+    html += '<input type="number" id="prl-dia-'+l.id+'" value="'+(l.dia||7)+'" min="1" max="28" style="width:60px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:12px;padding:7px 8px;outline:none;" placeholder="Día">';
+    if(i>0) html += '<button type="button" onclick="removeProyLine(\'' + l.id + '\')" style="background:none;border:none;color:rgba(237,26,142,0.6);cursor:pointer;font-size:14px;padding:4px;">✕</button>';
+    html += '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  html += '<button type="button" onclick="addProyLine()" style="width:100%;padding:10px;border-radius:50px;background:transparent;border:1.5px dashed rgba(81,196,202,0.35);color:#51c4ca;font-family:Poppins,sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px;">+ Agregar línea</button>';
   html += '</div>';
 
   html += '<div class="edit-row">';
@@ -2753,6 +2916,65 @@ function renderProjectModal(p){
   openEditModal(html);
 }
 
+function recalcProjFee(){
+  var total = 0;
+  if(window._projLineas){
+    window._projLineas.forEach(function(lid){
+      var m = document.getElementById('prl-monto-'+lid);
+      if(m) total += parseFloat(m.value)||0;
+    });
+  }
+  var feeEl = document.getElementById('proj-fee');
+  if(feeEl) feeEl.value = total||'';
+}
+
+function addProyLine(){
+  var newId = uid();
+  var list = document.getElementById('proj-lineas-list');
+  if(!list) return;
+  var div = document.createElement('div');
+  div.id = 'prl-'+newId;
+  div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:12px;margin-bottom:8px;';
+  div.innerHTML = '<div style="display:flex;gap:8px;margin-bottom:8px;">'
+    +'<input type="text" id="prl-concepto-'+newId+'" placeholder="Concepto" style="flex:2;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:13px;padding:8px 10px;outline:none;">'
+    +'<input type="number" id="prl-monto-'+newId+'" placeholder="$" oninput="recalcProjFee()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:13px;padding:8px 10px;outline:none;">'
+    +'</div>'
+    +'<div style="display:flex;gap:8px;align-items:center;">'
+    +'<select id="prl-cobro-'+newId+'" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:12px;padding:7px 8px;outline:none;">'
+    +'<option>Mensual</option><option>Por entregable</option><option>Al inicio</option><option>A la entrega</option><option>Bimestral</option><option>Trimestral</option>'
+    +'</select>'
+    +'<input type="number" id="prl-dia-'+newId+'" value="7" min="1" max="28" style="width:60px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:Poppins,sans-serif;font-size:12px;padding:7px 8px;outline:none;" placeholder="Día">'
+    +'<button type="button" onclick="removeProyLine(\''+newId+'\')" style="background:none;border:none;color:rgba(237,26,142,0.6);cursor:pointer;font-size:14px;padding:4px;">✕</button>'
+    +'</div>';
+  list.appendChild(div);
+  if(!window._projLineas) window._projLineas=[];
+  window._projLineas.push(newId);
+}
+
+function removeProyLine(id){
+  var el = document.getElementById('prl-'+id);
+  if(el) el.remove();
+  if(window._projLineas) window._projLineas = window._projLineas.filter(function(x){ return x!==id; });
+  recalcProjFee();
+}
+
+function collectProjLineas(){
+  if(!window._projLineas) return [];
+  return window._projLineas.map(function(lid){
+    var c = document.getElementById('prl-concepto-'+lid);
+    var m = document.getElementById('prl-monto-'+lid);
+    var co= document.getElementById('prl-cobro-'+lid);
+    var d = document.getElementById('prl-dia-'+lid);
+    return {
+      id: lid,
+      concepto: c?c.value.trim():'',
+      monto:    m?parseFloat(m.value)||0:0,
+      cobro:    co?co.value:'Mensual',
+      dia:      d?parseInt(d.value)||7:7
+    };
+  }).filter(function(l){ return l.monto>0||l.concepto; });
+}
+
 function saveProject(){
   var assignedTo = [];
   document.querySelectorAll('#edit-modal-body input[type=checkbox]').forEach(function(cb){
@@ -2764,11 +2986,14 @@ function saveProject(){
   if(editingProjectId){
     var idx = projects.findIndex(function(p){ return p.id===editingProjectId; });
     if(idx>=0){
+      var lineas = collectProjLineas();
+      var totalFee = lineas.reduce(function(s,l){ return s+l.monto; },0) || (parseFloat(document.getElementById('proj-fee').value)||0);
       projects[idx].nombre      = document.getElementById('proj-nombre').value.trim();
       projects[idx].cliente     = document.getElementById('proj-cliente').value.trim();
       projects[idx].tipo        = document.getElementById('proj-tipo').value;
       projects[idx].cobro       = document.getElementById('proj-cobro').value;
-      projects[idx].fee         = parseFloat(document.getElementById('proj-fee').value)||0;
+      projects[idx].fee         = totalFee;
+      projects[idx].lineas      = lineas;
       projects[idx].status      = document.getElementById('proj-status').value;
       projects[idx].fechaInicio = document.getElementById('proj-fi').value;
       projects[idx].fechaFin    = document.getElementById('proj-ff').value;
@@ -2779,13 +3004,16 @@ function saveProject(){
   } else {
     var nombre = document.getElementById('proj-nombre').value.trim();
     if(!nombre){ showToast('Ingresa el nombre del proyecto','yellow'); return; }
+    var lineas = collectProjLineas();
+    var totalFee = lineas.reduce(function(s,l){ return s+l.monto; },0) || (parseFloat(document.getElementById('proj-fee').value)||0);
     var newProj = {
       id: uid(),
       nombre:      nombre,
       cliente:     document.getElementById('proj-cliente').value.trim(),
       tipo:        document.getElementById('proj-tipo').value,
       cobro:       document.getElementById('proj-cobro').value,
-      fee:         parseFloat(document.getElementById('proj-fee').value)||0,
+      fee:         totalFee,
+      lineas:      lineas,
       status:      document.getElementById('proj-status').value,
       fechaInicio: document.getElementById('proj-fi').value,
       fechaFin:    document.getElementById('proj-ff').value,
@@ -2882,10 +3110,14 @@ function renderFlujo(user){
   var total=payments.reduce(function(s,p){return s+p.amount;},0);
   var paid=payments.filter(function(p){return p.status==='Pagado';}).reduce(function(s,p){return s+p.amount;},0);
   var pending=payments.filter(function(p){return p.status==='Pendiente';}).reduce(function(s,p){return s+p.amount;},0);
-  var html='<div class="metrics-grid" style="grid-template-columns:repeat(3,1fr);">';
-  html+='<div class="metric-card"><div class="metric-label">PROGRAMADO</div><div class="metric-value white" style="font-size:32px;">'+formatMXN(total)+'</div></div>';
-  html+='<div class="metric-card"><div class="metric-label">PAGADO</div><div class="metric-value teal" style="font-size:32px;">'+formatMXN(paid)+'</div></div>';
-  html+='<div class="metric-card"><div class="metric-label">PENDIENTE</div><div class="metric-value yellow" style="font-size:32px;">'+formatMXN(pending)+'</div></div>';
+  var pendingInvoicesTotal=getInvoices().filter(function(i){return i.status==='Pendiente';}).reduce(function(s,i){return s+i.total;},0);
+  var netBalance=pendingInvoicesTotal-pending;
+  var netColor=netBalance>=0?'#51c4ca':'#ed1a8e';
+  var html='<div class="metrics-grid" style="grid-template-columns:repeat(2,1fr);">';
+  html+='<div class="metric-card"><div class="metric-label">PROGRAMADO</div><div class="metric-value white" style="font-size:28px;">'+formatMXN(total)+'</div></div>';
+  html+='<div class="metric-card"><div class="metric-label">PAGADO</div><div class="metric-value teal" style="font-size:28px;">'+formatMXN(paid)+'</div></div>';
+  html+='<div class="metric-card"><div class="metric-label">PENDIENTE (PAGOS)</div><div class="metric-value yellow" style="font-size:28px;">'+formatMXN(pending)+'</div></div>';
+  html+='<div class="metric-card"><div class="metric-label">SALDO NETO PROYECTADO</div><div class="metric-value" style="font-size:28px;color:'+netColor+';">'+formatMXN(netBalance)+'</div><div class="metric-sub" style="color:'+netColor+';">'+(netBalance>=0?'Positivo ✓':'Negativo — revisar')+'</div></div>';
   html+='</div>';
   // card cuts
   html+='<div class="cards-strip">';
@@ -2896,7 +3128,7 @@ function renderFlujo(user){
   });
   html+='</div>';
   // filters
-  var filterOpts=['TODOS','ESTA SEMANA','ESTE MES','AMEX POLAR','AMEX ROBERTO','BANAMEX','BBVA'];
+  var filterOpts=['TODOS','COBROS','ESTA SEMANA','ESTE MES','AMEX POLAR','AMEX ROBERTO','BANAMEX','BBVA'];
   html+='<div class="filter-pills">';
   filterOpts.forEach(function(f){
     var fid=f.toLowerCase().replace(/ /g,'-');
@@ -2916,16 +3148,68 @@ function renderFlujo(user){
   var filtered=filterPayments(payments,payFilter);
   filtered.sort(function(a,b){return a.dueDate.localeCompare(b.dueDate);});
   var events=getEvents();
-  filtered.forEach(function(p){
-    var ev=events.find(function(e){return e.id===p.eventId;})||{name:'—'};
-    html+='<div class="payment-item">';
-    html+='<div class="pay-left"><div><span class="pay-day">'+dayNum(p.dueDate)+'</span><span class="pay-month">'+monthStr(p.dueDate)+'</span></div>';
-    html+='<div class="pay-concept">'+esc(p.concept)+'</div>';
-    html+='<div class="pay-event">'+esc(ev.name)+'</div><div class="pay-method">'+esc(p.paymentMethod)+'</div>';
-    if(p.status==='Pendiente')html+='<button class="btn-mark-paid" onclick="markPaymentPaid(\''+p.id+'\')">MARCAR PAGADO</button>';
-    html+='</div>';
-    html+='<div class="pay-right"><div class="pay-amount">'+formatMXN(p.amount)+'</div>'+chipStatus(p.status)+attachBadge('payment',p.id,p.attachments)+buildAvatarRow(p)+'</div>';
-    html+='</div>';
+  // Merge payments (outgoing) and invoices (incoming) into one unified timeline
+  var pendingInvoices=getInvoices().filter(function(i){return i.status==='Pendiente';});
+  var unified=[];
+  if(payFilter!=='cobros'){
+    filtered.forEach(function(p){unified.push({type:'pago',data:p,date:p.dueDate});});
+  }
+  if(payFilter==='todos'||payFilter==='cobros'||payFilter==='esta-semana'||payFilter==='este-mes'){
+    var today2=new Date(); today2.setHours(0,0,0,0);
+    var weekEnd2=new Date(today2); weekEnd2.setDate(today2.getDate()+7);
+    var monthEnd2=new Date(today2.getFullYear(),today2.getMonth()+1,0);
+    pendingInvoices.forEach(function(i){
+      var d=i.dueDate?new Date(i.dueDate+'T00:00:00'):null;
+      var include=false;
+      if(payFilter==='todos'||payFilter==='cobros') include=true;
+      else if(payFilter==='esta-semana'&&d&&d>=today2&&d<=weekEnd2) include=true;
+      else if(payFilter==='este-mes'&&d&&d>=today2&&d<=monthEnd2) include=true;
+      if(include) unified.push({type:'cobro',data:i,date:i.dueDate||''});
+    });
+  }
+  unified.sort(function(a,b){return (a.date||'').localeCompare(b.date||'');});
+  unified.forEach(function(item){
+    if(item.type==='pago'){
+      var p=item.data;
+      if(p.tipo==='cobro' && p.proyectoId){
+        // Project scheduled cobro — show with purple accent
+        var borderColor=p.status==='Facturado'?'#51c4ca':'#a855f7';
+        html+='<div class="payment-item" style="border-left:3px solid '+borderColor+';">';
+        html+='<div class="pay-left">';
+        html+='<div><span class="pay-day" style="color:#a855f7;">'+dayNum(p.dueDate)+'</span><span class="pay-month" style="color:#a855f7;">'+monthStr(p.dueDate)+'</span></div>';
+        html+='<div style="font-size:11px;font-weight:700;color:#a855f7;letter-spacing:1px;margin-bottom:2px;">\u{1F4C2} PROYECTO \u2192 COBRO</div>';
+        html+='<div class="pay-concept">'+esc(p.concept)+'</div>';
+        html+='<div class="pay-event">'+esc(p.cliente||p.proyectoNombre||'')+'</div>';
+        html+='<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">Facturar: '+formatMXN(p.amount)+' + IVA '+formatMXN(p.ivaAmount||0)+' = '+formatMXN(p.total||p.amount)+'</div>';
+        if(p.expectedPayDate) html+='<div style="font-size:11px;color:rgba(81,196,202,0.7);margin-top:2px;">Cobro estimado: '+esc(p.expectedPayDate)+'</div>';
+        if(p.status==='Pendiente') html+='<button class="btn-mark-paid" style="background:linear-gradient(135deg,#a855f7,#51c4ca);color:white;margin-top:6px;" onclick="createInvoiceFromPayment(\''+p.id+'\')">' + 'CREAR FACTURA</button>';
+        html+='</div>';
+        html+='<div class="pay-right"><div class="pay-amount" style="color:#a855f7;">'+formatMXN(p.total||p.amount)+'</div>'+chipStatus(p.status)+'</div>';
+        html+='</div>';
+      } else {
+        var ev=events.find(function(e){return e.id===p.eventId;})||{name:'—'};
+        html+='<div class="payment-item" style="border-left:3px solid #f97316;">';
+        html+='<div class="pay-left"><div><span class="pay-day">'+dayNum(p.dueDate)+'</span><span class="pay-month">'+monthStr(p.dueDate)+'</span></div>';
+        html+='<div class="pay-concept">'+esc(p.concept)+'</div>';
+        html+='<div class="pay-event">'+esc(ev.name)+'</div><div class="pay-method">'+esc(p.paymentMethod)+'</div>';
+        if(p.status==='Pendiente')html+='<button class="btn-mark-paid" onclick="markPaymentPaid(\''+p.id+'\')">MARCAR PAGADO</button>';
+        html+='</div>';
+        html+='<div class="pay-right"><div class="pay-amount">'+formatMXN(p.amount)+'</div>'+chipStatus(p.status)+attachBadge('payment',p.id,p.attachments)+buildAvatarRow(p)+'</div>';
+        html+='</div>';
+      }
+    } else {
+      var i=item.data;
+      html+='<div class="payment-item" style="border-left:3px solid #51c4ca;">';
+      html+='<div class="pay-left"><div><span class="pay-day" style="color:#51c4ca;">'+dayNum(i.dueDate)+'</span><span class="pay-month" style="color:#51c4ca;">'+monthStr(i.dueDate)+'</span></div>';
+      html+='<div style="font-size:11px;font-weight:700;color:#51c4ca;letter-spacing:1px;margin-bottom:2px;">COBRO →</div>';
+      html+='<div class="pay-concept">'+esc(i.invoiceNum||'—')+' · '+esc(i.client)+'</div>';
+      html+='<div class="pay-event">'+esc(i.concept)+'</div>';
+      html+='<div class="pay-method">vence '+esc(i.dueDate||'—')+'</div>';
+      if(i.status==='Pendiente')html+='<button class="btn-mark-paid" style="background:linear-gradient(135deg,#51c4ca,#0891b2);color:white;" onclick="markInvoicePaid(\''+i.id+'\')">MARCAR COBRADO</button>';
+      html+='</div>';
+      html+='<div class="pay-right"><div class="pay-amount" style="color:#51c4ca;">'+formatMXN(i.total)+'</div>'+chipStatus(i.status)+'</div>';
+      html+='</div>';
+    }
   });
   return html;
 }
@@ -2947,15 +3231,16 @@ function filterPayments(payments,filter){
 
 // ---- FINANZAS ----
 function renderFinanzas(user){
-  var tabs=['TARJETAS','PRÉSTAMOS','CxC'];
+  var tabs=['TARJETAS','PRÉSTAMOS','CxC','IVA'];
   var html='<div class="fin-tabs">';
   tabs.forEach(function(t){
-    var id=t==='PRÉSTAMOS'?'prestamos':t==='CxC'?'cxc':'tarjetas';
+    var id=t==='PRÉSTAMOS'?'prestamos':t==='CxC'?'cxc':t==='IVA'?'iva':'tarjetas';
     html+='<div class="fin-tab'+(finTab===id?' active':'')+'" onclick="setFinTab(\''+id+'\')">'+esc(t)+'</div>';
   });
   html+='</div>';
   if(finTab==='tarjetas')html+=renderTarjetas();
   else if(finTab==='prestamos')html+=renderPrestamos();
+  else if(finTab==='iva')html+=renderIVA();
   else html+=renderCxC();
   return html;
 }
@@ -2981,29 +3266,253 @@ function renderTarjetas(){
   });
   return html;
 }
-function renderPrestamos(){
-  var config=getConfig();
-  var loans=config.loans||[];
-  var totalDebt=loans.reduce(function(s,l){return s+(l.totalOwed-l.paid);},0);
-  var html='';
-  loans.forEach(function(l){
-    var balance=l.totalOwed-l.paid;
-    var monthlyInterest=balance*l.rate/100;
-    html+='<div class="loan-card">';
-    html+='<div class="metric-label">'+esc(l.creditor.toUpperCase())+'</div>';
-    html+='<div class="loan-name">'+esc(l.creditor)+'</div>';
-    html+='<div class="loan-rate">'+(l.rate>0?l.rate+'% mensual':'Sin interés')+'</div>';
-    html+='<div style="height:1px;background:#222;margin:12px 0;"></div>';
-    html+='<div style="display:flex;gap:32px;align-items:flex-end;">';
-    html+='<div><div class="metric-label">SALDO PENDIENTE</div><div class="loan-balance">'+formatMXN(balance)+'</div></div>';
-    if(monthlyInterest>0)html+='<div><div class="metric-label">INTERÉS/MES</div><div class="loan-interest">'+formatMXN(monthlyInterest)+'</div></div>';
-    html+='</div>';
-    html+='<button class="edit-icon-btn" onclick="editLoan(\''+l.id+'\');" title="Editar">✏️ Editar</button>';
-    html+='<div style="margin-top:6px;">'+attachBadge('loan',l.id,l.attachments)+'</div>';
-    html+='</div>';
+function renderIVA(){
+  var expenses = getExpenses();
+  var invoices = getInvoices();
+  var today = new Date();
+  var thisMonth = today.toISOString().slice(0,7);
+
+  // IVA a favor (acreditable) — from expenses WITH factura
+  var ivaAcreditableConFact = 0;
+  var ivaSinFact = 0;
+  var expSinFactura = [];
+
+  expenses.forEach(function(e){
+    var hasFact = e.invoice && e.invoice !== 'Sin factura' && e.invoice !== 'Pendiente' && e.invoice !== '';
+    var ivaEst = Math.round((e.amount||0) * 0.16);
+    if(hasFact){
+      ivaAcreditableConFact += ivaEst;
+    } else {
+      ivaSinFact += ivaEst;
+      expSinFactura.push(e);
+    }
   });
-  html+='<button type="button" onclick="addNewLoan()" style="width:100%;padding:11px;border-radius:50px;background:transparent;border:1.5px dashed rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);font-family:Poppins,sans-serif;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">+ Agregar préstamo</button>';
-  html+='<div style="text-align:right;margin-top:16px;"><div style="font-size:13px;font-weight:700;letter-spacing:2px;color:var(--gray);">DEUDA TOTAL</div><div style="font-size:40px;font-weight:700;color:var(--magenta);">'+formatMXN(totalDebt)+'</div></div>';
+
+  // IVA trasladado (cobrado a clientes)
+  var ivaTrasladado = invoices
+    .filter(function(i){ return i.status!=='Cancelada'; })
+    .reduce(function(s,i){ return s+(i.iva||0); },0);
+
+  // This month
+  var ivaTrasladadoMes = invoices
+    .filter(function(i){ return i.status!=='Cancelada' && (i.invoiceDate||'').startsWith(thisMonth); })
+    .reduce(function(s,i){ return s+(i.iva||0); },0);
+
+  var ivaAcreditableMes = expenses
+    .filter(function(e){ return (e.date||'').startsWith(thisMonth) && e.invoice && e.invoice!=='Sin factura' && e.invoice!=='Pendiente'; })
+    .reduce(function(s,e){ return s+Math.round((e.amount||0)*0.16); },0);
+
+  var ivaPagarEstimado = Math.max(0, ivaTrasladadoMes - ivaAcreditableMes);
+
+  var html = '';
+
+  // Summary cards
+  html += '<div class="metrics-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:20px;">';
+  html += '<div class="metric-card"><div class="metric-label">IVA TRASLADADO (MES)</div>';
+  html += '<div class="metric-value magenta" style="font-size:28px;">'+formatMXN(ivaTrasladadoMes)+'</div>';
+  html += '<div class="metric-sub">IVA en facturas emitidas este mes</div></div>';
+
+  html += '<div class="metric-card"><div class="metric-label">IVA ACREDITABLE (MES)</div>';
+  html += '<div class="metric-value teal" style="font-size:28px;">'+formatMXN(ivaAcreditableMes)+'</div>';
+  html += '<div class="metric-sub">Solo gastos CON comprobante</div></div>';
+
+  html += '<div class="metric-card" style="'+(ivaPagarEstimado>0?'border:1px solid rgba(237,26,142,0.3)':'')+'">';
+  html += '<div class="metric-label">ESTIMADO IVA A PAGAR</div>';
+  html += '<div class="metric-value" style="font-size:28px;color:'+(ivaPagarEstimado>0?'var(--magenta)':'#51c4ca')+';">'+formatMXN(ivaPagarEstimado)+'</div>';
+  html += '<div class="metric-sub">IVA trasladado − acreditable del mes</div></div>';
+
+  html += '<div class="metric-card" style="border:1px solid rgba(249,168,37,0.3)">';
+  html += '<div class="metric-label">IVA SIN COMPROBANTE</div>';
+  html += '<div class="metric-value yellow" style="font-size:28px;">'+formatMXN(ivaSinFact)+'</div>';
+  html += '<div class="metric-sub">'+expSinFactura.length+' gastos sin factura</div></div>';
+  html += '</div>';
+
+  // Missing comprobantes list
+  if(expSinFactura.length){
+    html += '<div class="section-title" style="color:#f9a825;margin-bottom:12px;">⚠️ COMPROBANTES FALTANTES ('+expSinFactura.length+')</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px;">Estos gastos no tienen factura — no se pueden acreditar en el IVA. Consigue los comprobantes y actualiza la factura en cada registro.</div>';
+    var events = getEvents();
+    var projs = getProjects();
+    expSinFactura.slice().sort(function(a,b){ return (b.amount||0)-(a.amount||0); }).forEach(function(e){
+      var evName = '—';
+      if(e.eventId && e.eventId!=='oficina'){
+        var ev = events.find(function(x){ return x.id===e.eventId; });
+        if(ev) evName = ev.name;
+        else {
+          var projId = e.eventId.replace('proj_','');
+          var pj = projs.find(function(x){ return x.id===projId; });
+          if(pj) evName = pj.nombre;
+        }
+      } else {
+        evName = 'Oficina / General';
+      }
+      var ivaEst = Math.round((e.amount||0)*0.16);
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(249,168,37,0.06);border:1px solid rgba(249,168,37,0.15);border-radius:12px;margin-bottom:6px;">';
+      html += '<div style="flex:1;min-width:0;">';
+      html += '<div style="font-size:13px;font-weight:600;color:white;">'+esc(e.concept)+'</div>';
+      html += '<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;">'+esc(e.date)+' · '+esc(evName)+' · '+esc(e.paymentMethod)+'</div>';
+      html += '</div>';
+      html += '<div style="text-align:right;flex-shrink:0;">';
+      html += '<div style="font-size:14px;font-weight:700;color:white;">'+formatMXN(e.amount)+'</div>';
+      html += '<div style="font-size:11px;color:#f9a825;">IVA: '+formatMXN(ivaEst)+'</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+  } else {
+    html += '<div style="text-align:center;padding:24px;font-size:14px;font-weight:700;color:#51c4ca;">✅ Todos los gastos tienen comprobante</div>';
+  }
+
+  // All acreditable expenses
+  var expConFact = expenses.filter(function(e){ return e.invoice && e.invoice!=='Sin factura' && e.invoice!=='Pendiente'; });
+  if(expConFact.length){
+    html += '<div class="section-title" style="color:#51c4ca;margin-top:24px;margin-bottom:12px;">✅ IVA ACREDITABLE TOTAL — '+formatMXN(ivaAcreditableConFact)+'</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:8px;">Gastos con comprobante fiscal — IVA acreditable acumulado</div>';
+    expConFact.slice(0,10).forEach(function(e){
+      html += '<div style="display:flex;justify-content:space-between;padding:8px 14px;background:rgba(81,196,202,0.05);border-radius:10px;margin-bottom:4px;">';
+      html += '<div style="font-size:12px;color:rgba(255,255,255,0.6);">'+esc(e.date)+' · '+esc(e.concept)+'</div>';
+      html += '<div style="font-size:12px;font-weight:700;color:#51c4ca;">'+formatMXN(Math.round((e.amount||0)*0.16))+'</div>';
+      html += '</div>';
+    });
+    if(expConFact.length>10) html += '<div style="font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:8px;">...y '+(expConFact.length-10)+' más</div>';
+  }
+
+  return html;
+}
+function scheduleInterestPayment(loanId, amount, dateStr){
+  var cfg = getConfig();
+  var loan = (cfg.loans||[]).find(function(l){ return l.id===loanId; });
+  if(!loan) return;
+
+  // Check if already scheduled for this month
+  var payments = getPayments();
+  var thisMonth = new Date().toISOString().slice(0,7);
+  var alreadyScheduled = payments.some(function(p){
+    return p.loanId===loanId && p.dueDate && p.dueDate.startsWith(thisMonth);
+  });
+
+  if(alreadyScheduled){
+    showToast('Ya hay un pago de interés programado para este mes','yellow');
+    return;
+  }
+
+  // Get the actual date
+  var now = new Date();
+  var payDay = loan.payDay || 1;
+  var payDate = new Date(now.getFullYear(), now.getMonth(), payDay);
+  if(payDate <= now) payDate = new Date(now.getFullYear(), now.getMonth()+1, payDay);
+  var payDateStr = payDate.toISOString().slice(0,10);
+
+  payments.push({
+    id: uid(),
+    eventId: 'oficina',
+    loanId: loanId,
+    concept: 'Interés préstamo — '+loan.creditor,
+    dueDate: payDateStr,
+    amount: amount,
+    paymentMethod: 'BBVA',
+    status: 'Pendiente',
+    rubro: 'Oficina'
+  });
+  lsSave('polar_payments', payments);
+  if(fbConnected&&fbDb) payments.slice(-1).forEach(function(p){ fbDb.collection('payments').doc(p.id).set(p).catch(function(){}); });
+  showToast('✅ Pago de interés programado para '+payDateStr);
+  switchTab('flujo');
+}
+function renderPrestamos(){
+  var cfg = getConfig();
+  var loans = cfg.loans || [];
+  var totalDebt = loans.reduce(function(s,l){ return s+(l.totalOwed||l.principal||0)-(l.paid||0); },0);
+  var html = '';
+
+  loans.forEach(function(l){
+    var balance = (l.totalOwed||l.principal||0)-(l.paid||0);
+    var monthlyInterest = l.monthlyInterest || Math.round((l.principal||0)*(l.rate||0)/100);
+
+    // Calculate months elapsed since startDate
+    var monthsElapsed = 0;
+    var interestAccrued = 0;
+    if(l.startDate){
+      var start = new Date(l.startDate);
+      var now = new Date();
+      monthsElapsed = Math.max(0, (now.getFullYear()-start.getFullYear())*12 + (now.getMonth()-start.getMonth()));
+      interestAccrued = monthlyInterest * monthsElapsed;
+    }
+
+    // Next interest payment date (next 1st or specific day)
+    var payDay = l.payDay || 1;
+    var nextPayDate = new Date();
+    nextPayDate.setDate(payDay);
+    if(nextPayDate <= new Date()) nextPayDate.setMonth(nextPayDate.getMonth()+1);
+    var nextPayStr = nextPayDate.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+    var daysToNext = Math.ceil((nextPayDate - new Date())/(1000*60*60*24));
+
+    html += '<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:20px;margin-bottom:14px;">';
+
+    // Header
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">';
+    html += '<div>';
+    html += '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.35);text-transform:uppercase;">'+esc(l.creditor)+'</div>';
+    if(l.startDate) html += '<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">Desde: '+new Date(l.startDate).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})+' ('+monthsElapsed+' meses)</div>';
+    html += '</div>';
+    html += '<button class="edit-icon-btn" onclick="editLoan(\''+l.id+'\')" title="Editar">✏️</button>';
+    html += '</div>';
+
+    // Main figures grid
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">';
+
+    html += '<div><div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Saldo pendiente</div>';
+    html += '<div style="font-size:28px;font-weight:800;color:var(--magenta);">'+formatMXN(balance)+'</div></div>';
+
+    html += '<div><div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Tasa mensual</div>';
+    html += '<div style="font-size:20px;font-weight:700;color:rgba(255,255,255,0.7);">'+(l.rate||0)+'%</div></div>';
+
+    if(monthlyInterest>0){
+      html += '<div><div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Interés mensual</div>';
+      html += '<div style="font-size:20px;font-weight:700;color:var(--yellow);">'+formatMXN(monthlyInterest)+'</div></div>';
+    }
+
+    if(interestAccrued>0){
+      html += '<div><div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Interés acumulado</div>';
+      html += '<div style="font-size:20px;font-weight:700;color:rgba(237,26,142,0.7);">'+formatMXN(interestAccrued)+'</div></div>';
+    }
+    html += '</div>';
+
+    // Next payment alert
+    if(monthlyInterest>0){
+      var alertColor = daysToNext<=7 ? '#ed1a8e' : daysToNext<=14 ? '#f9a825' : '#51c4ca';
+      html += '<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">';
+      html += '<div>';
+      html += '<div style="font-size:11px;color:rgba(255,255,255,0.4);">Próximo pago de interés</div>';
+      html += '<div style="font-size:14px;font-weight:700;color:white;">'+nextPayStr+'</div>';
+      html += '</div>';
+      html += '<div style="text-align:right;">';
+      html += '<div style="font-size:18px;font-weight:800;color:'+alertColor+';">'+formatMXN(monthlyInterest)+'</div>';
+      html += '<div style="font-size:10px;color:rgba(255,255,255,0.3);">En '+daysToNext+' días</div>';
+      html += '</div>';
+      html += '</div>';
+
+      // Button to schedule this month's interest payment in FLUJO
+      html += '<button onclick="scheduleInterestPayment(\''+l.id+'\','+monthlyInterest+',\''+nextPayStr+'\')" ';
+      html += 'style="width:100%;padding:10px;border-radius:50px;background:transparent;border:1.5px solid rgba(81,196,202,0.3);color:#51c4ca;font-family:Poppins,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:1px;"';
+      html += ' onmouseover="this.style.background=\'rgba(81,196,202,0.1)\'" onmouseout="this.style.background=\'transparent\'">';
+      html += '📅 PROGRAMAR EN FLUJO</button>';
+    }
+
+    html += '<div style="margin-top:8px;">'+attachBadge('loan',l.id,l.attachments)+'</div>';
+    html += '</div>';
+  });
+
+  if(loans.length===0){
+    html += '<div class="empty-state"><span class="empty-icon">💸</span>';
+    html += '<div class="empty-title">Sin préstamos registrados</div>';
+    html += '<button class="empty-btn" onclick="addNewLoan()">+ AGREGAR PRÉSTAMO</button></div>';
+  } else {
+    html += '<button type="button" onclick="addNewLoan()" style="width:100%;padding:11px;border-radius:50px;background:transparent;border:1.5px dashed rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);font-family:Poppins,sans-serif;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">+ Agregar préstamo</button>';
+    html += '<div style="text-align:right;margin-top:16px;">';
+    html += '<div style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;">Deuda total</div>';
+    html += '<div style="font-size:36px;font-weight:800;color:var(--magenta);">'+formatMXN(totalDebt)+'</div>';
+    html += '</div>';
+  }
   return html;
 }
 function renderCxC(){
@@ -3026,8 +3535,11 @@ function renderCxC(){
     html+='<div style="font-size:12px;color:var(--gray);">'+esc(inv.invoiceNum)+(inv.oc?' · '+esc(inv.oc):'')+'</div>';
     html+='<div style="font-size:13px;color:var(--gray);font-style:italic;margin-top:4px;">'+esc(inv.concept)+'</div>';
     html+='<div style="font-size:11px;color:var(--gray);margin-top:4px;">Comisión: '+formatMXN(inv.commission)+'</div></div>';
+    var ocColors={'Sin OC':'rgba(255,255,255,0.3)','OC Solicitada':'#f9a825','OC Recibida':'#51c4ca','Factura Emitida':'#81c784','Cobrado':'#4caf50'};
+    var ocColor=ocColors[inv.ocStatus||'Sin OC']||'rgba(255,255,255,0.3)';
     html+='<div style="text-align:right;"><div class="inv-total">'+formatMXN(inv.total)+'</div>';
     html+=chipStatus(inv.status);
+    html+='<div style="font-size:10px;font-weight:700;margin-top:4px;color:'+ocColor+';">● '+(inv.ocStatus||'Sin OC')+'</div>';
     html+='<div style="font-size:13px;font-weight:700;color:'+daysColor+';margin-top:6px;">'+Math.abs(days)+(days<0?' DÍAS VENCIDO':' DÍAS')+'</div>';
     html+='<button class="edit-icon-btn" onclick="editInvoice(\''+inv.id+'\')" title="Editar factura">✏️</button>';
     html += buildAvatarRow(inv)+attachBadge('invoice',inv.id,inv.attachments);
@@ -3088,9 +3600,14 @@ function renderConfig(user){
       +';border:1px solid rgba(255,255,255,'+(gf.activo?'0.1':'0.05')+');border-radius:12px;margin-bottom:8px;">';
     html += '<label style="position:relative;cursor:pointer;flex-shrink:0;">'
       +'<input type="checkbox" '+(gf.activo?'checked':'')+' onchange="toggleGastoFijo(\''+gf.id+'\')" style="accent-color:#ed1a8e;width:18px;height:18px;"></label>';
+    var diaLabel = gf.frecuencia==='quincenal' ? 'Días 1 y 15' : 'Día '+(gf.dia||'?')+' c/mes';
+    var tipoIcon = (gf.tipoCargo||'').includes('Auto')||( gf.tipoCargo||'').includes('Domicil')||( gf.tipoCargo||'').includes('Cargo auto') ? '🔄' : (gf.tipoCargo||'').includes('Transf') ? '➡️' : (gf.tipoCargo||'').includes('BBVA')&&!(gf.tipoCargo||'').includes('Auto') ? '🏦' : '💳';
     html += '<div style="flex:1;min-width:0;">'
       +'<div style="font-size:13px;font-weight:600;color:'+(gf.activo?'white':'rgba(255,255,255,0.35)')+'">'+esc(gf.nombre)+'</div>'
-      +'<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;">'+gf.frecuencia+' · '+esc(gf.paymentMethod)+'</div>'
+      +'<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap;">'
+      +'<span>📅 '+diaLabel+'</span>'
+      +'<span>'+tipoIcon+' '+esc(gf.tipoCargo||gf.paymentMethod)+'</span>'
+      +'</div>'
       +'</div>';
     html += '<div style="text-align:right;flex-shrink:0;">'
       +'<div style="font-size:14px;font-weight:700;color:'+(gf.activo?'#51c4ca':'rgba(255,255,255,0.25)')+'">'+fmt(gf.monto)+'</div>'
@@ -3227,7 +3744,8 @@ function saveExpense(){
   var method=getPillVal('g-method');
   var status=getPillVal('g-status');
   var invoice=document.getElementById('g-invoice').value.trim();
-  if(!concept||!amount||!eventId){showToast('Completa los campos requeridos','yellow');return;}
+  if(!concept||!amount){showToast('Ingresa el concepto y el monto','yellow');return;}
+  if(!eventId) eventId='oficina'; // default to office/general
   var expenses=getExpenses();
   var newExp={id:uid(),eventId:eventId,date:date,concept:concept,amount:amount,rubro:rubro,paymentMethod:method,status:status,invoice:invoice||'Sin factura',createdBy:user.id,imageData:(scanImageData && scanImageData.thumbnail) ? scanImageData.thumbnail : (scanImageData && scanImageData.isPDF) ? scanImageData.dataUrl : null,docName:(scanImageData && scanImageData.docFile) ? scanImageData.docFile.name : null};
   newExp = addHistoryEntry(newExp, '\u270f\ufe0f Gasto registrado');
@@ -3276,7 +3794,20 @@ function markPaymentPaid(id){
   var payments=getPayments();
   var idx=payments.findIndex(function(p){return p.id===id;});
   if(idx>=0){payments[idx].status='Pagado';lsSave('polar_payments',payments);}
+  if(fbConnected&&fbDb) fbDb.collection('payments').doc(id).update({status:'Pagado'}).catch(function(){});
   showToast('✓ MARCADO COMO PAGADO');
+  switchTab('flujo');
+}
+function markInvoicePaid(id){
+  var invoices=getInvoices();
+  var idx=invoices.findIndex(function(i){return i.id===id;});
+  if(idx>=0){
+    invoices[idx].status='Pagada';
+    invoices[idx].paidDate=new Date().toISOString().slice(0,10);
+    lsSave('polar_invoices',invoices);
+    if(fbConnected&&fbDb) fbDb.collection('invoices').doc(id).set(invoices[idx]).catch(function(){});
+  }
+  showToast('✅ FACTURA MARCADA COMO COBRADA');
   switchTab('flujo');
 }
 function setPayFilter(f){
@@ -4478,19 +5009,24 @@ function openGastoFijoForm(id){
   var overlay = document.createElement('div');
   overlay.id = 'gf-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:2000;background:rgba(2,6,23,0.95);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;';
-  var def = existing || {id:uid(),nombre:'',monto:0,frecuencia:'mensual',dia:1,quincena:1,rubro:'Oficina',paymentMethod:'BBVA',activo:true};
+  var TIPO_CARGO_OPTS = ['Cargo automático BBVA','Cargo automático AmEx Polar','Cargo automático AmEx Roberto','Cargo automático Banamex Blanca','Transferencia manual','Depósito BBVA','Domiciliación IMSS','Línea de pago SAT','Efectivo / App','Otro'];
+  var def = existing || {id:uid(),nombre:'',monto:0,frecuencia:'mensual',dia:1,quincena:1,rubro:'Oficina',paymentMethod:'BBVA',tipoCargo:'Transferencia manual',activo:true};
   overlay.innerHTML = '<div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:32px 28px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;">'
     +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">'
     +'<div style="font-size:18px;font-weight:800;color:white">'+(existing?'Editar':'Nuevo')+' Gasto Fijo</div>'
     +'<button onclick="document.getElementById(\'gf-overlay\').remove()" style="background:rgba(255,255,255,0.08);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>'
     +'</div>'
-    +'<div class="field"><label>Nombre</label><input type="text" id="gf-nombre" value="'+esc(def.nombre)+'" placeholder="Ej: Adobe Creative Cloud"></div>'
+    +'<div class="field"><label>Nombre / Descripción</label><input type="text" id="gf-nombre" value="'+esc(def.nombre)+'" placeholder="Ej: Nómina Q1 — Verónica Silva (BBVA)"></div>'
+    +'<div class="field"><label>Persona (si aplica)</label><input type="text" id="gf-persona" value="'+esc(def.persona||'')+'" placeholder="Nombre del empleado"></div>'
     +'<div class="field"><label>Monto (MXN)</label><input type="number" id="gf-monto" value="'+def.monto+'" placeholder="0"></div>'
     +'<div class="field"><label>Frecuencia</label><select id="gf-freq"><option value="mensual">Mensual</option><option value="quincenal">Quincenal</option><option value="semanal">Semanal</option></select></div>'
-    +'<div class="field" id="gf-dia-wrap"><label>Día del mes</label><input type="number" id="gf-dia" value="'+def.dia+'" min="1" max="28" placeholder="1-28"></div>'
+    +'<div class="field" id="gf-dia-wrap"><label>📅 Día del mes en que se paga</label><input type="number" id="gf-dia" value="'+def.dia+'" min="1" max="28" placeholder="1-28"></div>'
     +'<div class="field" id="gf-qna-wrap" style="display:none"><label>Quincena</label><select id="gf-qna"><option value="1">Primera (día 1)</option><option value="2">Segunda (día 15)</option></select></div>'
     +'<div class="field"><label>Rubro</label><select id="gf-rubro"><option>Oficina</option><option>Catering</option><option>Traslado terrestre</option><option>Equipo A/V</option><option>Viáticos · Varios</option><option>Personal</option></select></div>'
-    +'<div class="field"><label>Forma de pago</label><select id="gf-pay"><option>BBVA</option><option>AmEx Polar</option><option>AmEx Roberto</option><option>Banamex Blanca</option><option>Efectivo</option></select></div>'
+    +'<div class="field"><label>Forma de pago</label><select id="gf-pay"><option>BBVA</option><option>AmEx Polar</option><option>AmEx Roberto</option><option>Banamex Blanca</option><option>Efectivo</option><option>Transferencia</option></select></div>'
+    +'<div class="field"><label>💳 Cómo se paga / Tipo de cargo</label><select id="gf-tipocargo">'
+    +TIPO_CARGO_OPTS.map(function(t){ return '<option'+(t===(def.tipoCargo||'Transferencia manual')?' selected':'')+'>'+t+'</option>'; }).join('')
+    +'</select></div>'
     +'<input type="hidden" id="gf-id" value="'+def.id+'">'
     +'<button type="button" onclick="saveGastoFijoForm()" style="width:100%;padding:14px;border-radius:50px;border:none;background:linear-gradient(135deg,#ed1a8e,#51c4ca);color:white;font-family:Poppins,sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;text-transform:uppercase;letter-spacing:1px;">'+(existing?'GUARDAR CAMBIOS':'CREAR GASTO FIJO')+'</button>'
     +'</div>';
@@ -4513,16 +5049,20 @@ function openGastoFijoForm(id){
 }
 
 function saveGastoFijoForm(){
+  var personaEl = document.getElementById('gf-persona');
+  var tipoCEl   = document.getElementById('gf-tipocargo');
   var gf = {
-    id: document.getElementById('gf-id').value,
-    nombre: document.getElementById('gf-nombre').value.trim(),
-    monto: parseFloat(document.getElementById('gf-monto').value)||0,
-    frecuencia: document.getElementById('gf-freq').value,
-    dia: parseInt(document.getElementById('gf-dia').value)||1,
-    quincena: parseInt(document.getElementById('gf-qna').value)||1,
-    rubro: document.getElementById('gf-rubro').value,
-    paymentMethod: document.getElementById('gf-pay').value,
-    activo: true
+    id:           document.getElementById('gf-id').value,
+    nombre:       document.getElementById('gf-nombre').value.trim(),
+    persona:      personaEl ? personaEl.value.trim() : '',
+    monto:        parseFloat(document.getElementById('gf-monto').value)||0,
+    frecuencia:   document.getElementById('gf-freq').value,
+    dia:          parseInt(document.getElementById('gf-dia').value)||1,
+    quincena:     parseInt(document.getElementById('gf-qna').value)||1,
+    rubro:        document.getElementById('gf-rubro').value,
+    paymentMethod:document.getElementById('gf-pay').value,
+    tipoCargo:    tipoCEl ? tipoCEl.value : 'Transferencia manual',
+    activo:       true
   };
   if(!gf.nombre){ showToast('Ingresa un nombre','yellow'); return; }
   saveGastosFijo(gf);
@@ -5023,6 +5563,7 @@ function editLoan(loanId){
     +'<div class="field"><label>Fecha inicio</label><input type="date" id="el-startDate" value="'+(loan.startDate||'')+'"></div>'
     +'<div class="field"><label>Interés mensual ($)</label><input type="number" id="el-monthlyInt" value="'+(loan.monthlyInterest||Math.round((loan.principal||0)*(loan.rate||0)/100))+'"></div>'
     +'</div>'
+    +'<div class="field"><label>Día de pago de interés (del mes)</label><input type="number" id="el-payday" value="'+(loan.payDay||1)+'" min="1" max="28" placeholder="1-28"></div>'
     +'<div class="field"><label>Estado</label>'
     +'<select id="el-status"><option value="activo">Activo</option><option value="pagado">Pagado / Cerrado</option></select>'
     +'</div>'
@@ -5049,6 +5590,7 @@ function saveLoanEdit(id){
   cfg.loans[idx].paid         = parseFloat(document.getElementById('el-paid').value)||0;
   cfg.loans[idx].startDate    = document.getElementById('el-startDate').value;
   cfg.loans[idx].monthlyInterest = parseFloat(document.getElementById('el-monthlyInt').value)||0;
+  cfg.loans[idx].payDay        = parseInt(document.getElementById('el-payday').value)||1;
   cfg.loans[idx].status       = document.getElementById('el-status').value;
   cfg.loans[idx] = addHistoryEntry(cfg.loans[idx], '\u270f\ufe0f Pr\u00e9stamo editado');
   lsSave('polar_config', cfg);
@@ -5216,8 +5758,10 @@ function saveInvoiceEdit(id){
   invoices[idx].total       = parseFloat(document.getElementById('ei-total').value)||Math.round(sub*1.16);
   invoices[idx].commission  = parseFloat(document.getElementById('ei-comm').value)||0;
   invoices[idx].dueDate     = document.getElementById('ei-duedate').value;
-  invoices[idx].status      = document.getElementById('ei-status').value;
-  invoices[idx].paidDate    = document.getElementById('ei-paiddate').value;
+  invoices[idx].status        = document.getElementById('ei-status').value;
+  invoices[idx].paidDate      = document.getElementById('ei-paiddate').value;
+  invoices[idx].ocStatus      = document.getElementById('ei-ocstatus').value;
+  invoices[idx].scheduledDate = document.getElementById('ei-facdate').value;
   invoices[idx] = addHistoryEntry(invoices[idx], '\u270f\ufe0f Factura actualizada');
   lsSave('polar_invoices', invoices);
   if(fbConnected&&fbDb) fbDb.collection('invoices').doc(id).set(invoices[idx]).catch(function(){});
@@ -5237,11 +5781,62 @@ function deleteInvoice(id){
 }
 
 function addNewInvoice(){
-  var newInv = {id:uid(),client:'',invoiceNum:'',oc:'',concept:'',subtotal:0,iva:0,total:0,dueDate:'',status:'Pendiente',commission:0};
+  var newInv = {id:uid(),client:'',invoiceNum:'',oc:'',concept:'',subtotal:0,iva:0,total:0,dueDate:'',status:'Pendiente',commission:0,ocStatus:'Sin OC',scheduledDate:'',attachments:[]};
   var invoices = getInvoices();
   invoices.push(newInv);
   lsSave('polar_invoices',invoices);
   editInvoice(newInv.id);
+}
+function createInvoiceFromPayment(payId){
+  var payments = getPayments();
+  var p = payments.find(function(x){ return x.id===payId; });
+  if(!p || !p.proyectoId) return;
+  var projects = getProjects();
+  var proj = projects.find(function(x){ return x.id===p.proyectoId; });
+  if(!proj) return;
+  quickCreateInvoice('proyecto_iguala', p.proyectoId, p.concept, proj.cliente, p.amount);
+  // Mark this payment as invoice created
+  p.status = 'Facturado';
+  lsSave('polar_payments', payments);
+}
+
+function quickCreateInvoice(tipo, sourceId, nombre, cliente, monto){
+  var eventId = tipo==='proyecto_iguala' ? 'proj_'+sourceId : sourceId;
+  var today = new Date().toISOString().slice(0,10);
+  var iva = Math.round(monto * 0.16);
+  var total = monto + iva;
+  var dueDate = new Date();
+  dueDate.setDate(dueDate.getDate()+60);
+  var dueDateStr = dueDate.toISOString().slice(0,10);
+  var newInv = {
+    id: uid(),
+    client:         cliente,
+    invoiceNum:     'F-PENDIENTE',
+    oc:             '',
+    concept:        nombre,
+    eventId:        eventId,
+    subtotal:       monto,
+    iva:            iva,
+    total:          total,
+    invoiceDate:    today,
+    dueDate:        dueDateStr,
+    status:         'Pendiente',
+    commission:     0,
+    ocStatus:       'OC Solicitada',
+    scheduledDate:  '',
+    attachments:    []
+  };
+  var invoices = getInvoices();
+  invoices.push(newInv);
+  lsSave('polar_invoices', invoices);
+  if(fbConnected&&fbDb) fbDb.collection('invoices').doc(newInv.id).set(newInv).catch(function(){});
+  showToast('✅ Factura creada — edita el No. de factura y OC en FINANZAS → CxC');
+  switchTab('finanzas');
+  setTimeout(function(){
+    var tabs = document.querySelectorAll('.fin-tab');
+    tabs.forEach(function(t){ if(t.textContent==='CxC') t.click(); });
+    setTimeout(function(){ editInvoice(newInv.id); }, 200);
+  }, 300);
 }
 
 // ============================================================
