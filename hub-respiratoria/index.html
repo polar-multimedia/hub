@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1a1446">
+<title>Hub Respiratoria · Ciclo 8</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap">
+<style>
+  :root{--ink:#1a1446;--mag:#e0288a;--rosa-3:#ffb3d6;--sol:#ffd23f;--muted:#c9c2e6}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--ink);color:#fff;font-family:Manrope,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;display:flex;justify-content:center}
+  .g{width:100%;max-width:430px;min-height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:24px max(24px,env(safe-area-inset-right,0px)) calc(32px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));gap:14px}
+  .kk{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--rosa-3)}
+  h1{margin:0;font-size:38px;line-height:.95;letter-spacing:-.04em;font-weight:800}
+  p{margin:0;font-size:14px;font-weight:700;line-height:1.45;color:var(--muted)}
+  input{width:100%;font:inherit;font-size:22px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:#fff;border:0;border-radius:22px;padding:18px 20px;min-height:64px;outline:none}
+  input:focus-visible{box-shadow:0 0 0 4px var(--sol)}
+  button{font:inherit;border:0;border-radius:999px;min-height:56px;background:var(--mag);color:#fff;font-size:15px;font-weight:800;cursor:pointer}
+  button:disabled{opacity:.6}
+  button:focus-visible{outline:3px solid var(--sol);outline-offset:3px}
+  .msg{min-height:20px;font-size:13px;font-weight:800;color:var(--sol)}
+  .chip{align-self:flex-start;display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px 5px 6px;font-size:12px;font-weight:800}
+  .chip i{font-style:normal;background:var(--sol);color:var(--ink);border-radius:999px;padding:3px 8px}
+  small{font-size:11px;font-weight:700;color:rgba(255,255,255,.55);line-height:1.4}
+</style>
+</head>
+<body>
+<form class="g" id="f" autocomplete="off">
+  <span class="chip"><i>C8</i>Demo de revisión</span>
+  <span class="kk">Hub Carnot · Línea Respiratoria</span>
+  <h1>Entra con tu código</h1>
+  <p>Polar te envió un código personal de acceso. Escríbelo tal como llegó.</p>
+  <label for="c" class="kk" style="color:#fff;margin-top:6px">Código de acceso</label>
+  <input id="c" name="c" placeholder="RESP-XXXX-XXXX" inputmode="text" autocapitalize="characters" spellcheck="false" required>
+  <div class="msg" id="m" role="status" aria-live="polite"></div>
+  <button id="b" type="submit">Entrar al hub</button>
+  <small>Contenido confidencial de Carnot Laboratorios para revisión interna. No compartas tu código.</small>
+</form>
+<script>
+const KEYS=[{"s": "rZwgeBdmNCWAQZiUA8s8Qg==", "i": "dS8Uv8nysJixYBeM", "c": "PeSqhWziXtI/kGXM5VEJDEyXMBLSPFupfSVs1PqHCIbJzh+3aMJSXjdShP2kIm8HiqY3a5nehBAijSzxW7BYdn3EblrZmDTxcAwyKFF7z81TdqU5JPjVQgsvmHz4Z5jLevyg4cIiZe4kroJLpfD1tcft2T1In2qY+T9/y+4Jnk75hA=="}, {"s": "QaQ9Uarg0uALu+xkLwdYcw==", "i": "J/ubMuCFRbVHcQvS", "c": "0lO0tULbnrSyzhlE1JwZS4yZFjr/erg58pgy4G4AIoAXW7fJB4q+KdiM/6+2g/shkovczPeGbvsK1/KYNCAyTVFNSzf+WVJZg4nflwxRUgZ0C7Bf7Pafz/gRmcECWvkSRuom7UERUp1+ywvkTD1l9Ww5UxDnBGJhGHlNJnvqxV1Qo5Sz/BNxo8SU2g=="}, {"s": "4g1a/wAkT7VnXFFehjyeGA==", "i": "vrKd+lJUTrc7OdC3", "c": "oSgpa+TZ2naLLM8PB5v/dpsgMypxquokBKs/FNqT8w4n3ie0+Vw0HJSZ2bBaJeO1k69Bmc+IHg5xW0kaJCp0a+CnQIgK+Uabk4PopUg1OoKzMbI9JRP5eBWu+ZCgz5qfiwZDtODqoSYNIiQNcjAt+uinVVuOV6mlohew9aXF/3QMvQ=="}, {"s": "Z1gUE6PoNG/sOro35osWiA==", "i": "u6I2WbDaoL3I3woJ", "c": "6G4yMgxRPgv9EdwiHFeCZc6rDvAXRSV4db26emdn2rA7NEn7tdZLz6IgiIvNAavyGE+7RmMuzQ3TtnvT7yurBiI7w7r7FqrUovjE+uNMyYHmvOslDDA7sDuKwla1ULQd2QKXALlVK0v9orljdzMVngDUe1poDixnE5I="}], ITER=250000, IV='cwOQfg4wsxMn+b60';
+const ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function unwrap(code){
+  const raw=new TextEncoder().encode(code.replace(/[^A-Za-z0-9]/g,'').toUpperCase());
+  const base=await crypto.subtle.importKey('raw',raw,'PBKDF2',false,['deriveKey']);
+  for(const k of KEYS){
+    const kek=await crypto.subtle.deriveKey({name:'PBKDF2',salt:ub(k.s),iterations:ITER,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    try{ const p=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(k.i)},kek,ub(k.c)); return JSON.parse(new TextDecoder().decode(p)); }catch(_){}
+  }
+  return null;
+}
+async function open(code,quiet){
+  const m=document.getElementById('m'), b=document.getElementById('b');
+  b.disabled=true; m.textContent='Verificando…';
+  const u=await unwrap(code);
+  if(!u){ b.disabled=false; m.textContent=quiet?'':'Ese código no es válido. Revísalo e inténtalo de nuevo.'; try{ if(quiet) localStorage.removeItem('hr_code'); }catch(_){} return; }
+  m.textContent='Abriendo el hub…';
+  try{ localStorage.setItem('hr_code',code); }catch(_){}
+  const r=await fetch('app.enc',{cache:'no-store'}); const ct=ub((await r.text()).trim());
+  const key=await crypto.subtle.importKey('raw',ub(u.k),'AES-GCM',false,['decrypt']);
+  const html=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(IV)},key,ct));
+  window.__HR_USER={n:u.n,r:u.r};
+  document.open(); document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"></head><body><script>window.__HR_USER='+JSON.stringify({n:u.n,r:u.r})+'<\/script>'+html+'</body></html>'); document.close();
+}
+document.getElementById('f').addEventListener('submit',e=>{ e.preventDefault(); open(document.getElementById('c').value,false).catch(()=>{ document.getElementById('m').textContent='No se pudo abrir. Revisa tu conexión.'; document.getElementById('b').disabled=false; }); });
+try{ const s=localStorage.getItem('hr_code'); if(s){ document.getElementById('c').value=s; open(s,true); } }catch(_){}
+</script>
+</body>
+</html>
