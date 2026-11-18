@@ -523,6 +523,14 @@ body{font-weight:400}
 .tr-row p{font-size:13.5px;line-height:1.5;color:var(--muted);font-weight:400;margin-top:2px}
 .tr-side{align-self:stretch;margin-bottom:132px}
 @media (max-width:900px){.tr{padding-top:40px}.tr-grid{grid-template-columns:minmax(0,1fr);gap:0}.tr-side{display:none}.tr-copy{order:1;padding-bottom:30px}.tr-photo{order:2;width:min(88%,420px);margin-inline:auto}.tr-photo{margin-left:auto}.tr-photo img{width:116%;margin-left:-8%}.tr-q,.tr-body{padding-left:0}.tr-q{padding-left:30px}.tr-row{grid-template-columns:96px minmax(0,1fr)}.tr::after{height:70px}}
+
+.tr-grid{align-items:stretch}
+.tr-left{display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+.tr-left .tr-q{margin:6px 0 0;font-size:clamp(22px,2.5vw,34px);line-height:1.25}
+.tr-copy{align-self:start;padding-top:10px}
+.tr-body{padding-left:0}
+.tr-photo .ed-dots{left:auto;right:-6%;top:0}
+@media (max-width:900px){.tr-left{order:2;gap:0}.tr-left .tr-q{display:none}.tr-copy::before{content:"Más de diez años en el quirófano de alta especialidad.";display:block;font-size:20px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;line-height:1.3;margin-bottom:30px}}
 </style>
 
 <div class="prog" aria-hidden="true"></div>
@@ -604,12 +612,14 @@ body{font-weight:400}
 
 <section class="in tr" id="doctor">
   <div class="tr-grid">
+    <div class="tr-left">
+      <blockquote class="tr-q rv">Más de diez años<br>en el quirófano de<br><span class="acc">alta especialidad.</span></blockquote>
     <div class="tr-photo">
       <span class="ed-dots" aria-hidden="true"></span>
       <img src="img/doctor-bn.webp" alt="Retrato en blanco y negro del Dr. Rodrigo Madroño, de traje, sentado y con las manos entrelazadas" loading="lazy">
     </div>
+    </div>
     <div class="tr-copy">
-      <blockquote class="tr-q rv">Más de diez años<br>en el quirófano de<br><span class="acc">alta especialidad.</span></blockquote>
       <div class="tr-body">
         <h2 class="tr-t rv">Trayectoria</h2>
         <p class="tr-lead rv">Cirujano de reemplazo articular certificado por el Consejo Mexicano de Ortopedia y Traumatología y miembro de la Sociedad Mexicana de Cirugía de Cadera.</p>
