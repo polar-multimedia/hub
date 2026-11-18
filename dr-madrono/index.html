@@ -500,6 +500,29 @@ body{font-weight:400}
 .ed-sign b{display:block;font-size:19px;letter-spacing:-.02em;font-weight:600}
 .ed-sign small{font-size:11.5px;color:var(--muted)}
 @media (max-width:860px){.ed{padding-block:40px 60px}.ed-grid{grid-template-columns:minmax(0,1fr);gap:44px}.ed-side{display:none}.ed-photo{width:min(84%,400px);justify-self:start;margin-left:6%}.ed-tab{transform:none;left:auto;right:0;top:34px}.ed-block{right:-10%}.ed-sign{left:-6%}}
+
+/* ---------- Trayectoria editorial ---------- */
+.tr{position:relative;padding-block:70px 0;margin-bottom:90px}
+.tr::after{content:"";position:absolute;left:calc(50% - 50vw);width:100vw;bottom:0;height:92px;background:var(--acc);z-index:0}
+.tr::before{content:"";position:absolute;left:50%;width:50vw;bottom:-14px;height:14px;background:#0B0F12;z-index:0}
+.tr-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1fr) 34px;gap:0 clamp(24px,4vw,64px);align-items:end}
+.tr-photo{position:relative;align-self:end;line-height:0}
+.tr-photo{clip-path:inset(-200px -300px 0 -300px);margin-left:-12%;padding-top:30px}
+.tr-photo img{position:relative;z-index:1;display:block;width:118%;max-width:none;margin-left:-6%;filter:drop-shadow(0 0 26px rgba(11,15,18,.22))}
+.tr-photo .ed-dots{left:-4%;top:6%;bottom:auto;width:46%;height:30%}
+.tr-copy{padding-bottom:132px}
+.tr-q{margin:0 0 44px;position:relative;padding-left:34px;font-size:clamp(20px,2.1vw,28px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;line-height:1.3}
+.tr-q::before{content:"\201C";position:absolute;left:0;top:-.18em;font-size:1.9em;line-height:1;color:var(--acc)}
+.tr-body{padding-left:34px}
+.tr-t{font-size:15px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;margin-bottom:14px}
+.tr-lead{font-size:15px;line-height:1.65;color:var(--muted);font-weight:400;max-width:54ch;margin-bottom:22px}
+.tr-list{display:grid;border-top:1px solid var(--line-2)}
+.tr-row{display:grid;grid-template-columns:118px minmax(0,1fr);gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
+.tr-row>span{font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);padding-top:3px}
+.tr-row b{display:block;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.tr-row p{font-size:13.5px;line-height:1.5;color:var(--muted);font-weight:400;margin-top:2px}
+.tr-side{align-self:stretch;margin-bottom:132px}
+@media (max-width:900px){.tr{padding-top:40px}.tr-grid{grid-template-columns:minmax(0,1fr);gap:0}.tr-side{display:none}.tr-copy{order:1;padding-bottom:30px}.tr-photo{order:2;width:min(88%,420px);margin-inline:auto}.tr-photo{margin-left:auto}.tr-photo img{width:116%;margin-left:-8%}.tr-q,.tr-body{padding-left:0}.tr-q{padding-left:30px}.tr-row{grid-template-columns:96px minmax(0,1fr)}.tr::after{height:70px}}
 </style>
 
 <div class="prog" aria-hidden="true"></div>
@@ -579,23 +602,28 @@ body{font-weight:400}
   </div>
 </section>
 
-<section class="in" id="doctor">
-  <div class="panel split">
-    <div class="stickcol">
-      <figure class="shot" style="--ar:5/4;margin-bottom:26px"><img src="img/doctor-quirofano.jpg" alt="El Dr. Rodrigo Madroño en quirófano, con bata de Traumatología y Ortopedia" loading="lazy" style="object-position:62% 30%"><figcaption>Imagen ilustrativa</figcaption></figure>
-      <span class="badge">Trayectoria</span>
-      <h2 class="h2"><span class="ln"><span>Más de diez años</span></span><span class="ln"><span>en el quirófano de</span></span><span class="ln"><span class="acc">alta especialidad</span></span></h2>
-      <p class="sub">Cirujano de reemplazo articular certificado por el Consejo Mexicano de Ortopedia y Traumatología y miembro de la Sociedad Mexicana de Cirugía de Cadera.</p>
+<section class="in tr" id="doctor">
+  <div class="tr-grid">
+    <div class="tr-photo">
+      <span class="ed-dots" aria-hidden="true"></span>
+      <img src="img/doctor-bn.webp" alt="Retrato en blanco y negro del Dr. Rodrigo Madroño, de traje, sentado y con las manos entrelazadas" loading="lazy">
     </div>
-    <div class="rows" id="rows">
-      <i class="fill"></i>
-      <div class="card row now rv"><h3>Reemplazos articulares, IMSS</h3><span class="n">(2015 a la fecha)</span><p>Servicio de reemplazos articulares del IMSS: cirugía de cadera y rodilla, consulta externa y urgencias.</p></div>
-      <div class="card row rv"><h3>Grupo Azura</h3><span class="n">(2018 a la fecha)</span><p>Consulta especializada en Tabacalera y cirugía de alta especialidad de cadera y rodilla en Sanatorio Durango.</p></div>
-      <div class="card row rv"><h3>Hospital General de Ecatepec</h3><span class="n">(2017–2019)</span><p>Médico adscrito a Traumatología y Ortopedia: urgencias y cirugía programada.</p></div>
-      <div class="card row rv"><h3>Urgencias del Estado de México</h3><span class="n">(2015–2017)</span><p>Coordinación de la atención de urgencias traumatológicas y ortopédicas del sistema SIES, ISEM.</p></div>
-      <div class="card row rv"><h3>Alta especialidad en reemplazos</h3><span class="n">(Formación)</span><p>Residencia en Traumatología y Ortopedia y curso de alta especialidad en reemplazos articulares, en una unidad de alta especialidad del IMSS.</p></div>
-      <div class="card row rv"><h3>Médico cirujano</h3><span class="n">(2009)</span><p>Universidad Justo Sierra. Mejor promedio de su generación y Premio Pfizer a la Excelencia en Estudiantes de Medicina.</p></div>
+    <div class="tr-copy">
+      <blockquote class="tr-q rv">Más de diez años<br>en el quirófano de<br><span class="acc">alta especialidad.</span></blockquote>
+      <div class="tr-body">
+        <h2 class="tr-t rv">Trayectoria</h2>
+        <p class="tr-lead rv">Cirujano de reemplazo articular certificado por el Consejo Mexicano de Ortopedia y Traumatología y miembro de la Sociedad Mexicana de Cirugía de Cadera.</p>
+        <div class="tr-list" id="rows">
+          <div class="tr-row rv"><span>2015 a la fecha</span><div><b>Reemplazos articulares, IMSS</b><p>Servicio de reemplazos articulares del IMSS: cirugía de cadera y rodilla, consulta externa y urgencias.</p></div></div>
+          <div class="tr-row rv"><span>2018 a la fecha</span><div><b>Grupo Azura</b><p>Consulta especializada en Tabacalera y cirugía de alta especialidad de cadera y rodilla en Sanatorio Durango.</p></div></div>
+          <div class="tr-row rv"><span>2017–2019</span><div><b>Hospital General de Ecatepec</b><p>Médico adscrito a Traumatología y Ortopedia: urgencias y cirugía programada.</p></div></div>
+          <div class="tr-row rv"><span>2015–2017</span><div><b>Urgencias del Estado de México</b><p>Coordinación de la atención de urgencias traumatológicas y ortopédicas del sistema SIES, ISEM.</p></div></div>
+          <div class="tr-row rv"><span>Formación</span><div><b>Alta especialidad en reemplazos</b><p>Residencia en Traumatología y Ortopedia y curso de alta especialidad en reemplazos articulares, en una unidad de alta especialidad del IMSS.</p></div></div>
+          <div class="tr-row rv"><span>2009</span><div><b>Médico cirujano</b><p>Universidad Justo Sierra. Mejor promedio de su generación y Premio Pfizer a la Excelencia en Estudiantes de Medicina.</p></div></div>
+        </div>
+      </div>
     </div>
+    <span class="ed-side tr-side" aria-hidden="true">Dr. Rodrigo Madroño</span>
   </div>
 </section>
 
