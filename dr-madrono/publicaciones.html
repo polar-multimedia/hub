@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Publicaciones · Dr. Madroño</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Layout: mesa de redacción del mes. Encabezado oscuro como el sitio, calendario claro de lunes a viernes, panel lateral con la vista previa por red. */
+:root{
+  --bg:#F3F5F6; --panel:#FFFFFF; --fg:#0B0F12; --muted:#51606A; --dim:#9AA6AD; --line:rgba(11,15,18,.10); --line-2:rgba(11,15,18,.2);
+  --acc:#0A8794; --acc-soft:rgba(10,135,148,.10); --holo:#3FE0EE; --dark:#050607; --dark-2:#0E1012; --dark-fg:#F2F5F6; --dark-muted:#9BA6AC;
+  --ok:#1E8E5A; --ok-soft:rgba(30,142,90,.12); --wait:#B4650F; --wait-soft:rgba(180,101,15,.12);
+  --p-e:#0A8794; --p-c:#5B55C9; --p-q:#B4650F; --p-x:#12151A; --p-f:#1E8E5A;
+  --font:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+html{padding-block:env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.45;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;letter-spacing:inherit;text-align:left}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:8px}
+h1,h2,h3,p{margin:0}h1,h2,h3{font-weight:400;letter-spacing:-.04em}
+img{max-width:100%}
+[hidden]{display:none!important}
+.in{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+.top{background:var(--dark);color:var(--dark-fg);padding-block:18px 74px}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:500;padding:6px 16px 6px 6px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:var(--dark-2)}
+.brand img{width:34px;height:34px;border-radius:50%}
+.back{margin-left:auto;padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.18);font-size:14px}
+.top h1{font-size:clamp(40px,6vw,84px);line-height:.95;margin:44px 0 14px}
+.top h1 span{color:var(--holo)}
+.top p{color:var(--dark-muted);max-width:58ch;font-size:16.5px}
+.kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.kpi{padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);font-size:14px;color:var(--dark-muted)}
+.kpi b{color:var(--dark-fg);font-weight:500;font-variant-numeric:tabular-nums}
+
+.sheet{background:var(--bg);border-radius:36px 36px 0 0;margin-top:-40px;padding-block:28px 60px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:22px}
+.filters .lab{font-size:12.5px;color:var(--muted);margin-right:4px}
+.f{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:13.5px;color:var(--muted)}
+.f i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.f[aria-pressed="true"]{border-color:var(--fg);color:var(--fg)}
+.sep{width:1px;height:22px;background:var(--line-2);margin-inline:6px}
+
+.dow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.day{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:236px;min-width:0;transition:transform .2s,box-shadow .2s,opacity .2s;width:100%}
+.day:hover{transform:translateY(-2px);box-shadow:0 18px 36px -24px rgba(11,15,18,.35)}
+.day.dim{opacity:.28}
+.day.empty{background:none;border-style:dashed;justify-content:center;align-items:center;color:var(--dim);font-size:13px;cursor:default;min-height:120px}
+.day.empty:hover{transform:none;box-shadow:none}
+.day .hd{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.day .n{font-size:26px;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.st{font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:3px 8px;border-radius:999px;background:var(--wait-soft);color:var(--wait)}
+.st.ok{background:var(--ok-soft);color:var(--ok)}
+.th{width:100%;aspect-ratio:16/10;border-radius:12px;overflow:hidden;background:var(--dark);position:relative;flex-shrink:0}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.pl{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--c)}
+.day h3{font-size:16.5px;line-height:1.15;letter-spacing:-.03em}
+.chs{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+.chs span{font-size:10.5px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.wk{grid-column:1/-1;font-size:12px;color:var(--dim);margin-top:10px}
+@media (max-width:900px){.dow{display:none}.cal{grid-template-columns:minmax(0,1fr)}.day{min-height:0;display:grid;grid-template-columns:110px minmax(0,1fr);column-gap:12px}.day .hd{grid-column:1/-1}.day .th{grid-row:span 3}.day.empty{display:none}.chs{margin-top:4px}}
+
+/* Gráfico de marca (cuando la pieza no lleva foto) */
+.gfx{position:absolute;inset:0;background:radial-gradient(90% 90% at 80% 10%,rgba(63,224,238,.35),transparent 60%),linear-gradient(160deg,#0E1A1F,#050607);color:#F2F5F6;display:flex;flex-direction:column;justify-content:flex-end;padding:9%}
+.gfx::before{content:"";position:absolute;right:7%;top:9%;width:26%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(63,224,238,.6);box-shadow:0 0 0 12px rgba(63,224,238,.08)}
+.gfx small{font-size:.5em;letter-spacing:.1em;text-transform:uppercase;color:#3FE0EE;margin-bottom:.5em}
+.gfx b{font-weight:400;letter-spacing:-.04em;line-height:1.04;font-size:1em;text-wrap:balance}
+.th .gfx{font-size:13px}
+
+/* Panel de detalle */
+.scrim{position:fixed;inset:0;background:rgba(5,6,7,.5);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--bg);z-index:41;display:flex;flex-direction:column;box-shadow:-30px 0 60px -30px rgba(5,6,7,.5);padding-top:env(safe-area-inset-top,0px)}
+.dh{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:grid;gap:6px;background:var(--panel)}
+.dh .r{display:flex;align-items:center;gap:10px}
+.dh .x{margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);text-align:center;font-size:18px}
+.dh h2{font-size:26px;line-height:1.08}
+.dh .when{font-size:13px;color:var(--muted)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.tab{padding:7px 14px;border-radius:999px;border:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--fg);color:#fff;border-color:var(--fg)}
+.db{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.df{padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--panel);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{padding:11px 18px;border-radius:999px;border:1px solid var(--line-2);font-size:14px;font-weight:500;background:var(--panel)}
+.btn.a{background:var(--acc);border-color:transparent;color:#fff}
+.btn.done{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.df .msg{font-size:12.5px;color:var(--muted);margin-left:auto}
+
+.post{flex-shrink:0;width:100%;max-width:460px;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.ph{display:flex;align-items:center;gap:10px;padding:12px}
+.ph img{width:40px;height:40px;border-radius:50%}
+.ph b{display:block;font-size:14px;font-weight:600}.ph small{font-size:12px;color:var(--muted)}
+.ptext{padding:0 12px 12px;font-size:14.5px;white-space:pre-line}
+.ced{display:block;margin-top:8px;font-size:11.5px;color:var(--muted)}
+.vis{position:relative;aspect-ratio:1/1;background:var(--dark);font-size:26px}
+.vis.w{aspect-ratio:16/9;font-size:22px}
+.vis.v{aspect-ratio:9/14;font-size:25px}
+.vis img{width:100%;height:100%;object-fit:cover;display:block}
+.vis .cap{position:absolute;inset:auto 0 0;padding:18px;color:#F2F5F6;font-size:.82em;letter-spacing:-.03em;line-height:1.1;background:linear-gradient(transparent,rgba(5,6,7,.85))}
+.vis .tag,.vis .cnt{position:absolute;top:12px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:rgba(5,6,7,.6);color:#F2F5F6}
+.vis .tag{left:12px;color:#3FE0EE;letter-spacing:.08em;text-transform:uppercase}.vis .cnt{right:12px}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:8px 12px}
+.nav button{font-size:13px;font-weight:500;padding:5px 10px;border-radius:8px;border:1px solid var(--line)}
+.nav button:disabled{opacity:.35;cursor:default}
+.dots{display:flex;gap:5px}.dots i{width:6px;height:6px;border-radius:50%;background:#C9D1D6}.dots i.on{background:var(--acc)}
+.pact{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:9px;font-size:13px;color:var(--muted)}
+.scr{padding:12px;font-size:13.5px;color:var(--muted)}.scr b{color:var(--fg);font-weight:600}
+.art{padding:18px 20px 22px}.art .k{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.art h3{font-size:23px;line-height:1.15;margin:6px 0 8px}.art .by{font-size:12px;color:var(--muted);margin-bottom:10px}.art p{font-size:14.5px;color:#2A3036}
+.note{font-size:12.5px;color:var(--muted);text-align:center;max-width:44ch}
+.foot{font-size:12.5px;color:var(--muted);margin-top:26px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.vd video{width:100%;height:100%;object-fit:cover;display:block;background:#050607}
+.pb{position:absolute;left:8px;bottom:8px;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px 3px 20px;border-radius:999px;background:rgba(5,6,7,.7);color:#3FE0EE}
+.pb::before{content:"";position:absolute;left:8px;top:50%;transform:translateY(-50%);border-left:7px solid #3FE0EE;border-block:4.5px solid transparent}
+.vis .pb{left:12px;bottom:12px;font-size:12px}
+.refs{flex-shrink:0;width:100%;max-width:460px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:6px;font-size:13.5px}
+.refs b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.refs a{color:var(--acc);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.refs small{font-size:12px;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tags i{font-style:normal;padding:4px 10px;border-radius:999px;background:var(--acc-soft);color:var(--acc);font-size:12.5px}
+.art .fn{font-size:12.5px;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);overflow-wrap:anywhere}.art .fn a{color:var(--acc);text-decoration:underline}
+.vw{display:inline-flex;padding:3px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.vw button{padding:7px 16px;border-radius:999px;font-size:13.5px;color:var(--muted)}.vw button[aria-pressed="true"]{background:var(--fg);color:#fff}
+.pauta{display:block}
+.ptop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px;color:var(--muted)}
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px}
+table{border-collapse:collapse;width:100%;min-width:980px;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;padding:12px 14px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td .lk{font-weight:500;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-2)}
+td.hs{font-size:12px;color:var(--muted);max-width:260px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <div class="bar"><a class="brand" href="index.html"><img src="data:image/jpeg;base64,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" alt="">Dr. Madroño</a><a class="back" href="index.html">Volver al sitio</a></div>
+    <h1>Publicaciones de <span>diciembre</span></h1>
+    <p>El primer mes de contenido del Dr. Rodrigo Madroño: una pieza por día hábil, adaptada a cada red. Abra cualquier día para ver cómo queda y aprobarla.</p>
+    <div class="kpis" id="kpis"></div>
+  </div>
+</header>
+<main class="sheet">
+  <div class="in">
+    <div class="filters" id="filters"></div>
+    <div class="dow"><span>Lunes</span><span>Martes</span><span>Miércoles</span><span>Jueves</span><span>Viernes</span></div>
+    <div class="cal" id="cal"></div>
+    <p class="foot">Demo de Polar Multimedia. Textos de ejemplo: el contenido clínico lo valida el doctor antes de publicar. Las fotos son ilustrativas, generadas con IA.</p>
+  </div>
+</main>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Detalle de la publicación">
+  <div class="dh"><div class="r"><span class="pl" id="d-pl"></span><span class="st" id="d-st"></span><button class="x" type="button" id="d-x" aria-label="Cerrar">×</button></div><h2 id="d-t"></h2><div class="when" id="d-w"></div></div>
+  <div class="tabs" id="d-tabs" role="tablist"></div>
+  <div class="db" id="d-b"></div>
+  <div class="df"><button class="btn a" type="button" id="d-ok"></button><button class="btn" type="button" id="d-copy">Copiar texto</button><span class="msg" id="d-msg"></span></div>
+</aside>
+
+<script>
+const AV="data:image/jpeg;base64,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";
+const CED="Dr. Rodrigo Madroño Carpinteyro · Traumatología y Ortopedia · Céd. Prof. 6440493 · Céd. Esp. 8475828";
+const P={e:{n:"Entiende tu articulación",ch:["fb","ig","web"]},c:{n:"Así es la cirugía",ch:["ig","yt","li"]},q:{n:"Preguntas frecuentes",ch:["fb","ig"]},x:{n:"El experto",ch:["li","fb","ig"]},f:{n:"Volver a estar firme",ch:["fb","ig","yt"]}};
+const CH={fb:"Facebook",ig:"Instagram",li:"LinkedIn",yt:"YouTube",web:"Sitio"};
+const DOW=["lunes","martes","miércoles","jueves","viernes"];
+const HT={e:"#cadera #rodilla #artrosis #ortopedia",c:"#reemplazoarticular #cirugíadecadera #ortopedia",q:"#ortopedia #cadera #rodilla #CDMX",x:"#ortopedia #cirugíadecadera #CDMX",f:"#rehabilitación #reemplazoarticular #volveraestarfirme"};
+const D=[
+{d:1,p:"c",t:"¿Qué es un reemplazo total de cadera?",v:"sala",
+ m:"En un reemplazo total de cadera se sustituyen las superficies desgastadas de la articulación por componentes artificiales: una copa con su inserto en la pelvis y un vástago con una cabeza en el fémur. El objetivo es recuperar el movimiento que la artrosis fue quitando.",
+ s:["Así es un reemplazo total de cadera","1. La articulación está desgastada y duele al moverse","2. Se sustituyen las superficies dañadas por componentes artificiales","3. La recuperación empieza pronto, con apoyo y rehabilitación"],
+ g:"Animación 3D de la cadera. Voz en off: «Cuando el cartílago se desgasta, el hueso roza con el hueso. En un reemplazo total, las superficies dañadas se sustituyen por componentes artificiales»."},
+{d:2,p:"q",t:"¿Qué llevar a su primera consulta?",v:"consultorio",
+ m:"¿Qué llevar a su primera consulta de cadera o rodilla?\n• Radiografías o estudios previos\n• La lista de medicamentos que toma\n• Identificación y póliza de seguro, si aplica\n• Un familiar que le acompañe\nCon esto se aprovecha mejor la valoración. Agende su cita por WhatsApp.",
+ s:["¿Primera consulta? Esto es lo que debe llevar","Radiografías o estudios previos y la lista de sus medicamentos","Identificación, póliza si aplica y alguien que le acompañe"]},
+{d:3,p:"x",t:"Quién es el Dr. Rodrigo Madroño",v:"doctor-quirofano",
+ m:"Detrás de cada cirugía hay años de formación y de práctica. El Dr. Rodrigo Madroño es cirujano con alta especialidad en reemplazos articulares y lleva más de diez años operando cadera y rodilla en la UMAE Lomas Verdes del IMSS. Da consulta privada en Grupo Azura.",
+ li:"Desde 2015 formo parte del servicio de reemplazos articulares del Hospital de Traumatología y Ortopedia Lomas Verdes del IMSS, donde hice mi alta especialidad. Operar cadera y rodilla todos los días me ha enseñado que cada paciente es un caso distinto. Hoy también recibo pacientes en consulta privada en Grupo Azura.",
+ s:["Conozca a su cirujano","Alta especialidad en reemplazos articulares, Lomas Verdes IMSS","Más de diez años operando cadera y rodilla","Consulta privada en Grupo Azura"]},
+{d:4,p:"f",t:"La recuperación avanza por etapas",v:"rehab",
+ m:"Después de un reemplazo de cadera, la recuperación avanza por etapas: primeros pasos con apoyo, rehabilitación y regreso gradual a la rutina. Cada paciente lleva su propio ritmo, y su cirujano y su rehabilitador lo marcan.",
+ s:["Volver a estar firme es un camino por etapas","Primero: pasos con apoyo, guiados por su equipo médico","Después: rehabilitación para recuperar fuerza y movimiento","Al final: el regreso gradual a su rutina, a su ritmo"],
+ g:"Animación de una figura que pasa de la andadera al bastón y luego camina sola. Voz en off: «La recuperación avanza por etapas. Su cirujano y su rehabilitador marcan el ritmo»."},
+{d:7,p:"e",t:"Dolor de cadera que no cede: puede ser artrosis",v:"g",
+ m:"¿Le duele la cadera al levantarse, al subir escaleras o incluso en la noche? Cuando el dolor no se quita con descanso, puede tratarse de artrosis. Una valoración a tiempo abre más opciones de tratamiento. Agende su consulta por WhatsApp.",
+ s:["¿Su mamá dejó de caminar como antes?","El dolor de cadera que no se va con descanso tiene nombre: artrosis","Tres señales: dolor al levantarse, rigidez por la mañana, cojera","Una valoración a tiempo abre más opciones de tratamiento"],
+ w:"La artrosis de cadera es el desgaste del cartílago que recubre la articulación. Suele empezar con dolor en la ingle o el glúteo al caminar y rigidez por las mañanas. El tratamiento empieza casi siempre sin cirugía; cuando esas medidas ya no alcanzan, el reemplazo es una opción a valorar."},
+{d:8,p:"c",t:"El reemplazo de rodilla, pieza por pieza",v:"g",
+ m:"En un reemplazo total de rodilla, las superficies desgastadas del fémur y la tibia se recubren con componentes metálicos. Entre ellos se coloca un inserto que permite el deslizamiento de la articulación. La rehabilitación posterior es parte central del tratamiento.",
+ s:["El reemplazo de rodilla, pieza por pieza","Componente femoral: recubre el extremo del fémur","Base tibial: se asienta sobre la tibia","Inserto: la nueva superficie de deslizamiento"],
+ g:"Animación 3D de la rodilla que se separa en sus componentes. Voz en off: «Tres piezas sustituyen las superficies desgastadas: componente femoral, base tibial e inserto»."},
+{d:9,p:"q",t:"¿Cuánto dura una prótesis?",v:"g",
+ m:"¿Cuánto dura una prótesis de cadera o de rodilla? Depende de varios factores: la edad, el peso, la actividad física y el tipo de implante. No hay una sola respuesta para todos. En la consulta le explicamos qué puede esperar en su caso.",
+ s:["¿Cuánto dura una prótesis?","Depende de la edad, el peso, la actividad y el tipo de implante","No hay una sola respuesta: su cirujano se lo explica en consulta"]},
+{d:10,p:"x",t:"Cadera y rodilla, todos los días",v:"quirofano",
+ m:"El Dr. Rodrigo Madroño opera cadera y rodilla todos los días. Desde 2015 forma parte del servicio de reemplazos articulares de Lomas Verdes del IMSS, una unidad de alta especialidad en traumatología y ortopedia.",
+ li:"En cirugía de reemplazo articular, la práctica constante importa. Llevo más de diez años en el servicio de reemplazos de Lomas Verdes, donde la cadera y la rodilla son el trabajo de todos los días: quirófano, consulta externa y urgencias. Esa rutina es la que quiero poner al servicio de cada paciente.",
+ s:["Cadera y rodilla, todos los días","Desde 2015 en el servicio de reemplazos articulares de Lomas Verdes IMSS","Quirófano, consulta externa y urgencias","La misma experiencia, en consulta privada"]},
+{d:11,p:"f",t:"Prepare su casa antes de la cirugía",v:"t3",
+ m:"Antes de una cirugía de cadera o rodilla, vale la pena preparar la casa: retire tapetes sueltos, deje libres los pasillos, tenga a la mano una silla firme con descansabrazos y acomode lo que usa a diario a una altura cómoda. Su equipo médico le dará las indicaciones para su caso.",
+ s:["Prepare su casa antes de la cirugía","Retire tapetes sueltos y despeje los pasillos","Una silla firme con descansabrazos, siempre a la mano","Lo de uso diario, a una altura cómoda"],
+ g:"Recorrido animado por una casa: se quitan tapetes, se despeja el pasillo, aparece una silla firme. Voz en off: «Pequeños cambios en casa hacen más segura la recuperación»."},
+{d:14,p:"e",t:"Artrosis de rodilla: las señales",v:"g",
+ m:"La artrosis de rodilla suele avisar: dolor al subir o bajar escaleras, rigidez al levantarse después de estar sentado, inflamación y tronidos al doblarla. Si estas molestias le acompañan desde hace semanas, conviene una valoración.",
+ s:["Su rodilla le está avisando","Dolor al subir o bajar escaleras","Rigidez después de estar sentado","Inflamación y tronidos al doblarla"],
+ w:"La artrosis de rodilla es el desgaste del cartílago entre el fémur y la tibia. Sus señales más comunes son el dolor al usar escaleras, la rigidez y la inflamación. El diagnóstico se hace con exploración y radiografías, y el tratamiento se ajusta al grado de desgaste."},
+{d:15,p:"c",t:"¿Qué pasa el día de la cirugía?",v:"sala",
+ m:"El día de la cirugía empieza con el ingreso y la valoración de anestesia. Después viene el procedimiento en quirófano y, al terminar, el paso a recuperación, donde el equipo vigila al paciente y maneja el dolor. Saber qué va a pasar ayuda a llegar con más tranquilidad.",
+ s:["¿Qué pasa el día de la cirugía?","Ingreso y valoración de anestesia","El procedimiento en quirófano","Recuperación, con vigilancia y manejo del dolor"],
+ g:"Línea de tiempo animada del día: ingreso, anestesia, quirófano, recuperación. Voz en off: «Saber qué va a pasar ayuda a llegar con más tranquilidad»."},
+{d:16,p:"q",t:"¿Cuándo es momento de operarse?",v:"g",
+ m:"¿Cuándo es momento de operarse? Cuando el dolor ya no mejora con medicamentos, control de peso ni rehabilitación, y limita su vida diaria. La decisión se toma en la valoración, con base en su exploración y sus estudios, y siempre es suya.",
+ s:["¿Cuándo es momento de operarse?","Cuando el dolor ya no mejora con tratamiento conservador","Cuando limita caminar, dormir o vestirse","La decisión se toma en la valoración, y es suya"]},
+{d:17,p:"x",t:"Qué significa estar certificado",v:"doctor-quirofano",
+ m:"El Dr. Rodrigo Madroño está certificado por el Consejo Mexicano de Ortopedia y Traumatología y es miembro de la Sociedad Mexicana de Cirugía de Cadera. La certificación confirma que un especialista mantiene vigentes sus conocimientos.",
+ li:"La certificación del Consejo Mexicano de Ortopedia y Traumatología no es un trámite de una vez: confirma que un especialista mantiene vigentes sus conocimientos. Para mí es un compromiso con cada paciente, igual que mi participación en la Sociedad Mexicana de Cirugía de Cadera.",
+ s:["¿Su cirujano está certificado?","Consejo Mexicano de Ortopedia y Traumatología","Sociedad Mexicana de Cirugía de Cadera","Puede verificar las cédulas: 6440493 y 8475828"]},
+{d:18,p:"f",t:"La fisioterapia, su mejor aliada",v:"rehab",
+ m:"La cirugía es la mitad del camino. La otra mitad es la fisioterapia: ejercicios guiados para recuperar fuerza, movimiento y confianza al caminar. Seguir el plan de su rehabilitador es parte del tratamiento.",
+ s:["La cirugía es la mitad del camino","La otra mitad: fisioterapia guiada","Fuerza, movimiento y confianza al caminar","Seguir el plan es parte del tratamiento"],
+ g:"Paciente animado haciendo ejercicios con su fisioterapeuta. Voz en off: «La cirugía es la mitad del camino. La otra mitad se camina en rehabilitación»."},
+{d:21,p:"e",t:"Tres mitos sobre la prótesis de cadera",v:"g",
+ m:"Tres mitos sobre la prótesis de cadera:\n• «Es solo para personas muy mayores». La indicación depende del desgaste y del dolor, no solo de la edad.\n• «Hay que aguantar hasta no poder más». Esperar demasiado puede complicar la recuperación.\n• «Todas las prótesis son iguales». El implante se elige para cada paciente.",
+ s:["Tres mitos sobre la prótesis de cadera","Mito: «es solo para muy mayores». Depende del desgaste, no solo de la edad","Mito: «hay que aguantar». Esperar de más puede complicar la recuperación","Mito: «todas son iguales». El implante se elige para cada paciente"],
+ w:"Alrededor del reemplazo de cadera hay ideas que retrasan la consulta. La edad no es el único criterio, esperar hasta el límite no ayuda y no existe un implante único: cada caso se valora con exploración y estudios."},
+{d:22,p:"c",t:"Las piezas de una prótesis de cadera",v:"g",
+ m:"Una prótesis total de cadera tiene cuatro componentes: la copa, que se fija en la pelvis; el inserto, que recubre su interior; la cabeza, que se articula con el inserto, y el vástago, que se aloja dentro del fémur. En el sitio puede girarlas y separarlas en un modelo 3D.",
+ s:["Las piezas de una prótesis de cadera","Copa: se fija en la pelvis","Inserto y cabeza: la nueva articulación","Vástago: se aloja dentro del fémur"],
+ g:"Modelo 3D de la prótesis que se separa pieza por pieza con rótulos. Voz en off: «Copa, inserto, cabeza y vástago trabajan juntos para devolver el movimiento»."},
+{d:23,p:"q",t:"¿Dónde da consulta y dónde opera?",v:"consultorio",
+ m:"¿Dónde atiende el Dr. Rodrigo Madroño? La consulta privada es en Grupo Azura, José María Iglesias 21, colonia Tabacalera. Las cirugías se realizan en Grupo Azura Sanatorio Durango, Durango 296, Roma Norte. Agende su valoración por WhatsApp.",
+ s:["¿Dónde atiende el Dr. Madroño?","Consulta: Grupo Azura, col. Tabacalera","Cirugía: Sanatorio Durango, Roma Norte"]},
+{d:24,p:"x",t:"Felices fiestas",v:"t2",
+ m:"Que esta Navidad le encuentre de pie, en familia y con ganas de moverse. Gracias a los pacientes y a las familias que confiaron en nosotros este año. Felices fiestas.",
+ li:"Cierro el año agradecido con cada paciente que confió en mi equipo y con los colegas con quienes comparto quirófano. Que estas fiestas nos encuentren a todos de pie y en familia.",
+ s:["Felices fiestas","Que esta Navidad le encuentre de pie y en familia","Gracias por la confianza de este año"]},
+{d:25,p:null},
+{d:28,p:"e",t:"¿Es la cadera o es la columna?",v:"g",
+ m:"No todo dolor «de cadera» viene de la cadera. El de la articulación suele sentirse en la ingle y al girar la pierna; el de columna, en la espalda baja y el glúteo, a veces con hormigueo. Distinguirlos requiere una exploración y estudios.",
+ s:["¿Es la cadera o es la columna?","Cadera: dolor en la ingle, al girar la pierna","Columna: espalda baja y glúteo, a veces con hormigueo","Solo una valoración los distingue"],
+ w:"El dolor de cadera y el de columna se confunden con frecuencia porque se sienten cerca. La ubicación del dolor y los movimientos que lo provocan dan pistas, pero el diagnóstico se confirma con exploración física y estudios de imagen."},
+{d:29,p:"c",t:"Segunda opinión: cuándo pedirla",v:"consultorio",
+ m:"Si ya le propusieron una cirugía de cadera o rodilla y tiene dudas, pedir una segunda opinión es válido y común. Lleve sus estudios y el plan que le plantearon: una segunda revisión le ayuda a decidir con más tranquilidad.",
+ s:["Segunda opinión: cuándo pedirla","Si ya le propusieron cirugía y tiene dudas","Lleve sus estudios y el plan que le plantearon","Decidir con información da tranquilidad"],
+ g:"Paciente y familiar frente al médico revisando una radiografía. Voz en off: «Pedir una segunda opinión es válido y común»."},
+{d:30,p:"q",t:"¿Puedo operarme si tengo diabetes o presión alta?",v:"g",
+ m:"¿Puede operarse una persona con diabetes o presión alta? En muchos casos sí, cuando la enfermedad está bien controlada. Antes de la cirugía se hace una valoración con su médico internista para decidir si es el mejor momento.",
+ s:["¿Diabetes o presión alta?","En muchos casos sí es posible operarse","La condición debe estar bien controlada","Se decide con una valoración previa"]},
+{d:31,p:"f",t:"Propósito 2027: atender ese dolor",v:"t1",
+ m:"Si este año dejó de caminar, de bailar o de salir por un dolor de cadera o de rodilla, que el propósito de 2027 sea atenderlo. El primer paso es una valoración. Feliz año nuevo.",
+ s:["Propósito 2027","Atender ese dolor que lleva tiempo posponiendo","El primer paso es una valoración","Feliz año nuevo"],
+ g:"Calendario animado que cambia a 2027 y una figura que da un paso. Voz en off: «Que el propósito de este año sea atender ese dolor»."}
+];
+const META={"1": {"h": "#ReemplazoDeCadera #PrótesisDeCadera #CirugíaDeCadera #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"], ["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"]], "vid": "cadera-reemplazo"}, "2": {"h": "#PrimeraConsulta #DolorDeCadera #DolorDeRodilla #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Antes de una artroplastia de cadera o de rodilla, qué preguntarle al médico", "https://medlineplus.gov/spanish/ency/patientinstructions/000233.htm"]]}, "3": {"h": "#CirujanoOrtopedista #ReemplazoArticular #CaderaYRodilla #DrMadroño #Ortopedia #CDMX", "r": [["Consejo Mexicano de Ortopedia y Traumatología", "https://cmot.org.mx/"]]}, "4": {"h": "#Recuperación #Rehabilitación #ReemplazoDeCadera #VolverAEstarFirme #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Alta tras artroplastia de cadera", "https://medlineplus.gov/spanish/ency/patientinstructions/000169.htm"], ["AAOS OrthoInfo: Activities After Total Hip Replacement", "https://orthoinfo.aaos.org/en/recovery/activities-after-hip-replacement/"]]}, "7": {"h": "#ArtrosisDeCadera #DolorDeCadera #Artrosis #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Hip Osteoarthritis", "https://orthoinfo.aaos.org/en/diseases--conditions/osteoarthritis-of-the-hip"], ["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"]], "vid": "cadera-sana-artrosis"}, "8": {"h": "#ReemplazoDeRodilla #PrótesisDeRodilla #CirugíaDeRodilla #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Reemplazo de la articulación de la rodilla", "https://medlineplus.gov/spanish/ency/article/002974.htm"], ["AAOS OrthoInfo: Total Knee Replacement", "https://orthoinfo.aaos.org/en/treatment/total-knee-replacement/"]], "vid": "rodilla-piezas"}, "9": {"h": "#PrótesisDeCadera #PrótesisDeRodilla #PreguntasFrecuentes #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"], ["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"]], "vid": "mg-09"}, "10": {"h": "#ReemplazoArticular #CaderaYRodilla #AltaEspecialidad #DrMadroño #Ortopedia #CDMX", "r": []}, "11": {"h": "#AntesDeLaCirugía #CasaSegura #ReemplazoArticular #VolverAEstarFirme #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Alistar la casa en caso de cirugía de rodilla o de cadera", "https://medlineplus.gov/spanish/ency/patientinstructions/000167.htm"]]}, "14": {"h": "#ArtrosisDeRodilla #DolorDeRodilla #Artrosis #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Arthritis of the Knee", "https://orthoinfo.aaos.org/en/diseases--conditions/arthritis-of-the-knee/"]], "vid": "rodilla-artrosis"}, "15": {"h": "#DíaDeLaCirugía #ReemplazoArticular #CirugíaOrtopédica #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Preparing for Joint Replacement Surgery", "https://orthoinfo.aaos.org/en/treatment/preparing-for-joint-replacement-surgery"], ["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"]]}, "16": {"h": "#CuándoOperarse #DolorDeCadera #DolorDeRodilla #PreguntasFrecuentes #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"], ["MedlinePlus: Reemplazo de la articulación de la rodilla", "https://medlineplus.gov/spanish/ency/article/002974.htm"]], "vid": "mg-16"}, "17": {"h": "#MédicoCertificado #CMOT #CirugíaDeCadera #DrMadroño #Ortopedia #CDMX", "r": [["Consejo Mexicano de Ortopedia y Traumatología", "https://cmot.org.mx/"]]}, "18": {"h": "#Fisioterapia #Rehabilitación #ReemplazoArticular #VolverAEstarFirme #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Alta tras artroplastia de rodilla", "https://medlineplus.gov/spanish/ency/patientinstructions/000170.htm"], ["MedlinePlus: Alta tras artroplastia de cadera", "https://medlineplus.gov/spanish/ency/patientinstructions/000169.htm"]]}, "21": {"h": "#MitosYRealidades #PrótesisDeCadera #ReemplazoDeCadera #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"], ["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"]], "vid": "mg-21"}, "22": {"h": "#PrótesisDeCadera #ReemplazoDeCadera #Anatomía3D #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"]], "vid": "protesis-piezas"}, "23": {"h": "#GrupoAzura #SanatorioDurango #ConsultaOrtopedia #DrMadroño #Ortopedia #CDMX", "r": []}, "24": {"h": "#FelicesFiestas #Navidad #VolverAEstarFirme #DrMadroño #Ortopedia #CDMX", "r": []}, "28": {"h": "#DolorDeCadera #DolorDeEspalda #Diagnóstico #DrMadroño #Ortopedia #CDMX", "r": [["AAOS OrthoInfo: Hip Osteoarthritis", "https://orthoinfo.aaos.org/en/diseases--conditions/osteoarthritis-of-the-hip"]], "vid": "mg-28"}, "29": {"h": "#SegundaOpinión #ReemplazoArticular #CirugíaDeCadera #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Antes de una artroplastia de cadera o de rodilla, qué preguntarle al médico", "https://medlineplus.gov/spanish/ency/patientinstructions/000233.htm"]]}, "30": {"h": "#Diabetes #Hipertensión #ReemplazoArticular #PreguntasFrecuentes #DrMadroño #Ortopedia #CDMX", "r": [["MedlinePlus: Riesgos de la cirugía de reemplazo de cadera y de rodilla", "https://medlineplus.gov/spanish/ency/patientinstructions/000375.htm"]], "vid": "mg-30"}, "31": {"h": "#Propósito2027 #DolorDeCadera #DolorDeRodilla #VolverAEstarFirme #DrMadroño #Ortopedia #CDMX", "r": []}};
+D.forEach(x=>{if(x.p){x.ch=P[x.p].ch;Object.assign(x,META[x.d])}});
+const pieces=D.filter(x=>x.p);
+let st={};try{st=JSON.parse(localStorage.getItem("pubDic")||"{}")||{}}catch(e){}
+const save=()=>{try{localStorage.setItem("pubDic",JSON.stringify(st))}catch(e){}};
+const S={view:"cal",fp:null,fc:null,open:null,tab:null,slide:0};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $=id=>document.getElementById(id);
+const still=x=>x.vid?`vid/${x.vid}.jpg`:`img/${x.v}.jpg`;
+const visual=(x,cls,cap,play)=>{if(x.vid&&play)return `<div class="${cls} vd"><video src="vid/${x.vid}.mp4" poster="vid/${x.vid}.jpg" autoplay muted loop playsinline controls></video></div>`;
+  return `<div class="${cls}"><img src="${still(x)}" alt="" loading="lazy">${x.vid?'<span class="pb">Video</span>':""}${cap&&!x.vid?`<div class="cap">${esc(cap)}</div>`:""}</div>`};
+const HRS={li:"08:30",web:"09:00",fb:"10:00",ig:"13:00",yt:"18:00"};
+const fmt=(x,c)=>c==="yt"?"Short":c==="web"?"Artículo de blog":c==="ig"?(x.vid||x.p==="c"?"Reel":"Carrusel de "+x.s.length+" láminas"):(x.vid?"Video + texto":"Imagen + texto");
+const refsBox=x=>(x.r.length?`<div class="refs"><b>Referencias</b>${x.r.map(r=>`<a href="${r[1]}" target="_blank" rel="noopener">${esc(r[0])}</a>`).join("")}<small>Para validar el texto. En redes se cita la fuente; en el blog van al pie con su liga.</small></div>`:"")+`<div class="refs"><b>Hashtags</b><span class="tags">${x.h.split(" ").map(t=>`<i>${esc(t)}</i>`).join("")}</span></div>`;
+
+function kpis(){const ok=pieces.filter(x=>st[x.d]).length,posts=pieces.reduce((a,x)=>a+x.ch.length,0);
+  $("kpis").innerHTML=`<span class="kpi"><b>${pieces.length}</b> piezas</span><span class="kpi"><b>${posts}</b> publicaciones en 5 canales</span><span class="kpi"><b>${pieces.filter(x=>x.vid).length}</b> videos animados</span><span class="kpi"><b>${ok}</b> de ${pieces.length} aprobadas</span>`}
+function filters(){
+  $("filters").innerHTML=`<span class="vw"><button type="button" data-view="cal" aria-pressed="${S.view!=="pauta"}">Calendario</button><button type="button" data-view="pauta" aria-pressed="${S.view==="pauta"}">Pauta</button></span><span class="sep"></span><span class="lab">Pilar</span>`+Object.entries(P).map(([k,p])=>`<button class="f" type="button" data-fp="${k}" aria-pressed="${S.fp===k}" style="--c:var(--p-${k})"><i></i>${p.n}</button>`).join("")+`<span class="sep"></span><span class="lab">Canal</span>`+Object.entries(CH).map(([k,n])=>`<button class="f" type="button" data-fc="${k}" aria-pressed="${S.fc===k}">${n}</button>`).join("")}
+function pauta(){
+  const rows=[];pieces.forEach(x=>x.ch.forEach(c=>{if((S.fp&&S.fp!==x.p)||(S.fc&&S.fc!==c))return;rows.push({x,c})}));
+  rows.sort((a,b)=>a.x.d-b.x.d||HRS[a.c].localeCompare(HRS[b.c]));S.rows=rows;
+  $("cal").className="pauta";
+  $("cal").innerHTML=`<div class="ptop"><span>${rows.length} publicaciones programadas</span><button class="btn" type="button" id="cp-pauta">Copiar pauta</button><span id="cp-msg"></span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Hora</th><th>Canal</th><th>Formato</th><th>Pilar</th><th>Pieza</th><th>Hashtags</th><th>Estado</th></tr></thead><tbody>${rows.map(({x,c})=>`<tr><td>${DOW[new Date(2026,11,x.d).getDay()-1].slice(0,3)} ${x.d} dic</td><td>${HRS[c]}</td><td>${CH[c]}</td><td>${fmt(x,c)}</td><td style="color:var(--p-${x.p})">${P[x.p].n}</td><td><button class="lk" type="button" data-open="${x.d}" data-tabgo="${c}">${esc(x.t)}</button></td><td class="hs">${c==="web"||c==="yt"?"":esc(x.h)}</td><td><span class="st ${st[x.d]?"ok":""}">${st[x.d]?"Aprobada":"Por aprobar"}</span></td></tr>`).join("")}</tbody></table></div>`}
+function cal(){
+  document.querySelector(".dow").hidden=S.view==="pauta";if(S.view==="pauta"){pauta();return}$("cal").className="cal";
+  let h="",first=new Date(2026,11,1).getDay()-1;                // 1 de diciembre de 2026 cae en martes
+  for(let i=0;i<first;i++)h+=`<div class="day empty" aria-hidden="true"></div>`;
+  D.forEach(x=>{
+    if(!x.p){h+=`<div class="day empty">${x.d} · Navidad, sin publicación</div>`;return}
+    const dim=(S.fp&&S.fp!==x.p)||(S.fc&&!x.ch.includes(S.fc));
+    h+=`<button class="day ${dim?"dim":""}" type="button" data-open="${x.d}" style="--c:var(--p-${x.p})"><span class="hd"><span class="n">${x.d}</span><span class="st ${st[x.d]?"ok":""}">${st[x.d]?"Aprobada":"Por aprobar"}</span></span>${visual(x,"th")}<span class="pl">${P[x.p].n}</span><h3>${esc(x.t)}</h3><span class="chs">${x.ch.map(c=>`<span>${CH[c]}</span>`).join("")}</span></button>`});
+  $("cal").innerHTML=h}
+const src=x=>x.r.length?"\nFuente: "+x.r.map(r=>r[0].replace(/^(MedlinePlus|AAOS OrthoInfo): .*/,"$1")).filter((v,i,s)=>s.indexOf(v)===i).join(" y ")+".":"";
+const text=(x,c)=>c==="li"?(x.li||x.m)+src(x)+"\n\n"+x.h:c==="ig"?x.m.split(/\n|(?<=[.?!])\s/)[0]+"\n\n"+x.h:c==="yt"?x.g:c==="web"?x.w:x.m+src(x)+"\n\n"+x.h;
+function body(){
+  const x=S.open,c=S.tab,when="Programada · "+x.d+" de diciembre, 10:00",head=sub=>`<div class="ph"><img src="${AV}" alt=""><div><b>Dr. Rodrigo Madroño</b><small>${sub}</small></div></div>`;
+  let h="";
+  if(c==="fb")h=`<article class="post">${head(when)}<div class="ptext">${esc(text(x,"fb"))}<span class="ced">${CED}</span></div>${visual(x,"vis"+(x.vid?"":" w"),x.t,true)}<div class="pact"><span>Me gusta</span><span>Comentar</span><span>Compartir</span></div></article>`;
+  if(c==="li")h=`<article class="post">${head("Cirujano de reemplazo articular de cadera y rodilla")}<div class="ptext">${esc(text(x,"li"))}<span class="ced">${CED}</span></div>${visual(x,"vis"+(x.vid?"":" w"),x.t,true)}<div class="pact"><span>Recomendar</span><span>Comentar</span><span>Compartir</span></div></article>`;
+  if(c==="ig"){const n=x.s.length,i=Math.min(S.slide,n-1);
+    h=x.vid?`<article class="post">${head(when)}${visual(x,"vis",null,true)}<div class="ptext"><b>Reel</b>\n${esc(text(x,"ig"))}<span class="ced">${CED}</span></div></article>`
+     :`<article class="post">${head(when)}${visual(x,"vis",x.s[i])}<div class="nav"><button type="button" data-sl="-1" ${i===0?"disabled":""}>Anterior</button><div class="dots">${x.s.map((_,j)=>`<i class="${j===i?"on":""}"></i>`).join("")}</div><button type="button" data-sl="1" ${i===n-1?"disabled":""}>Siguiente</button></div><div class="ptext"><b>${x.p==="c"?"Reel":"Carrusel"} · lámina ${i+1} de ${n}</b>\n${esc(text(x,"ig"))}<span class="ced">${CED}</span></div></article>`}
+  if(c==="yt")h=`<article class="post" style="max-width:340px">${x.vid?visual(x,"vis",null,true):visual(x,"vis v",x.t)}<div class="scr"><b>YouTube Short · guion:</b> ${esc(x.g)}</div></article>`;
+  if(c==="web")h=`<article class="post">${visual(x,"vis w")}<div class="art"><div class="k">${P[x.p].n}</div><h3>${esc(x.t)}</h3><div class="by">Por el Dr. Rodrigo Madroño Carpinteyro · Céd. Esp. 8475828</div><p>${esc(x.w)}</p>${x.r.length?`<p class="fn"><b>Referencias</b><br>${x.r.map((r,j)=>`${j+1}. <a href="${r[1]}" target="_blank" rel="noopener">${esc(r[0])}</a>`).join("<br>")}</p>`:""}</div></article>`;
+  h+=refsBox(x);
+  $("d-b").innerHTML=h+`<p class="note">Filtro aplicado: cédulas visibles, sin promesas de resultados y sin marcas de implantes.</p>`;
+  $("d-tabs").innerHTML=x.ch.map(k=>`<button class="tab" role="tab" type="button" data-tab="${k}" aria-selected="${k===c}">${CH[k]}</button>`).join("");
+  const ok=!!st[x.d];$("d-st").textContent=ok?"Aprobada":"Por aprobar";$("d-st").className="st "+(ok?"ok":"");
+  $("d-ok").textContent=ok?"Aprobada · deshacer":"Aprobar esta pieza";$("d-ok").className="btn "+(ok?"done":"a")}
+function open(d){const x=pieces.find(p=>p.d===d);S.open=x;S.tab=(S.fc&&x.ch.includes(S.fc))?S.fc:x.ch[0];S.slide=0;
+  const dow=DOW[new Date(2026,11,d).getDay()-1];
+  $("d-pl").textContent=P[x.p].n;$("d-pl").style.setProperty("--c",`var(--p-${x.p})`);$("d-t").textContent=x.t;$("d-w").textContent=`${dow} ${d} de diciembre de 2026 · sale en ${x.ch.map(c=>CH[c]).join(", ")}`;
+  $("d-msg").textContent="";body();$("drawer").hidden=false;$("scrim").hidden=false;$("d-x").focus()}
+function close(){$("drawer").hidden=true;$("scrim").hidden=true;S.open=null}
+document.addEventListener("click",e=>{const b=e.target.closest("button");
+  if(e.target.id==="scrim"){close();return}if(!b)return;
+  if(b.dataset.fp){S.fp=S.fp===b.dataset.fp?null:b.dataset.fp;filters();cal()}
+  else if(b.dataset.fc){S.fc=S.fc===b.dataset.fc?null:b.dataset.fc;filters();cal()}
+  else if(b.dataset.view){S.view=b.dataset.view;filters();cal()}
+  else if(b.id==="cp-pauta"){const t="Fecha\tHora\tCanal\tFormato\tPilar\tPieza\tHashtags\n"+S.rows.map(({x,c})=>[x.d+"/12/2026",HRS[c],CH[c],fmt(x,c),P[x.p].n,x.t,(c==="web"||c==="yt"?"":x.h)].join("\t")).join("\n");const m=s=>$("cp-msg").textContent=s;try{navigator.clipboard.writeText(t).then(()=>m("Pauta copiada: péguela en Excel o Sheets"),()=>m("No se pudo copiar"))}catch(er){m("No se pudo copiar")}}
+  else if(b.dataset.open){open(+b.dataset.open);if(b.dataset.tabgo){S.tab=b.dataset.tabgo;body()}}
+  else if(b.dataset.tab){S.tab=b.dataset.tab;S.slide=0;$("d-msg").textContent="";body()}
+  else if(b.dataset.sl){S.slide+=+b.dataset.sl;body()}
+  else if(b.id==="d-x")close();
+  else if(b.id==="d-ok"){const d=S.open.d;st[d]=!st[d];save();body();cal();kpis()}
+  else if(b.id==="d-copy"){const t=text(S.open,S.tab)+"\n\n"+CED;const done=m=>$("d-msg").textContent=m;
+    try{navigator.clipboard.writeText(t).then(()=>done("Texto copiado"),()=>done("No se pudo copiar; selecciónelo a mano"))}catch(er){done("No se pudo copiar; selecciónelo a mano")}}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.open)close()});
+kpis();filters();cal();
+</script>
+</body>
+</html>
