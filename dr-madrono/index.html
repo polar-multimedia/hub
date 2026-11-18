@@ -428,6 +428,53 @@ body{font-weight:400}
 .live .sub{color:#A9B4BA}.live .est{color:#6F7B82}.live .acc{color:#3FE0EE}
 .live .h2{margin-bottom:16px}
 @media (prefers-reduced-motion:reduce){.live-k i{animation:none}.live-n .dg>span{transition:none}}
+
+/* ---------- Aprende ---------- */
+.ap-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:end}
+.ap-head .sub{justify-self:end}
+@media (max-width:760px){.ap-head{grid-template-columns:minmax(0,1fr)}.ap-head .sub{justify-self:start}}
+.post.ap{color:inherit;text-decoration:none;cursor:pointer}
+.post.ap .k span{color:var(--muted);text-transform:none;letter-spacing:0}
+.post.ap h3{transition:color .2s}
+.post.ap:hover h3{color:var(--acc)}
+.post.ap .shot,.post.ap .media{transition:box-shadow .3s}
+.post.ap:hover .shot,.post.ap:hover .media{box-shadow:0 0 0 2px var(--acc)}
+.post.ap:focus-visible{outline:2px solid var(--acc);outline-offset:6px;border-radius:20px}
+.ap-grid{margin-top:44px;gap:34px 20px}
+.ap-grid .post h3{font-size:20px}
+.post.ap .shot img{transform:none}
+.play{position:absolute;left:12px;bottom:12px;width:40px;height:40px;border-radius:50%;background:rgba(5,6,7,.7);border:1px solid rgba(255,255,255,.35)}
+.play::after{content:"";position:absolute;left:16px;top:12px;border-left:12px solid #F2F5F6;border-top:8px solid transparent;border-bottom:8px solid transparent}
+@media (max-width:900px){.ap-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.ap-grid{grid-template-columns:minmax(0,1fr)}}
+.reader{width:min(1120px,100vw - 24px);max-width:none;height:min(860px,100dvh - 24px);max-height:none;padding:0;border:1px solid var(--line-2);border-radius:28px;background:#0B0E10;color:#F2F5F6;color-scheme:dark;overflow:hidden}
+.reader[open]{display:flex;flex-direction:column;animation:rdin .35s cubic-bezier(.2,.7,.2,1)}
+@keyframes rdin{from{transform:translateY(24px);opacity:0}}
+.reader::backdrop{background:rgba(3,5,6,.72);backdrop-filter:blur(6px)}
+.rd-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.rd-bar .pill{padding:8px 16px;font-size:14px;cursor:pointer;color:inherit;font:inherit}
+.rd-in{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:40px;padding:32px 36px 44px;align-items:start;overscroll-behavior:contain}
+.rd-media{position:sticky;top:0}
+.rd-media video,.rd-media img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:20px;background:#07090B}
+.rd-media small{display:block;margin-top:10px;font-size:12px;color:var(--muted)}
+.rd-body{max-width:62ch}
+.rd-body h2{font-size:clamp(26px,3.2vw,38px);line-height:1.06;letter-spacing:-.03em}
+.rd-by{margin-top:12px;font-size:13px;color:var(--muted)}
+#rd-b{margin-top:22px}
+#rd-b p{font-size:17px;line-height:1.6;color:#DDE3E6;font-weight:400;margin:0 0 16px}
+#rd-b h3{font-size:20px;letter-spacing:-.02em;margin:28px 0 10px}
+#rd-b ul{margin:0 0 16px;padding:0;list-style:none;display:grid;gap:8px}
+#rd-b li{font-size:17px;line-height:1.45;color:#DDE3E6;padding-left:22px;position:relative}
+#rd-b li::before{content:"";position:absolute;left:2px;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.rd-src{margin-top:30px;padding-top:20px;border-top:1px solid var(--line)}
+.rd-src .k{font-size:12px;color:var(--acc);letter-spacing:.06em;text-transform:uppercase}
+.rd-src ul{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+.rd-src a{font-size:14px;color:#DDE3E6;text-decoration:underline;text-underline-offset:3px}
+.rd-note{margin-top:18px;font-size:13px;color:var(--muted)}
+.rd-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.rd-cta button{cursor:pointer;color:inherit;font:inherit;font-size:15px;text-align:left}
+@media (max-width:860px){.rd-in{grid-template-columns:minmax(0,1fr);gap:22px;padding:20px 18px 32px}.rd-media{position:static;max-width:420px}}
+@media (prefers-reduced-motion:reduce){.reader[open]{animation:none}}
 </style>
 
 <div class="prog" aria-hidden="true"></div>
@@ -437,7 +484,7 @@ body{font-weight:400}
   <div class="in">
     <a class="brand" href="#inicio"><img src="data:image/jpeg;base64,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" alt="">Dr. Madroño</a>
     <nav class="bar" aria-label="Secciones">
-      <a class="on" href="#inicio">Inicio</a><a href="#experiencia">Experiencia</a><a href="#doctor">Trayectoria</a><a href="#procedimientos">Procedimientos</a><a href="#recuperacion">Recuperación</a><a href="#preguntas">Preguntas</a><a href="#contacto">Sedes</a><a href="publicaciones.html">Publicaciones</a>
+      <a class="on" href="#inicio">Inicio</a><a href="#experiencia">Experiencia</a><a href="#doctor">Trayectoria</a><a href="#procedimientos">Procedimientos</a><a href="#recuperacion">Recuperación</a><a href="#preguntas">Preguntas</a><a href="#aprende">Aprende</a><a href="#contacto">Sedes</a>
     </nav>
     <a class="pill a" href="#contacto">Agendar</a>
   </div>
@@ -617,34 +664,35 @@ body{font-weight:400}
   </div>
 </section>
 
-<section class="in" id="blog">
-  <span class="badge">Blog</span>
-  <h2 class="h2" style="margin-top:22px"><span class="ln"><span>Para entender</span></span><span class="ln"><span>su <span class="acc">articulación</span></span></span></h2>
+<section class="in" id="aprende">
+  <div class="ap-head">
+    <div><span class="badge">Aprende</span>
+    <h2 class="h2" style="margin-top:22px"><span class="ln"><span>Para entender</span></span><span class="ln"><span>su <span class="acc">articulación</span></span></span></h2></div>
+    <p class="sub">Artículos breves, con animaciones y fuentes médicas, para llegar a la consulta sabiendo qué preguntar.</p>
+  </div>
   <div class="g2">
-    <article class="post rv">
-      <figure class="media cine" id="cineA">
+    <a class="post ap rv" href="#leer-artrosis-de-cadera"><figure class="media cine" id="cineA">
         <canvas width="1120" height="700" role="img" aria-label="Animación 3D: una cadera sana gira con suavidad y una cadera con artrosis roza y se traba"></canvas>
         <span class="cine-k tl">Comparación en 3D</span>
         <div class="co" data-co="ok"><span>Cartílago liso</span></div>
         <div class="co warn" data-co="bad"><span>Cartílago desgastado</span></div>
         <div class="cine-cols"><div><b>Cadera sana</b><small>La cabeza del fémur gira con suavidad dentro de la pelvis.</small></div><div class="warn"><b>Con artrosis</b><small>El hueso roza con el hueso: dolor, rigidez y menos movimiento.</small></div></div>
-      </figure>
-      <div class="k">Entiende tu articulación</div><h3>Dolor de cadera: cuándo es artrosis y cuándo considerar un reemplazo</h3><p>Síntomas, diagnóstico y tratamientos antes de pensar en cirugía.</p>
-    </article>
-    <article class="post rv">
-      <figure class="media cine" id="cineB">
+      </figure><div class="k">Entiende tu articulación<span> · 3 min de lectura</span></div><h3>Dolor de cadera: cuándo es artrosis y cuándo considerar un reemplazo</h3><p>Síntomas, diagnóstico y tratamientos antes de pensar en cirugía.</p></a>
+    <a class="post ap rv" href="#leer-reemplazo-total-de-cadera"><figure class="media cine" id="cineB">
         <canvas width="1120" height="700" role="img" aria-label="Animación 3D: el reemplazo total de cadera paso a paso, de la artrosis a la prótesis colocada"></canvas>
         <div class="cine-step"><span class="cine-k" id="cb-k"></span><b id="cb-t"></b><small id="cb-d"></small></div>
         <div class="co" data-part="copa"><span>Copa</span></div><div class="co" data-part="inserto"><span>Inserto</span></div><div class="co" data-part="cabeza"><span>Cabeza</span></div><div class="co" data-part="vastago"><span>Vástago</span></div>
         <div class="cine-prog" id="cb-p"></div>
-      </figure>
-      <div class="k">Así es la cirugía</div><h3>¿Qué es un reemplazo total de cadera?</h3><p>Qué se sustituye, por qué y cómo empieza la recuperación.</p>
-    </article>
+      </figure><div class="k">Así es la cirugía<span> · 3 min de lectura</span></div><h3>¿Qué es un reemplazo total de cadera?</h3><p>Qué se sustituye, por qué y cómo empieza la recuperación.</p></a>
   </div>
-  <article class="post wide rv">
-    <figure class="shot" style="--ar:16/10"><img src="img/rehab.jpg" alt="Paciente dando pasos con andadera junto a su fisioterapeuta" loading="lazy"><figcaption>Imagen ilustrativa</figcaption></figure>
-    <div><div class="k">Volver a estar firme</div><h3>Las etapas de la recuperación después de un reemplazo</h3><p>De los primeros pasos con apoyo al regreso a la rutina.</p></div>
-  </article>
+  <div class="g3 ap-grid">
+    <a class="post ap rv" href="#leer-artrosis-de-rodilla"><figure class="shot" style="--ar:1"><img src="vid/rodilla-artrosis.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span></figure><div class="k">Entiende tu articulación<span> · 2 min de lectura</span></div><h3>Artrosis de rodilla: las señales</h3><p>Cómo avisa la rodilla y cuándo conviene una valoración.</p></a>
+    <a class="post ap rv" href="#leer-reemplazo-de-rodilla"><figure class="shot" style="--ar:1"><img src="vid/rodilla-piezas.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span></figure><div class="k">Así es la cirugía<span> · 2 min de lectura</span></div><h3>El reemplazo de rodilla, pieza por pieza</h3><p>Las tres piezas que sustituyen las superficies desgastadas.</p></a>
+    <a class="post ap rv" href="#leer-piezas-de-la-protesis"><figure class="shot" style="--ar:1"><img src="vid/protesis-piezas.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span></figure><div class="k">Así es la cirugía<span> · 2 min de lectura</span></div><h3>Las piezas de una prótesis de cadera</h3><p>Copa, inserto, cabeza y vástago: qué hace cada una.</p></a>
+    <a class="post ap rv" href="#leer-etapas-de-la-recuperacion"><figure class="shot" style="--ar:1"><img src="img/rehab.jpg" alt="" loading="lazy"><figcaption>Imagen ilustrativa</figcaption></figure><div class="k">Volver a estar firme<span> · 3 min de lectura</span></div><h3>Las etapas de la recuperación después de un reemplazo</h3><p>De los primeros pasos con apoyo al regreso a la rutina.</p></a>
+    <a class="post ap rv" href="#leer-mitos-de-la-protesis"><figure class="shot" style="--ar:1"><img src="vid/mg-21.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span></figure><div class="k">Entiende tu articulación<span> · 2 min de lectura</span></div><h3>Tres mitos sobre la prótesis de cadera</h3><p>Ideas que retrasan la consulta y lo que conviene saber.</p></a>
+    <a class="post ap rv" href="#leer-cadera-o-columna"><figure class="shot" style="--ar:1"><img src="vid/mg-28.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span></figure><div class="k">Entiende tu articulación<span> · 2 min de lectura</span></div><h3>¿Es la cadera o es la columna?</h3><p>Dos dolores que se sienten cerca y se confunden seguido.</p></a>
+  </div>
 </section>
 </div>
 
@@ -672,9 +720,24 @@ body{font-weight:400}
 <footer>
   <div class="in">
     <span>Dr. Rodrigo Madroño Carpinteyro · Traumatología y Ortopedia · Céd. Prof. 6440493 · Céd. Esp. 8475828</span>
-    <span>Aviso de publicidad COFEPRIS: <span class="pend">número en trámite</span> · Aviso de privacidad</span>
+    <span>Aviso de publicidad COFEPRIS: <span class="pend">número en trámite</span> · Aviso de privacidad · <a href="publicaciones.html" style="text-decoration:underline">Pauta de publicaciones (interno)</a></span>
   </div>
 </footer>
+<dialog class="reader" id="reader" aria-labelledby="rd-t">
+  <div class="rd-bar"><span class="badge" id="rd-k"></span><button class="pill" type="button" id="rd-x">Cerrar</button></div>
+  <div class="rd-in">
+    <div class="rd-media" id="rd-m"></div>
+    <article class="rd-body">
+      <h2 id="rd-t"></h2>
+      <p class="rd-by">Revisado por el Dr. Rodrigo Madroño Carpinteyro · Céd. Prof. 6440493 · Céd. Esp. 8475828</p>
+      <div id="rd-b"></div>
+      <div class="rd-src"><div class="k">Fuentes</div><ul id="rd-r"></ul></div>
+      <p class="rd-note">Esta información es educativa y no sustituye una consulta médica. Cada caso se valora de forma individual.</p>
+      <div class="rd-cta"><a class="pill a" href="#contacto" id="rd-go">Agendar valoración</a><button class="pill" type="button" id="rd-next"></button></div>
+    </article>
+  </div>
+</dialog>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -739,6 +802,30 @@ const go=()=>tick(false);
 if("IntersectionObserver" in window){const io=new IntersectionObserver(e=>{if(e[0].isIntersecting){setTimeout(go,250);io.disconnect()}},{threshold:.4});io.observe(el)}else go();
 others.forEach(o=>o.textContent=fmt(calc().n));
 setInterval(go,30000);
+})();
+
+/* ---------- Aprende: lector de artículos ---------- */
+(function(){
+const ART=[{"id": "artrosis-de-cadera", "k": "Entiende tu articulación", "min": 3, "t": "Dolor de cadera: cuándo es artrosis y cuándo considerar un reemplazo", "b": ["La cadera es una articulación de esfera y cavidad: la cabeza del fémur gira dentro de la pelvis. Las dos superficies están recubiertas de cartílago, un tejido liso que permite que el movimiento sea suave y sin dolor.", ["h", "Qué es la artrosis"], "La artrosis es el desgaste de ese cartílago. Cuando se adelgaza, el hueso empieza a rozar con el hueso. Es un proceso gradual, más frecuente con la edad, y suele avanzar a lo largo de años.", ["h", "Cómo se siente"], ["l", ["Dolor en la ingle, el muslo o el glúteo al caminar o al levantarse", "Rigidez por la mañana o después de estar sentado", "Dificultad para ponerse los zapatos o los calcetines", "Cojera o menos movimiento del que tenía antes", "Dolor que aparece también en reposo o en la noche"]], ["h", "Cómo se diagnostica"], "Con una exploración física y radiografías. En la mayoría de los casos no hacen falta estudios más complejos para confirmar el desgaste y saber qué tan avanzado está.", ["h", "El tratamiento empieza sin cirugía"], "Control de peso, ejercicio de bajo impacto, rehabilitación, medicamentos para el dolor y, a veces, un bastón. Estas medidas ayudan a muchas personas durante mucho tiempo.", ["h", "Cuándo se valora el reemplazo"], "Cuando esas medidas ya no alcanzan y el dolor limita lo cotidiano: caminar, dormir, vestirse. La decisión se toma en la valoración, con sus estudios en la mano, y siempre es suya."], "r": [["AAOS OrthoInfo: Hip Osteoarthritis", "https://orthoinfo.aaos.org/en/diseases--conditions/osteoarthritis-of-the-hip"], ["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"]], "vid": "cadera-sana-artrosis"}, {"id": "reemplazo-total-de-cadera", "k": "Así es la cirugía", "min": 3, "t": "¿Qué es un reemplazo total de cadera?", "b": ["En un reemplazo total de cadera se sustituyen las superficies desgastadas de la articulación por componentes artificiales. El objetivo es aliviar el dolor y recuperar el movimiento que la artrosis fue quitando.", ["h", "Qué se sustituye"], ["l", ["En la pelvis: una copa metálica con un inserto que recubre su interior", "En el fémur: un vástago que se aloja dentro del hueso y una cabeza que se articula con el inserto"]], "La cabeza y el inserto forman la nueva articulación: se deslizan uno sobre otro como antes lo hacían el hueso y el cartílago.", ["h", "Para quién es"], "Para personas con desgaste avanzado de la cadera cuyo dolor ya no mejora con tratamiento conservador. También se indica en algunas fracturas y en otras enfermedades de la articulación. No depende solo de la edad.", ["h", "Antes de la cirugía"], "Se hace una valoración completa: exploración, radiografías, estudios de laboratorio y revisión de sus otras enfermedades y medicamentos. Con eso se planea la cirugía y se elige el implante para su caso.", ["h", "Después de la cirugía"], "La recuperación empieza pronto, con apoyo y con rehabilitación guiada. Como toda cirugía, tiene riesgos; su cirujano se los explica en consulta, junto con lo que puede esperar en su caso."], "r": [["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"], ["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"]], "vid": "cadera-reemplazo"}, {"id": "artrosis-de-rodilla", "k": "Entiende tu articulación", "min": 2, "t": "Artrosis de rodilla: las señales", "b": ["La artrosis de rodilla es el desgaste del cartílago que recubre el fémur, la tibia y la rótula. Sin esa capa lisa, el movimiento se vuelve áspero y doloroso.", ["h", "Las señales más comunes"], ["l", ["Dolor al subir o bajar escaleras", "Rigidez al levantarse después de estar sentado", "Inflamación que va y viene", "Tronidos o sensación de roce al doblarla", "Sensación de que la rodilla falla o se traba"]], ["h", "Cómo se diagnostica"], "Con exploración física y radiografías tomadas de pie, que muestran cuánto espacio queda entre los huesos.", ["h", "Qué se puede hacer"], "El tratamiento se ajusta al grado de desgaste. Suele empezar con control de peso, fortalecimiento del muslo, rehabilitación y medicamentos. Cuando el desgaste es avanzado y el dolor limita su vida diaria, se valora el reemplazo.", "Si estas molestias le acompañan desde hace semanas, conviene una valoración."], "r": [["AAOS OrthoInfo: Arthritis of the Knee", "https://orthoinfo.aaos.org/en/diseases--conditions/arthritis-of-the-knee/"]], "vid": "rodilla-artrosis"}, {"id": "reemplazo-de-rodilla", "k": "Así es la cirugía", "min": 2, "t": "El reemplazo de rodilla, pieza por pieza", "b": ["En un reemplazo total de rodilla no se cambia la rodilla completa: se recubren las superficies desgastadas de los huesos con componentes que vuelven a deslizarse entre sí.", ["h", "Las piezas"], ["l", ["Componente femoral: recubre el extremo del fémur", "Base tibial: se asienta sobre la tibia", "Inserto: va entre los dos y es la nueva superficie de deslizamiento"]], "En algunos casos también se recubre la cara interna de la rótula.", ["h", "Lo que sigue"], "La rehabilitación es parte central del tratamiento: los ejercicios para doblar y estirar la rodilla empiezan pronto y se mantienen varias semanas. Su cirujano y su rehabilitador marcan el ritmo."], "r": [["MedlinePlus: Reemplazo de la articulación de la rodilla", "https://medlineplus.gov/spanish/ency/article/002974.htm"], ["AAOS OrthoInfo: Total Knee Replacement", "https://orthoinfo.aaos.org/en/treatment/total-knee-replacement/"]], "vid": "rodilla-piezas"}, {"id": "piezas-de-la-protesis", "k": "Así es la cirugía", "min": 2, "t": "Las piezas de una prótesis de cadera", "b": ["Una prótesis total de cadera tiene cuatro componentes que trabajan juntos.", ["l", ["Copa: se fija en la cavidad de la pelvis", "Inserto: recubre el interior de la copa", "Cabeza: una esfera que se articula con el inserto", "Vástago: se aloja dentro del fémur y sostiene la cabeza"]], ["h", "No todas son iguales"], "Hay distintos materiales, tamaños y formas de fijación al hueso. El implante se elige para cada paciente según su edad, la calidad de su hueso, su anatomía y su actividad.", "En la sección de procedimientos de este sitio puede girar y separar las piezas en un modelo 3D."], "r": [["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"]], "vid": "protesis-piezas"}, {"id": "etapas-de-la-recuperacion", "k": "Volver a estar firme", "min": 3, "t": "Las etapas de la recuperación después de un reemplazo", "b": ["La recuperación de un reemplazo de cadera o de rodilla avanza por etapas. Cada paciente lleva su propio ritmo, y su cirujano y su rehabilitador lo marcan.", ["h", "Primeros días"], "Los primeros pasos se dan con apoyo, con andadera o muletas, guiados por el equipo médico. El dolor se maneja con medicamentos.", ["h", "Primeras semanas"], "Ya en casa, lo importante es seguir el plan: ejercicios, cuidado de la herida y las precauciones que le indiquen. La fisioterapia ayuda a recuperar fuerza y movimiento.", ["h", "Regreso gradual"], "Poco a poco se deja el apoyo y se retoman las actividades de todos los días. Cuándo volver a manejar, a trabajar o a hacer ejercicio lo define su médico.", ["h", "Prepare su casa"], ["l", ["Retire tapetes sueltos y despeje los pasillos", "Tenga a la mano una silla firme con descansabrazos", "Deje lo de uso diario a una altura cómoda", "Pida a un familiar que le acompañe los primeros días"]], ["h", "Cuándo avisar a su médico"], "Si hay fiebre, enrojecimiento o salida de líquido en la herida, dolor que aumenta en lugar de disminuir, o hinchazón y dolor en la pantorrilla."], "r": [["MedlinePlus: Alta tras artroplastia de cadera", "https://medlineplus.gov/spanish/ency/patientinstructions/000169.htm"], ["AAOS OrthoInfo: Activities After Total Hip Replacement", "https://orthoinfo.aaos.org/en/recovery/activities-after-hip-replacement/"]], "img": "rehab"}, {"id": "mitos-de-la-protesis", "k": "Entiende tu articulación", "min": 2, "t": "Tres mitos sobre la prótesis de cadera", "b": ["Alrededor del reemplazo de cadera hay ideas que retrasan la consulta. Estas son tres de las más comunes.", ["h", "«Es solo para personas muy mayores»"], "La indicación depende del desgaste y del dolor, no solo de la edad. Hay pacientes jóvenes que lo necesitan y personas mayores que no.", ["h", "«Hay que aguantar hasta no poder más»"], "Esperar demasiado puede hacer que se pierda fuerza y movimiento, y eso complica la recuperación. Valorarse a tiempo no obliga a operarse: abre opciones.", ["h", "«Todas las prótesis son iguales»"], "No existe un implante único. Se elige para cada paciente, con base en su exploración y sus estudios."], "r": [["AAOS OrthoInfo: Total Hip Replacement", "https://orthoinfo.aaos.org/en/treatment/total-hip-replacement/"], ["MedlinePlus: Reemplazo de la articulación de la cadera", "https://medlineplus.gov/spanish/ency/article/002975.htm"]], "vid": "mg-21"}, {"id": "cadera-o-columna", "k": "Entiende tu articulación", "min": 2, "t": "¿Es la cadera o es la columna?", "b": ["No todo dolor «de cadera» viene de la cadera. El de la articulación y el de la columna se confunden porque se sienten cerca.", ["h", "Cuando es la cadera"], "Suele sentirse en la ingle y en la parte de enfrente del muslo. Aparece al caminar, al girar la pierna o al ponerse los zapatos.", ["h", "Cuando es la columna"], "Suele sentirse en la espalda baja y el glúteo, y a veces baja por la pierna con hormigueo o adormecimiento. Puede cambiar con la postura.", ["h", "Cómo se distinguen"], "La ubicación del dolor da pistas, pero no basta: a veces coinciden los dos problemas. El diagnóstico se confirma con exploración física y estudios de imagen."], "r": [["AAOS OrthoInfo: Hip Osteoarthritis", "https://orthoinfo.aaos.org/en/diseases--conditions/osteoarthritis-of-the-hip"]], "vid": "mg-28"}];
+const dlg=document.getElementById("reader");if(!dlg||!dlg.showModal)return;
+const $=id=>document.getElementById(id),esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+let cur=-1;
+function show(i){const a=ART[i];if(!a)return;cur=i;
+  $("rd-k").textContent=a.k+" · "+a.min+" min de lectura";$("rd-t").textContent=a.t;
+  $("rd-m").innerHTML=a.vid?`<video src="vid/${a.vid}.mp4" poster="vid/${a.vid}.jpg" controls muted loop playsinline preload="none"></video><small>Animación ilustrativa</small>`:`<img src="img/${a.img}.jpg" alt=""><small>Imagen ilustrativa</small>`;
+  $("rd-b").innerHTML=a.b.map(x=>typeof x==="string"?`<p>${esc(x)}</p>`:x[0]==="h"?`<h3>${esc(x[1])}</h3>`:`<ul>${x[1].map(l=>`<li>${esc(l)}</li>`).join("")}</ul>`).join("");
+  $("rd-r").innerHTML=a.r.map(r=>`<li><a href="${r[1]}" target="_blank" rel="noopener">${esc(r[0])}</a></li>`).join("");
+  const n=ART[(i+1)%ART.length];$("rd-next").textContent="Siguiente: "+n.t;
+  if(!dlg.open)dlg.showModal();dlg.querySelector(".rd-in").scrollTop=0;
+  const v=dlg.querySelector("video");if(v&&!matchMedia("(prefers-reduced-motion:reduce)").matches)v.play().catch(()=>{});}
+function route(){const m=location.hash.match(/^#leer-(.+)$/);if(m){const i=ART.findIndex(a=>a.id===m[1]);if(i>=0){show(i);return}}if(dlg.open)dlg.close()}
+function leave(){const v=dlg.querySelector("video");if(v)v.pause();if(/^#leer-/.test(location.hash))history.replaceState(null,"",location.pathname+location.search+"#aprende")}
+dlg.addEventListener("close",leave);
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+$("rd-x").addEventListener("click",()=>dlg.close());
+$("rd-next").addEventListener("click",()=>{location.hash="#leer-"+ART[(cur+1)%ART.length].id});
+$("rd-go").addEventListener("click",()=>{dlg.close()});
+addEventListener("hashchange",route);route();
 })();
 /* ---------- Visor 3D ---------- */
 (function(){
