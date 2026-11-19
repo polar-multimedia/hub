@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Diagnóstico Dr. Madroño</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050607; --panel:#0E1114; --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.22);
+  --fg:#F2F5F6; --muted:#A9B4BA; --acc:#3FE0EE; --acc-ink:#021A1D; --acc-soft:rgba(63,224,238,.13); --warn:#F0A04B;
+}
+.light{--bg:#F3F5F6; --panel:#FFFFFF; --line:rgba(11,15,18,.12); --line-2:rgba(11,15,18,.24);
+  --fg:#0B0F12; --muted:#4A5963; --acc:#0A8794; --acc-ink:#FFFFFF; --acc-soft:rgba(10,135,148,.10); --warn:#B4650F}
+*{box-sizing:border-box}
+html{scroll-snap-type:y proximity;scroll-behavior:smooth}
+body{margin:0;background:#050607;color:#F2F5F6;font-family:"Inter Tight",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.s{min-height:100dvh;scroll-snap-align:start;background:var(--bg);color:var(--fg);display:flex;align-items:center;padding:72px 0 124px;position:relative;overflow:hidden}
+.in{width:min(1080px,100% - 40px);margin-inline:auto}
+.k{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--acc)}
+.k::before{content:"";width:26px;height:2px;background:var(--acc)}
+h1{font-size:clamp(34px,5vw,58px);line-height:1.04;letter-spacing:-.03em;font-weight:600;text-wrap:balance}
+h2{font-size:clamp(27px,3.4vw,40px);line-height:1.1;letter-spacing:-.025em;font-weight:600;margin-top:18px;text-wrap:balance;max-width:22ch}
+h2 em,h1 em{font-style:normal;color:var(--acc)}
+.lead{font-size:clamp(17px,1.5vw,19px);color:var(--muted);max-width:60ch;margin-top:18px;font-weight:400}
+.note{font-size:13.5px;color:var(--muted);margin-top:22px;max-width:70ch}
+.note a{text-underline-offset:3px}
+.grid{display:grid;gap:14px;margin-top:34px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px}
+.card h3{font-size:19px;line-height:1.2;letter-spacing:-.015em;font-weight:600}
+.card p{font-size:15px;color:var(--muted);margin-top:8px}
+.card .n{font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--acc);margin-bottom:12px;display:block}
+/* aparición */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s cubic-bezier(.2,.7,.2,1)}
+.on .rv{opacity:1;transform:none}
+.on .rv:nth-child(2){transition-delay:.08s}.on .rv:nth-child(3){transition-delay:.16s}.on .rv:nth-child(4){transition-delay:.24s}.on .rv:nth-child(5){transition-delay:.32s}.on .rv:nth-child(6){transition-delay:.4s}.on .rv:nth-child(7){transition-delay:.48s}.on .rv:nth-child(8){transition-delay:.56s}
+/* portada */
+.cover .in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
+.cover .emb{aspect-ratio:1;border-radius:28px;overflow:hidden;border:1px solid var(--line);box-shadow:0 0 90px -30px var(--acc)}
+.cover .emb img{width:100%;height:100%;object-fit:cover;display:block}
+.cover .by{margin-top:30px;font-size:14px;color:var(--muted)}
+.hint{margin-top:34px;display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.hint kbd{font:inherit;border:1px solid var(--line-2);border-radius:8px;padding:2px 9px;color:var(--fg)}
+/* buscador */
+.search{margin-top:34px;max-width:720px}
+.bar{display:flex;align-items:center;gap:12px;border:1px solid var(--line-2);border-radius:999px;padding:14px 22px;background:var(--panel);font-size:17px}
+.bar svg{flex:none;width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:2}
+.bar span{white-space:nowrap;overflow:hidden}
+.bar i{width:2px;height:22px;background:var(--acc);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chips button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:7px 14px;font-size:14px;color:var(--muted)}
+.chips button[aria-pressed=true]{border-color:var(--acc);color:var(--fg);background:var(--acc-soft)}
+.res{margin-top:18px;display:grid;gap:10px}
+.res div{display:flex;justify-content:space-between;gap:16px;align-items:center;border:1px dashed var(--line-2);border-radius:14px;padding:13px 18px;font-size:15.5px}
+.res b{font-weight:500}
+.res span{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--warn);white-space:nowrap}
+/* pestañas de públicos */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px}
+.tabs button{border:1px solid var(--line-2);background:transparent;border-radius:999px;padding:10px 18px;font-size:15px;font-weight:500}
+.tabs button[aria-selected=true]{background:var(--acc);color:var(--acc-ink);border-color:transparent}
+.pane{margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pane .card h3{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);font-weight:600}
+.pane .card p{font-size:18px;color:var(--fg);margin-top:10px;line-height:1.4}
+/* ecosistema */
+.eco{margin-top:30px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px;align-items:start}
+.nodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.nodes button{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:14px 12px;font-size:14.5px;font-weight:500;text-align:left;line-height:1.25;min-height:74px;transition:border-color .2s,transform .2s}
+.nodes button small{display:block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.nodes button:hover{transform:translateY(-2px)}
+.nodes button[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset}
+.nodes .hub{grid-column:1/-1;background:var(--acc);color:var(--acc-ink);border-color:transparent;min-height:0;padding:16px}
+.nodes .hub small{color:inherit;opacity:.75}
+.detail{border-left:3px solid var(--acc);padding:6px 0 6px 22px;min-height:190px}
+.detail h3{font-size:22px;letter-spacing:-.02em;font-weight:600}
+.detail p{margin-top:10px;color:var(--muted);font-size:16px}
+.detail .st{display:inline-block;margin-top:16px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:999px;border:1px solid var(--line-2)}
+.detail .st.ok{border-color:var(--acc);color:var(--acc)}
+/* lo construido */
+.shots{margin-top:30px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:22px;align-items:start}
+.view{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#050607;aspect-ratio:16/10}
+.view img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.list{display:grid;gap:8px}
+.list button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:13px 16px}
+.list button b{display:block;font-size:16px;font-weight:600}
+.list button span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.list button[aria-pressed=true]{border-color:var(--acc);background:var(--acc-soft)}
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:16px;background:var(--acc);color:var(--acc-ink);border-radius:999px;padding:12px 22px;font-weight:600;font-size:15px;text-decoration:none}
+/* flujo */
+.flow{margin-top:34px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;counter-reset:f}
+.flow .card{position:relative}
+.flow .card::before{counter-increment:f;content:"0" counter(f);display:block;font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--acc);margin-bottom:12px}
+.flow .you{border-color:var(--acc);box-shadow:0 0 50px -26px var(--acc)}
+/* pendientes */
+.todo{margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.todo label{display:grid;grid-template-columns:26px minmax(0,1fr);gap:14px;align-items:start;border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:16px 18px;cursor:pointer;transition:border-color .2s,opacity .2s}
+.todo input{appearance:none;-webkit-appearance:none;width:24px;height:24px;margin:1px 0 0;border:2px solid var(--line-2);border-radius:7px;display:grid;place-items:center;cursor:pointer}
+.todo input:checked{background:var(--acc);border-color:var(--acc)}
+.todo input:checked::after{content:"";width:6px;height:11px;border:solid var(--acc-ink);border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
+.todo input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.todo b{display:block;font-size:16.5px;font-weight:600;line-height:1.25}
+.todo span{display:block;font-size:14px;color:var(--muted);margin-top:4px}
+.todo label:has(input:checked){border-color:var(--acc);opacity:.72}
+.count{margin-top:18px;font-size:15px;color:var(--muted)}
+.count b{color:var(--fg);font-variant-numeric:tabular-nums}
+/* navegación */
+.dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);display:grid;gap:9px;z-index:5}
+.dots button{width:10px;height:10px;border-radius:50%;border:1.5px solid #8E9AA1;background:transparent;padding:0}
+.dots button[aria-current=true]{background:#3FE0EE;border-color:#3FE0EE;transform:scale(1.25)}
+.nav{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;z-index:5;background:rgba(14,17,20,.88);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px;backdrop-filter:blur(10px);color:#F2F5F6}
+.nav button{width:42px;height:42px;border-radius:50%;border:0;background:transparent;font-size:19px;display:grid;place-items:center}
+.nav button:hover{background:rgba(255,255,255,.1)}
+.nav span{font-size:13.5px;font-variant-numeric:tabular-nums;padding:0 8px;min-width:58px;text-align:center;color:#C9D2D7}
+@media (max-width:820px){
+  .s{padding:56px 0 120px;align-items:flex-start}
+  .cover .in{grid-template-columns:minmax(0,1fr)}.cover .emb{max-width:240px;order:-1}
+  .g3,.g4,.g2,.pane,.eco,.shots,.flow,.todo{grid-template-columns:minmax(0,1fr)}
+  .nodes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dots{display:none}.detail{min-height:0}.bar{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rv{opacity:1;transform:none;transition:none}.bar i{animation:none}}
+</style>
+</head>
+<body>
+
+<section class="s cover" id="s1">
+  <div class="in">
+    <div>
+      <span class="k rv">Diagnóstico · noviembre de 2026</span>
+      <h1 class="rv" style="margin-top:20px">Rodrigo, esto es lo que <em>vimos</em> y lo que te proponemos</h1>
+      <p class="lead rv">Revisamos cómo te ve hoy alguien que te busca en internet, qué tienes a tu favor y qué hace falta para que los pacientes particulares te encuentren.</p>
+      <p class="by rv">Preparado por Polar Multimedia para el Dr. Rodrigo Madroño Carpinteyro</p>
+      <p class="hint rv">Avanza con <kbd>↓</kbd> o con los botones de abajo</p>
+    </div>
+    <div class="emb rv"><img src="dx/logo.jpg" alt="Emblema del Dr. Madroño: el oso empuja el madroño, que se apoya en una muleta"></div>
+  </div>
+</section>
+
+<section class="s light" id="s2">
+  <div class="in">
+    <span class="k rv">01 · Lo que encontramos</span>
+    <h2 class="rv">Hoy, quien te busca en internet <em>no te encuentra</em></h2>
+    <p class="lead rv">Buscamos tu nombre y tu especialidad como lo haría la familia de un paciente. Prueba las búsquedas:</p>
+    <div class="search rv">
+      <div class="bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span id="q"></span><i></i></div>
+      <div class="chips" id="qs">
+        <button type="button" aria-pressed="true">Dr. Rodrigo Madroño</button>
+        <button type="button" aria-pressed="false">cirujano de cadera CDMX</button>
+        <button type="button" aria-pressed="false">reemplazo de rodilla opiniones</button>
+      </div>
+      <div class="res">
+        <div><b>Sitio web propio</b><span>No existe</span></div>
+        <div><b>Perfil de Google con mapa y reseñas</b><span>No existe</span></div>
+        <div><b>Ficha en directorios médicos</b><span>No la encontramos</span></div>
+        <div><b>Redes profesionales</b><span>No las encontramos</span></div>
+      </div>
+    </div>
+    <p class="note rv">Revisión hecha por Polar el 17 de noviembre de 2026. Si tienes algún perfil que no vimos, dinos y lo sumamos.</p>
+  </div>
+</section>
+
+<section class="s" id="s3">
+  <div class="in">
+    <span class="k rv">02 · Lo que eso cuesta</span>
+    <h2 class="rv">Tu experiencia existe, pero <em>no se puede comprobar</em> desde afuera</h2>
+    <div class="grid g3">
+      <div class="card rv"><span class="n">LA FAMILIA INVESTIGA</span><h3>Quien decide suele ser la hija o el hijo</h3><p>Buscan en Google, comparan cirujanos y eligen entre los que aparecen. Si no apareces, no entras en la comparación.</p></div>
+      <div class="card rv"><span class="n">LA RECOMENDACIÓN SE VERIFICA</span><h3>Aunque te recomienden, te van a buscar</h3><p>Hoy esa búsqueda no devuelve nada que confirme lo que les dijeron de ti.</p></div>
+      <div class="card rv"><span class="n">UNA SOLA FUENTE</span><h3>Tu práctica depende de un contrato</h3><p>La consulta privada es lo que te da un ingreso propio a futuro, y hoy no tiene por dónde crecer.</p></div>
+    </div>
+    <p class="note rv">La buena noticia: partes de cero, sin mala reputación que corregir, y tu apellido es poco común, así que ocupar el primer resultado con tu nombre es rápido.</p>
+  </div>
+</section>
+
+<section class="s light" id="s4">
+  <div class="in">
+    <span class="k rv">03 · Lo que tienes a favor</span>
+    <h2 class="rv">Pocos cirujanos pueden decir <em>esto</em></h2>
+    <div class="grid g3">
+      <div class="card rv"><span class="n">VOLUMEN</span><h3>Operas cadera y rodilla todos los días</h3><p>Desde 2015, en el servicio de reemplazos articulares del IMSS. Es tu argumento más fuerte.</p></div>
+      <div class="card rv"><span class="n">ALTA ESPECIALIDAD</span><h3>Formado en reemplazos articulares</h3><p>Residencia en Traumatología y Ortopedia y curso de alta especialidad en una unidad del IMSS.</p></div>
+      <div class="card rv"><span class="n">CERTIFICACIÓN</span><h3>Consejo y Sociedad</h3><p>Consejo Mexicano de Ortopedia y Traumatología y Sociedad Mexicana de Cirugía de Cadera.</p></div>
+      <div class="card rv"><span class="n">PRÁCTICA PRIVADA</span><h3>Ya atiendes en Grupo Azura</h3><p>Consulta en Tabacalera y cirugía en Sanatorio Durango. No hay que inventar nada, solo mostrarlo.</p></div>
+      <div class="card rv"><span class="n">TRAYECTORIA</span><h3>Mejor promedio y Premio Pfizer</h3><p>Suman, aunque van en segundo plano: lo que convence es lo que haces en quirófano.</p></div>
+      <div class="card rv"><span class="n">IDENTIDAD</span><h3>Un emblema con historia</h3><p>El oso y el madroño, con la muleta que te da la especialidad. Ya tienes una versión nueva para elegir.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="s5">
+  <div class="in">
+    <span class="k rv">04 · A quién le hablamos</span>
+    <h2 class="rv">Tres públicos, y cada uno necesita <em>oír algo distinto</em></h2>
+    <div class="tabs rv" role="tablist" id="tabs">
+      <button type="button" role="tab" aria-selected="true">Paciente</button>
+      <button type="button" role="tab" aria-selected="false">Familia que decide</button>
+      <button type="button" role="tab" aria-selected="false">Colegas y hospitales</button>
+    </div>
+    <div class="pane rv" id="pane" role="tabpanel">
+      <div class="card"><h3>Quién es</h3><p id="p-who"></p></div>
+      <div class="card"><h3>Qué necesita oír</h3><p id="p-what"></p></div>
+    </div>
+    <p class="note rv">El perfil del paciente es nuestra hipótesis de arranque; tú sabes mejor quién llega a tu consulta y lo ajustamos contigo.</p>
+  </div>
+</section>
+
+<section class="s light" id="s6">
+  <div class="in">
+    <span class="k rv">05 · Lo que necesitas</span>
+    <h2 class="rv">Un sistema donde <em>todo lleva a tu consulta</em></h2>
+    <p class="lead rv">El sitio es el centro. Los perfiles de búsqueda hacen que te encuentren y las redes llevan gente al sitio. Toca cada pieza:</p>
+    <div class="eco rv">
+      <div class="nodes" id="nodes"></div>
+      <div class="detail" id="detail" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="s7">
+  <div class="in">
+    <span class="k rv">06 · Lo que ya está hecho</span>
+    <h2 class="rv">No es una propuesta en papel: <em>ya existe</em> una primera versión</h2>
+    <div class="shots rv">
+      <div>
+        <div class="view"><img id="shot" src="dx/s1.jpg" alt="Captura del sitio del Dr. Madroño"></div>
+        <a class="cta" href="https://polar-multimedia.github.io/hub/dr-madrono/" target="_blank" rel="noopener">Abrir el sitio de prueba</a>
+      </div>
+      <div class="list" id="built"></div>
+    </div>
+    <p class="note rv">El sitio es una versión de prueba: no aparece en Google y varias fotos son ilustrativas hasta tener las tuyas.</p>
+  </div>
+</section>
+
+<section class="s light" id="s8">
+  <div class="in">
+    <span class="k rv">07 · Tu parte</span>
+    <h2 class="rv">La meta es que te tome <em>un minuto al día</em></h2>
+    <p class="lead rv">No tienes que salir a cámara ni escribir nada. Tú solo apruebas.</p>
+    <div class="flow">
+      <div class="card rv"><h3>Preparamos la pieza</h3><p>Una idea al día, ya adaptada a cada red y al sitio.</p></div>
+      <div class="card rv"><h3>Te llega por WhatsApp</h3><p>La ves en el teléfono, tal como se va a publicar.</p></div>
+      <div class="card rv you"><h3>Respondes sí o pides un cambio</h3><p>Nada sale sin tu aprobación. Si no respondes, no se publica.</p></div>
+      <div class="card rv"><h3>Se publica sola</h3><p>En las redes que tocan ese día.</p></div>
+    </div>
+    <p class="note rv">El contenido del primer mes ya está escrito. El envío automático por WhatsApp todavía no está construido; es el siguiente paso una vez que apruebes el rumbo.</p>
+  </div>
+</section>
+
+<section class="s" id="s9">
+  <div class="in">
+    <span class="k rv">08 · Las reglas</span>
+    <h2 class="rv">Publicidad médica: hay que hacerlo <em>en regla</em> desde el primer día</h2>
+    <div class="grid g2">
+      <div class="card rv"><span class="n">ANTES DE PUBLICAR</span><h3>Aviso de publicidad ante COFEPRIS</h3><p>Un médico que promueve sus servicios en México necesita presentarlo. El trámite es el COFEPRIS-02-002-A y, según las fuentes que revisamos, es gratuito.</p></div>
+      <div class="card rv"><span class="n">EN CADA PIEZA</span><h3>Tu nombre y tus cédulas a la vista</h3><p>Cédula profesional 6440493 y de especialidad 8475828, en el sitio, los perfiles y las publicaciones.</p></div>
+      <div class="card rv"><span class="n">LO QUE NO SE DICE</span><h3>Sin promesas de resultados</h3><p>Nada de "sin dolor garantizado", comparaciones con otros médicos ni marcas de prótesis.</p></div>
+      <div class="card rv"><span class="n">TESTIMONIOS</span><h3>Solo con consentimiento firmado</h3><p>Las historias de pacientes y las fotos de antes y después son de lo más regulado.</p></div>
+    </div>
+    <p class="note rv">Esto es un resumen, no asesoría legal: conviene validarlo con un abogado sanitario antes de lanzar. Fuentes: <a href="https://agendapro.com/blog/publicidad-medica/" target="_blank" rel="noopener">AgendaPro</a>, <a href="https://papelea.com/mx/estado-de-zacatecas/cofepris-02-002-a-aviso-de-publicidad-modalidad-a-actividades-profesionales-tecnicas-auxiliares-y-especialidades" target="_blank" rel="noopener">Papelea</a>.</p>
+  </div>
+</section>
+
+<section class="s light" id="s10">
+  <div class="in">
+    <span class="k rv">09 · Lo que necesitamos de ti</span>
+    <h2 class="rv">Con esto <em>podemos lanzar</em></h2>
+    <p class="lead rv">Marca lo que ya nos diste o resolvimos en la plática.</p>
+    <div class="todo rv" id="todo"></div>
+    <p class="count rv"><b id="done">0</b> de <b id="total">0</b> resueltos</p>
+  </div>
+</section>
+
+<div class="dots" id="dots" aria-hidden="true"></div>
+<div class="nav" role="navigation" aria-label="Avanzar en la presentación">
+  <button type="button" id="prev" aria-label="Anterior">↑</button>
+  <span id="pos">1 / 10</span>
+  <button type="button" id="next" aria-label="Siguiente">↓</button>
+</div>
+
+<script>
+(function(){
+const S=[...document.querySelectorAll(".s")],dots=document.getElementById("dots"),pos=document.getElementById("pos");
+let cur=0;
+S.forEach((s,i)=>{const b=document.createElement("button");b.type="button";b.tabIndex=-1;b.onclick=()=>go(i);dots.appendChild(b)});
+const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function go(i){cur=Math.max(0,Math.min(S.length-1,i));S[cur].scrollIntoView({behavior:still?"auto":"smooth",block:"start"})}
+function mark(i){cur=i;pos.textContent=(i+1)+" / "+S.length;[...dots.children].forEach((d,j)=>d.setAttribute("aria-current",j===i))}
+function io(s){new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){s.classList.add("on");mark(S.indexOf(s))}}),{threshold:[.3,.6]}).observe(s)}
+document.getElementById("prev").onclick=()=>go(cur-1);
+document.getElementById("next").onclick=()=>go(cur+1);
+addEventListener("keydown",e=>{if(e.target.matches("input,textarea"))return;
+  if(["ArrowDown","PageDown","ArrowRight"].includes(e.key)||(e.key===" "&&!e.target.matches("button,a"))){e.preventDefault();go(cur+1)}
+  if(["ArrowUp","PageUp","ArrowLeft"].includes(e.key)){e.preventDefault();go(cur-1)}
+  if(e.key==="Home"){e.preventDefault();go(0)} if(e.key==="End"){e.preventDefault();go(S.length-1)}});
+S.forEach(io);mark(0);S[0].classList.add("on");
+
+/* buscador */
+const q=document.getElementById("q"),qs=[...document.querySelectorAll("#qs button")];let timer=0;
+function type(text){clearInterval(timer);if(still){q.textContent=text;return}let n=0;q.textContent="";timer=setInterval(()=>{q.textContent=text.slice(0,++n);if(n>=text.length)clearInterval(timer)},42)}
+qs.forEach(b=>b.onclick=()=>{qs.forEach(x=>x.setAttribute("aria-pressed",x===b));type(b.textContent)});
+type(qs[0].textContent);
+
+/* públicos */
+const AUD=[
+ ["Mujer de 60 años o más, con dolor de cadera o rodilla y posibilidad de pagar atención privada.","Confianza y calidez. Que puede volver a caminar con menos dolor, sin promesas."],
+ ["La hija o el hijo de 40 a 55 años, que investiga en Google y con frecuencia paga.","Datos que pueda comprobar: tu experiencia, tu volumen de cirugías y tus certificaciones."],
+ ["Médicos que refieren pacientes y directivos de hospitales.","Tu trayectoria, tu técnica y tu lugar en el reemplazo articular."]];
+const tabs=[...document.querySelectorAll("#tabs button")];
+function aud(i){tabs.forEach((t,j)=>t.setAttribute("aria-selected",j===i));document.getElementById("p-who").textContent=AUD[i][0];document.getElementById("p-what").textContent=AUD[i][1]}
+tabs.forEach((t,i)=>t.onclick=()=>aud(i));aud(0);
+
+/* ecosistema */
+const ECO=[
+ ["Centro","Sitio web con tu dominio","Tu trayectoria, los procedimientos explicados en 3D, preguntas frecuentes, artículos y el botón para pedir cita por WhatsApp. Todo lo demás lleva aquí.","Versión de prueba lista",1,1],
+ ["Búsqueda","Perfil de Google","Para aparecer en Maps y en las búsquedas locales, con reseñas de pacientes, ligado a tu consulta en Grupo Azura.","Por abrir",0],
+ ["Búsqueda","Directorios médicos","Doctoralia y Top Doctors: donde las familias comparan cirujanos. Perfiles completos, con tus cédulas.","Por abrir",0],
+ ["Redes","Facebook","Para pacientes mayores y sus hijos. Tono cálido y claro, de usted.","Contenido de diciembre escrito",1],
+ ["Redes","Instagram","Lo visual: carruseles y videos animados de la articulación y la cirugía.","Contenido de diciembre escrito",1],
+ ["Redes","LinkedIn","Para colegas, hospitales y aseguradoras. En primera persona y con tono profesional.","Contenido de diciembre escrito",1],
+ ["Redes","YouTube","Videos que explican cada procedimiento con animación y voz en off. Pesan mucho en Google.","10 videos animados listos",1],
+ ["Operación","Aprobación por WhatsApp","Cada mañana te llega la pieza del día. Con un sí se publica; si pides cambios, se corrige y te vuelve a llegar.","Por construir",0],
+ ["Operación","Banco de imágenes y animaciones","Los modelos 3D de cadera y rodilla, las animaciones y las ilustraciones de cada pieza.","En marcha",1]];
+const nodes=document.getElementById("nodes"),detail=document.getElementById("detail");
+ECO.forEach((e,i)=>{const b=document.createElement("button");b.type="button";if(e[5])b.className="hub";b.innerHTML="<small>"+e[0]+"</small>"+e[1];b.onclick=()=>eco(i);nodes.appendChild(b)});
+function eco(i){[...nodes.children].forEach((b,j)=>b.setAttribute("aria-pressed",j===i));const e=ECO[i];detail.innerHTML="<h3>"+e[1]+"</h3><p>"+e[2]+"</p><span class='st"+(e[4]?" ok":"")+"'>"+e[3]+"</span>"}
+eco(0);
+
+/* lo construido */
+const BUILT=[
+ ["dx/s1.jpg","Inicio","Tu nombre, el emblema animado y los modelos 3D de cadera y rodilla."],
+ ["dx/s2.jpg","Trayectoria","Tu recorrido desde 2015, con retrato y tus etapas."],
+ ["dx/s3.jpg","La cirugía en 3D","Modelos que se giran, se separan y avanzan paso a paso."],
+ ["dx/s4.jpg","Aprende","Ocho artículos con animaciones y fuentes médicas."],
+ [null,"Un mes de publicaciones","22 piezas para diciembre: 61 publicaciones en cinco canales y 10 videos animados."]];
+const built=document.getElementById("built"),shot=document.getElementById("shot");
+BUILT.forEach((x,i)=>{const b=document.createElement("button");b.type="button";b.innerHTML="<b>"+x[1]+"</b><span>"+x[2]+"</span>";b.onclick=()=>pick(i);built.appendChild(b)});
+function pick(i){[...built.children].forEach((b,j)=>b.setAttribute("aria-pressed",j===i));if(BUILT[i][0])shot.src=BUILT[i][0]}
+pick(0);
+
+/* pendientes */
+const TODO=[
+ ["Tu número total de cirugías","Cuántas de cadera y rodilla llevas, y cómo lo actualizamos. Hoy el sitio usa una cifra calculada: 13,718."],
+ ["Revisar los ocho artículos y los textos","Nada médico se publica sin que lo leas y lo apruebes."],
+ ["Una foto tuya real y tu firma","En consultorio o quirófano, sin pacientes identificables."],
+ ["WhatsApp para citas y para aprobar","Pueden ser dos números distintos."],
+ ["Datos de tu consulta","Confirmar Grupo Azura como sede, tu horario y el costo de la consulta."],
+ ["Aseguradoras que aceptas","Es una de las preguntas más frecuentes de los pacientes."],
+ ["Dos o tres pacientes para testimonio","Con consentimiento firmado."],
+ ["Aviso de publicidad ante COFEPRIS","Lo tramitamos contigo antes de la primera publicación."],
+ ["Tu visto bueno al emblema","La versión nueva del oso y el madroño."],
+ ["El nombre de tu dominio","Con tu nombre o uno descriptivo, como reemplazodecadera.com."],
+ ["A quién quieres atender","Confirmar o corregir el perfil de paciente que planteamos."]];
+const KEY="dx-madrono-todo",todo=document.getElementById("todo");let state={};
+try{state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){state={}}
+TODO.forEach((t,i)=>{const l=document.createElement("label");l.innerHTML="<input type='checkbox'"+(state[i]?" checked":"")+"><div><b>"+t[0]+"</b><span>"+t[1]+"</span></div>";
+  l.querySelector("input").onchange=e=>{state[i]=e.target.checked;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(_){}count()};todo.appendChild(l)});
+function count(){document.getElementById("done").textContent=TODO.filter((_,i)=>state[i]).length;document.getElementById("total").textContent=TODO.length}
+count();
+})();
+</script>
+</body>
+</html>
