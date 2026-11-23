@@ -22,7 +22,7 @@
   #gate .m{min-height:20px;font-size:12px;font-weight:800;color:#ffd23f}
   #gate .tag{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#ffb3d6}
 </style>
-</head>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-respi-180.png"><link rel="icon" type="image/png" href="icon-respi-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hub Respi"><meta name="theme-color" content="#1a1446"></head>
 <body>
 <div id="gate"><form class="g" id="f" autocomplete="off">
 <span class="tag">Hub Carnot · Línea Respiratoria · demo ciclo 8</span>
@@ -57,7 +57,7 @@ async function open(code,quiet){
   const key=await crypto.subtle.importKey('raw',ub(u.k),'AES-GCM',false,['decrypt']);
   const html=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(IV)},key,ct));
   window.__HR_USER={n:u.n,r:u.r,ruta:u.ruta||'',ger:u.ger||'',gm:u.gm||'',dist:u.dist||''};
-  document.open(); document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"></head><body><script>window.__HR_USER='+JSON.stringify({n:u.n,r:u.r,ruta:u.ruta||'',ger:u.ger||'',gm:u.gm||'',dist:u.dist||''})+';window.__HR_K='+JSON.stringify(u.k)+'<\/script>'+html+'</body></html>'); document.close();
+  document.open(); document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-respi-180.png"><link rel="icon" type="image/png" href="icon-respi-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hub Respi"><meta name="theme-color" content="#1a1446"></head><body><script>window.__HR_USER='+JSON.stringify({n:u.n,r:u.r,ruta:u.ruta||'',ger:u.ger||'',gm:u.gm||'',dist:u.dist||''})+';window.__HR_K='+JSON.stringify(u.k)+'<\/script>'+html+'</body></html>'); document.close();
 }
 document.getElementById('f').addEventListener('submit',e=>{ e.preventDefault(); open(document.getElementById('c').value,false).catch(()=>{ document.getElementById('m').textContent='No se pudo abrir. Revisa tu conexión.'; document.getElementById('b').disabled=false; }); });
 try{ const s=localStorage.getItem('hr_code'); if(s){ document.getElementById('c').value=s; open(s,true); } }catch(_){}
